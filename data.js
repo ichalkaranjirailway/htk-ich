@@ -660,6 +660,20 @@ const ENTRIES = [
     },
   },
 
+  {
+    id: 34,
+    date: "2026-08-06",
+    category: "social",
+    title: "इचलकरंजी रेल्वे कृती समिती",
+    to_whom: "Central Railway",
+    description: "इचलकरंजी करांची रेल्वे मागणी लवकरात लवकर पूर्ण करावी.",
+    response: "नक्कीच आमचे प्रयत्न सुरू आहेत.",
+    status: "",
+    proofType: "image",
+    proofSrc: "34--5q6s48.jpg",
+    referenceNo: "1"
+  },
+
 ];
 
 
