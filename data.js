@@ -41,7 +41,330 @@
 
 const ENTRIES = [
   {
-    id: 3,
+// हा कोड तुमच्या data.js फाईलमध्ये `const ENTRIES = [` च्या अगदी खाली पेस्ट करा:
+
+{
+  id: 1,
+  date: "2026-05-15",
+  category: "movement",
+  title: "केंद्रीय गृहमंत्री अमित शाह यांना निवेदन",
+  to_whom: "गृह मंत्रालय, भारत सरकार",
+  description: "रेल्वे कृती समितीच्या शिष्टमंडळाने थेट केंद्रीय गृहमंत्री अमित शाह यांची भेट घेऊन ८ किमी रेल्वे मार्ग तात्काळ मंजूर करण्याचे साकडे घातले.",
+  response: "सर्वोच्च पातळीवर पाठपुरावा",
+  proofSrc: "amit-shah-ichalkaranji-railway-nivedan.jpg.jpeg", // अपडेटेड एक्सटेंशन
+  en: {
+    title: "Memorandum Submited to HM Amit Shah",
+    to_whom: "Ministry of Home Affairs, GoI",
+    description: "Kruti Samiti delegation met Union Home Minister Amit Shah directly to request immediate clearance for the railway track.",
+    response: "Highest Advocacy"
+  }
+},
+{
+  id: 2,
+  date: "1965-11-20",
+  category: "government",
+  title: "नगरपालिकेचा १९६५ चा ऐतिहासिक ठराव",
+  to_whom: "रेल्वे मंत्रालय",
+  description: "६० वर्षांपूर्वी इचलकरंजी नगरपालिकेने मिरज-कोल्हापूर रेल्वे लाईन ब्रॉडगेज करताना इचलकरंजीला रेल्वे स्टेशन देण्याचा केलेला ठराव.",
+  response: "ऐतिहासिक पाऊलखूण",
+  proofSrc: "ichalkaranji-railway-historical-1965-resolution.jpg.jpeg",
+  en: {
+    title: "Historical 1965 Municipal Resolution",
+    to_whom: "Ministry of Railways",
+    description: "The historic resolution passed by Ichalkaranji Municipality in 1965 demanding a connection during Miraj-Kolhapur gauge conversion.",
+    response: "Historical Milestone"
+  }
+},
+{
+  id: 3,
+  date: "2026-05-12",
+  category: "news",
+  title: "सर्व्हेनंतरही रेल्वे मार्ग रखडलाच पुढारी बातमी",
+  to_whom: "प्रशासन व नागरिक",
+  description: "माजी केंद्रीय रेल्वेमंत्री सुरेश प्रभू यांनी सर्व्हे होऊनही हातकणंगले-इचलकरंजी मार्ग प्रलंबित असल्याबद्दल तीव्र खंत व्यक्त केली.",
+  response: "प्रकल्प प्रलंबित खंत",
+  proofSrc: "pudhari-suresh-prabhu-railway-statement-2026.jpg.jpeg",
+  en: {
+    title: "Route Delayed Despite Survey: Pudhari News",
+    to_whom: "Administration & Public",
+    description: "Former Railway Minister Suresh Prabhu expressed deep concern over the stagnation of the project after completion of the survey.",
+    response: "Delay Concerns"
+  }
+},
+{
+  id: 4,
+  date: "2026-05-11",
+  category: "news",
+  title: "माजी रेल्वेमंत्र्यांची नाराजी राष्ट्रगीत बातमी",
+  to_whom: "कृती समिती व नागरिक",
+  description: "इचलकरंजी दौऱ्यावर आले असता माजी रेल्वेमंत्री सुरेश प्रभू यांनी प्रकल्पाच्या संथ गतीबद्दल जाहीर नाराजी व्यक्त केली.",
+  response: "जाहीर सत्कार व निवेदन",
+  proofSrc: "suresh-prabhu-ichalkaranji-satkar-news.jpg.jpeg",
+  en: {
+    title: "Former Minister's Disappointment: Rashtrageet News",
+    to_whom: "Committee & Citizens",
+    description: "During his visit to Ichalkaranji, former minister Suresh Prabhu expressed open dissatisfaction with the zero progress.",
+    response: "Felicitation & Memo"
+  }
+},
+{
+  id: 5,
+  date: "2026-04-10",
+  category: "government",
+  title: "मध्य रेल्वे आरटीआई (RTI) उत्तर २०२६",
+  to_whom: "इचलकरंजी रेल्वे कृती समिती",
+  description: "मध्य रेल्वेच्या उप मुख्य अभियंता कार्यालयाने आरटीआय अंतर्गत दिलेल्या उत्तरात रेल्वे बोर्डाची अंतिम मंजुरी अद्याप प्रलंबित असल्याचे स्पष्ट केले.",
+  response: "अधिकृत माहिती उघड",
+  proofSrc: "central-railway-rti-reply-2026.jpg.jpeg",
+  en: {
+    title: "Central Railway RTI Reply 2026",
+    to_whom: "Railway Kruti Samiti",
+    description: "Central Railway Dy. Chief Engineer office clarified via RTI that the final approval from the Railway Board is still pending.",
+    response: "Official Info Disclosed"
+  }
+},
+{
+  id: 6,
+  date: "2024-05-06",
+  category: "news",
+  title: "दिल्ली बैठक आश्वासन राष्ट्रगीत बातमी",
+  to_whom: "कृती समिती शिष्टमंडळ",
+  description: "भाजप रेल्वे समितीचे प्रदेश संयोजक कैलाश वर्मा यांनी आचारसंहितेनंतर दिल्ली व मुंबईत तातडीने बैठक घडवून आणण्याचे दिलेले आश्वासन.",
+  response: "विशेष बैठक आश्वासन",
+  proofSrc: "ichalkaranji-railway-delhi-baithak-news.jpg.jpeg",
+  en: {
+    title: "Delhi Meeting Assurance: Rashtrageet News",
+    to_whom: "Committee Delegation",
+    description: "BJP Railway Committee State Coordinator Kailash Verma assured a special meeting in Delhi and Mumbai after election code.",
+    response: "Meeting Assured"
+  }
+},
+{
+  id: 7,
+  date: "2024-05-04",
+  category: "news",
+  title: "रेल्वे प्रश्न ऐरणीवर पुढारी विश्लेषण",
+  to_whom: "लोकप्रतिनिधी व प्रशासन",
+  description: "निवडणूक काळात इचलकरंजीचा रखडलेला रेल्वे मार्ग आणि लोकप्रतिनिधींच्या दुटूपी भूमिकेवर पुढारी वृत्तपत्राचे विशेष विश्लेषण.",
+  response: "माध्यम कव्हरेज",
+  proofSrc: "pudhari-news-ichalkaranji-railway-issue.jpg.jpeg",
+  en: {
+    title: "Railway Issue at Forefront: Pudhari Analysis",
+    to_whom: "Representatives & Admin",
+    description: "Special analysis by Pudhari newspaper highlighting how the stalled railway route became a core issue during elections.",
+    response: "Media Coverage"
+  }
+},
+{
+  id: 8,
+  date: "2024-02-26",
+  category: "movement",
+  title: "रेल्वे धरणे आंदोलन केसरी वृत्तपत्र बातमी",
+  to_whom: "प्रांत कार्यालय",
+  description: "रेल्वे कृती समितीने प्रांत कार्यालयासमोर पुकारलेल्या एक दिवसीय धरणे आंदोलनाला विविध सामाजिक संघटनांचा व्यापक पाठिंबा.",
+  response: "आंदोलन यशस्वी",
+  proofSrc: "ichalkaranji-railway-dharna-andolan-news.jpg.jpeg",
+  en: {
+    title: "Dharna Protest Success: Kesari News",
+    to_whom: "Prant Office",
+    description: "Wide public and institutional support for the one-day Dharna protest organized by Kruti Samiti outside Prant Office.",
+    response: "Protest Recorded"
+  }
+},
+{
+  id: 9,
+  date: "2022-11-30",
+  category: "news",
+  title: "केसरी वृत्तपत्र विशेष पान २०२२",
+  to_whom: "सार्वजनिक वाचक",
+  description: "इचलकरंजीच्या वस्त्रोद्योगासाठी आणि कामगारांसाठी रेल्वे किती आवश्यक आहे यावर व्यापारी, doctor आणि नेत्यांच्या मतांचे विशेष कव्हरेज.",
+  response: "विशेष आवृत्ती प्रसिद्ध",
+  proofSrc: "kesari-special-page-ichalkaranji-railway.jpg.jpeg",
+  en: {
+    title: "Dainik Kesari Special Page 2022",
+    to_whom: "General Public",
+    description: "Comprehensive coverage featuring opinions from industrialists, doctors, and politicians urging for railway connectivity.",
+    response: "Special Issue Released"
+  }
+},
+{
+  id: 10,
+  date: "2017-06-11",
+  category: "government",
+  title: "रेल्वे सर्वेक्षण भूमिपूजन निमंत्रण पत्रिका २०१७",
+  to_whom: "सर्व नागरिक व रेल्वेप्रेमी",
+  description: "हातकणंगले-इचलकरंजी नवीन ब्रॉडगेज रेल्वे मार्गाच्या अंतिम स्थान निश्चिती सर्वेक्षणाचा (FLS) अधिकृत पायाभरणी समारंभ.",
+  response: "पायाभरणी संपन्न",
+  proofSrc: "hatkanangale-ichalkaranji-railway-survey-2017.jpg.jpeg",
+  en: {
+    title: "Railway Survey Bhumi Pujan Card 2017",
+    to_whom: "All Citizens",
+    description: "Official invitation card for the Foundation Stone Laying ceremony of Final Location Survey of HTK-ICH route.",
+    response: "Ceremony Completed"
+  }
+},
+{
+  id: 11,
+  date: "2017-06-11",
+  category: "government",
+  title: "मध्य रेल्वे अधिकृत ट्विट २०१७",
+  to_whom: "डिजिटल पब्लिक",
+  description: "मध्य रेल्वेच्या (Central Railway) अधिकृत ट्विटर हँडलवरून भूमिपूजन सोहळा आणि नवीन मार्गाच्या प्रगतीची दिलेली माहिती.",
+  response: "अधिकृत डिजिटल नोंद",
+  proofSrc: "central-railway-bhumi-pujan-tweet.jpg.jpeg",
+  en: {
+    title: "Central Railway Official Tweet 2017",
+    to_whom: "Digital Public",
+    description: "Official tweet from Central Railway showcasing the updates and news clippings of the foundation stone laying ceremony.",
+    response: "Digitally Documented"
+  }
+},
+{
+  id: 12,
+  date: "2026-05-10",
+  category: "movement",
+  title: "इचलकरंजी रेल्वे जनआंदोलन मुख्य बॅनर",
+  to_whom: "प्रशासन व सर्व नागरिक",
+  description: "कृती समितीच्या 'आमच्यावरच अन्याय का? इचलकरंजीला रेल्वे कधी मिळणार?' या जनआंदोलन पुकारचे मुख्य डिजिटल पोस्टर.",
+  response: "चळवळ तीव्र",
+  proofSrc: "ichalkaranji-railway-andolan.jpg.jpeg",
+  en: {
+    title: "Public Movement Official Banner",
+    to_whom: "Administration & Citizens",
+    description: "The primary digital poster of the public outcry raising questions about the continuous neglect of the city's demands.",
+    response: "Agitation Intensified"
+  }
+},
+{
+  id: 13,
+  date: "2026-05-01",
+  category: "movement",
+  title: "इचलकरंजी रेल्वे कृती समिती अधिकृत बॅनर",
+  to_whom: "सार्वजनिक मंच",
+  description: "वस्त्रनगरीच्या बहुजन हिताय बहुजन सुखाय, हातकणंगले-इचलकरंजी रेल्वे मार्गासाठी सदैव प्रयत्नशील असणाऱ्या कृती समितीचा परिचय फलक.",
+  response: "समिती उद्देश स्पष्ट",
+  proofSrc: "ichalkaranji-railway-kruti-samiti-banner.jpg.jpeg",
+  en: {
+    title: "Official Kruti Samiti Banner",
+    to_whom: "Public Forum",
+    description: "Introductory information banner highlighting the identity and mission statement of the railway action committee.",
+    response: "Mission Declared"
+  }
+},
+{
+  id: 14,
+  date: "2026-05-20",
+  category: "news",
+  title: "प्रस्तावित इचलकरंजी रेल्वे स्थानक एआय रूप",
+  to_whom: "भविष्यातील आशा",
+  description: "भविष्यात मंजुरी मिळाल्यानंतर साकारणारे इचलकरंजी रेल्वे स्थानक प्रत्यक्षात कसे भव्य दिसेल, याचे संकल्पना चित्र (Concept Art).",
+  response: "भविष्यातील स्वप्न",
+  proofSrc: "proposed-ichalkaranji-railway-station-ai.jpg.jpeg",
+  en: {
+    title: "Proposed Railway Station Concept Art",
+    to_whom: "Future Vision",
+    description: "An AI-assisted futuristic representation showcasing the conceptual architectural look of the upcoming Ichalkaranji station.",
+    response: "Future Blueprint"
+  }
+},
+{
+  id: 15,
+  date: "2023-08-14",
+  category: "movement",
+  title: "प्रथम महापौरांना रेल्वे मागणी निवेदन",
+  to_whom: "इचलकरंजी महानगरपालिका प्रथम महापौर",
+  description: "इचलकरंजी रेल्वे कृती समिती तर्फे नवनियुक्त पहिल्या महापौरांना महापालिकेच्या वतीने रेल्वेचा पाठपुरावा गतिमान करण्यासाठी दिलेले अधिकृत पत्र.",
+  response: "प्रशासकीय पाठपुरावा",
+  proofSrc: "ichalkaranji-first-mahapour-railway-nivedan.jpg.jpeg",
+  en: {
+    title: "Memorandum to the First Mayor",
+    to_whom: "First Mayor, Municipal Corporation",
+    description: "Kruti Samiti members handing over the official letter to the newly appointed first mayor of Ichalkaranji city.",
+    response: "Administrative Liaison"
+   }
+},
+{
+  id: 16,
+  date: "2024-03-12",
+  category: "movement",
+  title: "कृती समिती पत्रकार परिषद व निवेदने",
+  to_whom: "वृत्तमाध्यमे व पत्रकार",
+  description: "नागरिकांकडून गोळा केलेल्या हजारो जनस्वाक्षरी निवेदनांचे गठ्ठे पत्रकार कक्षात प्रदर्शित करून घेण्यात आलेली जाहीर पत्रकार परिषद.",
+  response: "माध्यम संवाद",
+  proofSrc: "ichalkaranji-railway-kruti-samiti-press-conference.jpg.jpeg",
+  en: {
+    title: "Press Conference with Mass Memorandums",
+    to_whom: "Press & Media Rooms",
+    description: "Action committee showcasing huge physical bundles of signed public memorandums during a formal media brief.",
+    response: "Media Briefing Done"
+  }
+},
+{
+  id: 17,
+  date: "2024-03-14",
+  category: "news",
+  title: "पंतप्रधानांना १० हजार पत्रे वृत्तपत्र बातमी",
+  to_whom: "केंद्र व राज्य सरकार",
+  description: "इचलकरंजीतील शाळा, सामाजिक संस्था व नागरिकांनी मिळून पंतप्रधान नरेंद्र मोदी यांना पाठवलेल्या १० हजार पत्रांची वृत्तपत्र बातमी.",
+  response: "पत्रांची दखल",
+  proofSrc: "ichalkaranji-railway-10-thousand-letters-news.jpg.jpeg",
+  en: {
+    title: "10 Thousand Letters to PM: News Coverage",
+    to_whom: "Central & State Govts",
+    description: "Newspaper clipping describing the unique drive where 10,000 emotional letters were sent to Prime Minister Narendra Modi.",
+    response: "Campaign Documented"
+  }
+},
+{
+  id: 18,
+  date: "2023-08-16",
+  category: "news",
+  title: "रेल्वे कृती समिती वृत्तपत्र बातमी (महापौर बैठक)",
+  to_whom: "महापौर व स्थानिक आमदार",
+  description: "आमदार व खासदारांसोबत रेल्वे मंत्रालयात तातडीने संयुक्त बैठक घडवून आणण्यासाठी तत्कालीन महापौरांना दिलेल्या निवेदानाची बातमी.",
+  response: "बैठक मागणी",
+  proofSrc: "ichalkaranji-railway-news-clipping.jpg.jpeg",
+  en: {
+    title: "Action Committee Urges Mayor: News Clipping",
+    to_whom: "Mayor & Local MLA",
+    description: "Media report regarding the committee's call to the mayor to facilitate a joint technical session with MPs and MLAs.",
+    response: "Meeting Requested"
+  }
+},
+{
+  id: 19,
+  date: "2022-11-28",
+  category: "news",
+  title: "विविध क्षेत्रांतील मान्यवरांचे रेल्वे समर्थन फलक",
+  to_whom: "सार्वजनिक समाज",
+  description: "डॉक्टर्स, इंजिनिअर्स, वकील आणि टेक्स्टाईल असोसिएशनच्या अध्यक्षांनी इचलकरंजीला रेल्वे जोडण्याचे व्यक्त केलेले महत्त्व दर्शवणारा बोर्ड कोलाज.",
+  response: "जनमताचा कौल",
+  proofSrc: "ichalkaranji-railway-citizen-opinions.jpg.jpeg",
+  en: {
+    title: "Endorsements from Various Sectors",
+    to_whom: "General Society",
+    description: "A compiled billboard asset containing positive feedback and appeals from doctors, lawyers, and industry elites for the project.",
+    response: "Public Verdict"
+  }
+},
+{
+  id: 20,
+  date: "2022-11-30",
+  category: "news",
+  title: "केसरी वृत्तपत्र विशेष पान २०२२",
+  to_whom: "सार्वजनिक वाचक",
+  description: "इचलकरंजीच्या वस्त्रोद्योगासाठी आणि कामगारांसाठी रेल्वे किती आवश्यक आहे यावर व्यापारी, डॉक्टर आणि नेत्यांच्या मतांचे विशेष कव्हरेज.",
+  response: "विशेष आवृत्ती प्रसिद्ध",
+  proofSrc: "kesari-special-page-ichalkaranji-railway.jpg.jpeg",
+  en: {
+    title: "Dainik Kesari Special Page 2022",
+    to_whom: "General Public",
+    description: "Comprehensive coverage featuring opinions from industrialists, doctors, and politicians urging for railway connectivity.",
+    response: "Special Issue Released"
+   }
+},
+{
+    id: 21,
     date: "2026-03-02",
     category: "petition",
     title: "Change.org याचिका — \"इचलकरंजीला थेट रेल्वे कनेक्टिव्हिटी हवी!\"",
@@ -61,7 +384,7 @@ const ENTRIES = [
   },
 
   {
-    id: 4,
+    id: 22,
     date: "2026-03-13",
     category: "social",
     title: "इंस्टाग्राम रील — \"इचलकरंजीला रेल्वे स्टेशन हवंय!\"",
@@ -81,7 +404,7 @@ const ENTRIES = [
   },
 
   {
-    id: 5,
+    id: 23,
     date: "2026-03-28",
     category: "rti",
     title: "RTI उत्तर — उप मुख्य अभियंता/बांधकाम, सातारा",
@@ -101,7 +424,7 @@ const ENTRIES = [
   },
 
   {
-    id: 6,
+    id: 24,
     date: "2026-05-14",
     category: "rti",
     title: "RTI हस्तांतरण आदेश — मध्य रेल्वे पुणे विभाग",
@@ -121,7 +444,7 @@ const ENTRIES = [
   },
 
   {
-    id: 7,
+    id: 25,
     date: "2026-05-27",
     category: "rti",
     title: "RTI पाठपुरावा — सविस्तर ७ प्रश्नांची यादी",
@@ -141,7 +464,7 @@ const ENTRIES = [
   },
 
   {
-    id: 8,
+    id: 26,
     date: "2026-06-17",
     category: "grievance",
     title: "CPGRAMS तक्रार उत्तर — मध्य रेल्वे CAO (बांधकाम)",
@@ -161,7 +484,7 @@ const ENTRIES = [
   },
 
   {
-    id: 9,
+    id: 27,
     date: "2026-05-27",
     category: "letter",
     title: "सामाजिक-आर्थिक निकषांवर पुनर्विचारासाठी विनंती (ROR −१२.७३%)",
@@ -181,7 +504,7 @@ const ENTRIES = [
   },
 
   {
-    id: 10,
+    id: 28,
     date: "2026-05-29",
     category: "letter",
     title: "पत्र — खासदार श्रीकांत शिंदे (शिवसेना)",
@@ -201,7 +524,7 @@ const ENTRIES = [
   },
 
   {
-    id: 11,
+    id: 29,
     date: "2026-06-07",
     category: "letter",
     title: "तीव्र आक्षेप — शंकेश्वर–पारकनट्टी सर्वेक्षण; कराड–इचलकरंजी–निपाणी–बेळगाव मार्गासाठी विनंती",
@@ -221,7 +544,7 @@ const ENTRIES = [
   },
 
   {
-    id: 12,
+    id: 30,
     date: "2026-06-09",
     category: "letter",
     title: "पत्र — केंद्रीय गृहमंत्री अमित शाह",
@@ -241,7 +564,7 @@ const ENTRIES = [
   },
 
   {
-    id: 13,
+    id: 31,
     date: "2026-05-09",
     category: "letter",
     title: "तातडीचे — केंद्रीय वस्त्रोद्योग मंत्री गिरिराज सिंह",
@@ -261,7 +584,7 @@ const ENTRIES = [
   },
 
   {
-    id: 14,
+    id: 32,
     date: "2026-05-09",
     category: "letter",
     title: "पत्र — राज्य वस्त्रोद्योग मंत्री संजय सावकारे",
@@ -281,7 +604,7 @@ const ENTRIES = [
   },
 
   {
-    id: 15,
+    id: 33,
     date: "2026-04-06",
     category: "grievance",
     title: "सामूहिक अर्ज — जिल्हाधिकारी कोल्हापूर → महानगरपालिका → मध्य रेल्वे DEN",
@@ -301,7 +624,7 @@ const ENTRIES = [
   },
 
   {
-    id: 16,
+    id: 34,
     date: "2017-06-11",
     category: "media",
     title: "ऐतिहासिक: हातकणंगले–इचलकरंजी सर्वेक्षणासाठी भूमिपूजन",
@@ -321,7 +644,7 @@ const ENTRIES = [
   },
 
   {
-    id: 17,
+    id: 35,
     date: "2022-11-30",
     category: "media",
     title: "बातमी — दैनिक केसरी: \"रेल्वे कृती समिती प्रयत्नशील\"",
@@ -341,7 +664,7 @@ const ENTRIES = [
   },
 
   {
-    id: 18,
+    id: 36,
     date: "2026-05-12",
     category: "media",
     title: "बातमी — दैनिक पुढारी: \"सर्वेक्षणानंतरही मार्ग रखडलेलाच\"",
@@ -361,7 +684,7 @@ const ENTRIES = [
   },
 
   {
-    id: 19,
+    id: 37,
     date: "2026-04-16",
     category: "letter",
     title: "बातमी — मास लेटर मोहीम: राज्य सरकारला \"भावनिक साद\"",
@@ -381,7 +704,7 @@ const ENTRIES = [
   },
 
   {
-    id: 20,
+    id: 38,
     date: "2026-02-26",
     category: "media",
     title: "बातमी — दैनिक केसरी: धरणे आंदोलनाला पाठिंबा",
@@ -401,7 +724,7 @@ const ENTRIES = [
   },
 
   {
-    id: 21,
+    id: 39,
     date: "2026-04-01",
     category: "letter",
     title: "महापौरांना निवेदन — इचलकरंजी महानगरपालिका",
@@ -421,7 +744,7 @@ const ENTRIES = [
   },
 
   {
-    id: 22,
+    id: 40,
     date: "2026-04-12",
     category: "media",
     title: "बातमी — नागरिक प्रतिक्रिया विशेष पुरवणी",
@@ -441,7 +764,7 @@ const ENTRIES = [
   },
 
   {
-    id: 23,
+    id: 41,
     date: "2026-05-09",
     category: "media",
     title: "बातमी — राष्ट्रगीत: खासदार माने यांचे निधी आश्वासन",
@@ -461,7 +784,7 @@ const ENTRIES = [
   },
 
   {
-    id: 24,
+    id: 42,
     date: "2026-04-12",
     category: "letter",
     title: "मोठ्या प्रमाणावरील पोस्टकार्ड मोहीम — छायाचित्र पुरावा",
@@ -481,7 +804,7 @@ const ENTRIES = [
   },
 
   {
-    id: 25,
+    id: 43,
     date: "2024-05-06",
     category: "media",
     title: "बातमी — राष्ट्रगीत: भाजप रेल्वे सेल संयोजक कैलास वर्मा यांचे दिल्ली बैठकीचे आश्वासन",
@@ -501,7 +824,7 @@ const ENTRIES = [
   },
 
   {
-    id: 26,
+    id: 44,
     date: "2024-05-04",
     category: "media",
     title: "बातमी — पुढारी: \"रेल्वे प्रश्न ऐरणीवर\" (२०२४ निवडणूक वृत्तांकन)",
@@ -521,7 +844,7 @@ const ENTRIES = [
   },
 
   {
-    id: 27,
+    id: 45,
     date: "2026-05-12",
     category: "media",
     title: "बातमी — राष्ट्रगीत: सुरेश प्रभूंची विलंबाबाबत नाराजी",
@@ -541,7 +864,7 @@ const ENTRIES = [
   },
 
   {
-    id: 28,
+    id: 46,
     date: "2026-06-21",
     category: "letter",
     title: "प्रत्यक्ष भेट — केंद्रीय गृहमंत्री अमित शाह यांना निवेदन सुपूर्द",
@@ -561,7 +884,7 @@ const ENTRIES = [
   },
 
   {
-    id: 29,
+    id: 47,
     date: "2026-04-01",
     category: "letter",
     title: "लोकसभा — खासदार धैर्यशील माने यांनी इचलकरंजी रेल्वे प्रश्न उपस्थित केला",
@@ -581,7 +904,7 @@ const ENTRIES = [
   },
 
   {
-    id: 30,
+    id: 48,
     date: "2025-03-17",
     category: "letter",
     title: "लोकसभा अधिवेशन (१७ मार्च २०२५) — कोल्हापूर-इचलकरंजी व कोल्हापूर-वैभववाडी मार्ग",
@@ -601,7 +924,7 @@ const ENTRIES = [
   },
 
   {
-    id: 31,
+    id: 49,
     date: "2024-11-08",
     category: "letter",
     title: "निवडणूक प्रचारसभा — केंद्रीय गृहमंत्री अमित शाह यांना निवेदन सुपूर्द",
@@ -621,7 +944,7 @@ const ENTRIES = [
   },
 
   {
-    id: 32,
+    id: 50,
     date: "2026-07-29",
     category: "rti",
     title: "RTI उत्तर — निधी मंजुरी व DPR स्थिती (Ref. OL-272)",
@@ -641,7 +964,7 @@ const ENTRIES = [
   },
 
   {
-    id: 33,
+    id: 51,
     date: "2026-07-29",
     category: "rti",
     title: "RTI उत्तर — Traffic Survey, फाईल नोटिंग्ज व निधी तपशील (Ref. OL-270)",
