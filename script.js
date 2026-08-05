@@ -99,7 +99,7 @@ function proofHTML(entry) {
     case "video":
       // Document/photo/video proofs are not published on the site — visitors
       // are directed to contact the committee to request them.
-      return `<a class="proof-link" href="mailto:ich.mh.51@gmail.com?subject=${encodeURIComponent("Proof Document Request - " + title)}">${t("htk_ich")}</a>`;
+      return `<a class="proof-link" href="mailto:ich.mh.51@gmail.com?subject=${encodeURIComponent("Proof Document Request - " + title)}">${t("proof_contact")}</a>`;
     case "link":
       return `<a class="proof-link" href="${entry.proofSrc}" target="_blank" rel="noopener">${t("proof_link")}</a>`;
     case "text":
