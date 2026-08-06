@@ -566,16 +566,10 @@ const ENTRIES = [
     to_whom: "केंद्रीय गृहमंत्री अमित शाह (महाराष्ट्र विधानसभा निवडणूक प्रचार दौऱ्यादरम्यान)",
     description: "२०२४ च्या महाराष्ट्र विधानसभा निवडणुकीच्या प्रचारसभेत, रेल्वे कृती समितीच्या एका सदस्याने अमित शाह यांना रेल्वे मागणीचे निवेदन दिले.",
     response: "निवेदन स्वीकारले गेले; औपचारिक उत्तर आलेले नाही.",
-    status: "no-response",
-    proofType: "video",
-    proofSrc: "video-amit-shah-election-rally-08nov2024.mp4",
-    referenceNo: "",
-    en: {
-      title: "Election Rally — Memorandum Submitted to Union Home Minister Amit Shah",
-      to_whom: "Union Home Minister Amit Shah (during Maharashtra Assembly election campaign visit)",
-      description: "During the 2024 Maharashtra Assembly election campaign rally, a member of the Railway Action Committee handed a memorandum on the railway demand to Amit Shah.",
-      response: "The memorandum was accepted; a formal response has not arrived.",
-    },
+    status: "",
+    proofType: "image",
+    proofSrc: "31-vid-20260608-wa0035.mp4",
+    referenceNo: ""
   },
 
   {
