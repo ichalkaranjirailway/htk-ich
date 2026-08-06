@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Ichalkaranji Railway Archive</title>
+<style>
+  :root{--ink:#1a1a1a;--paper:#faf8f3;--accent:#8a1f1f;--line:#ddd;}
+  *{box-sizing:border-box;}
+  body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:var(--paper);color:var(--ink);max-width:760px;margin:0 auto;padding:16px 16px 80px;}
+  h1{font-size:1.3rem;margin-bottom:4px;}
+  h2{font-size:1.1rem;margin-top:32px;}
+  p.sub{color:#666;margin-top:0;margin-bottom:16px;font-size:.9rem;}
+  fieldset{border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:18px;background:#fff;}
+  legend{font-weight:600;padding:0 8px;color:var(--accent);}
+  label{display:block;margin:12px 0 4px;font-weight:600;font-size:.9rem;}
+  input[type=text],input[type=date],input[type=password],input[type=color],select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:6px;font-size:.95rem;font-family:inherit;}
+  input[type=color]{padding:4px;height:44px;}
+  textarea{min-height:70px;resize:vertical;}
+  .row{display:flex;gap:12px;}
+  .row > div{flex:1;}
+  button{background:var(--accent);color:#fff;border:none;padding:12px 18px;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;}
+  button.secondary{background:#666;}
+  button.danger{background:#b23b3b;}
+  button:disabled{background:#aaa;cursor:not-allowed;}
+  button.wide{width:100%;margin-top:10px;}
+  #status{margin-top:16px;padding:14px;border-radius:8px;font-size:.9rem;white-space:pre-wrap;display:none;position:sticky;bottom:8px;box-shadow:0 2px 10px rgba(0,0,0,.15);}
+  #status.ok{display:block;background:#e6f4ea;color:#1e6b34;border:1px solid #b6e0c2;}
+  #status.err{display:block;background:#fbe7e7;color:var(--accent);border:1px solid #f3c0c0;}
+  #status.busy{display:block;background:#fff6e0;color:#8a6d1f;border:1px solid #f0dfa0;}
+  .hint{font-size:.8rem;color:#888;margin-top:2px;}
+  .token-box{background:#fff3e0;border:1px solid #ffcc80;}
+  .token-box legend{color:#a05a00;}
+  details{margin-top:6px;font-size:.85rem;color:#555;}
+  .entry-row{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid var(--line);padding:10px 4px;font-size:.88rem;}
+  .entry-row .meta{flex:1;min-width:0;}
+  .entry-row .meta b{display:block;font-size:.9rem;}
+  .entry-row .meta span{color:#888;font-size:.78rem;}
+  .entry-row .btns{display:flex;gap:6px;flex-shrink:0;}
+  .entry-row .btns button{padding:6px 10px;font-size:.78rem;}
+  #entriesList{max-height:400px;overflow-y:auto;background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px 12px;}
+  #loadBtn{margin-bottom:12px;}
+  #editBanner{display:none;background:#e3edf7;border:1px solid #a9c6e8;color:#1a4d7a;padding:10px 14px;border-radius:8px;margin-bottom:12px;font-size:.88rem;}
+  .tabbar{display:flex;gap:6px;margin:18px 0 6px;position:sticky;top:0;background:var(--paper);padding:8px 0;z-index:5;overflow-x:auto;}
+  .tabbar button{background:#fff;color:var(--ink);border:1px solid var(--line);padding:9px 12px;border-radius:20px;font-size:.82rem;white-space:nowrap;}
+  .tabbar button.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .tabpanel{display:none;}
+  .tabpanel.active{display:block;}
+  .gal-item{display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line);padding:8px 4px;}
+  .gal-item img{width:52px;height:52px;object-fit:cover;border-radius:6px;background:#eee;flex-shrink:0;}
+  .gal-item .cap{flex:1;font-size:.85rem;min-width:0;overflow-wrap:anywhere;}
+  .color-row{display:flex;align-items:center;gap:10px;margin:10px 0;}
+  .color-row label{flex:1;margin:0;font-size:.88rem;}
+  .color-row input[type=color]{width:56px;flex-shrink:0;}
+  .color-row input[type=text]{width:100px;flex-shrink:0;font-family:monospace;font-size:.82rem;}
+</style>
+</head>
+<body>
+
+<h1>🚂 Ichalkaranji Railway Archive — Admin</h1>
+<p class="sub">इथून संपूर्ण साईट — नोंदी, मजकूर, गॅलरी, रंग — सगळं थेट बदलता येईल, कोडिंगशिवाय, मोबाईलवरून.</p>
+
+<fieldset class="token-box">
+<legend>🔑 एकदाच सेटअप</legend>
+<label>GitHub Token</label>
+<input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+<p class="hint">तुमच्याच ब्राऊझरमध्ये साठवलं जातं — परत विचारणार नाही. हे पेज कुणालाही शेअर करू नका. (हे GitHub login नाही — फक्त हा एक token पेस्ट करायचा आहे, कुठेही login करायची गरज नाही.)</p>
+<details>
+<summary>Token कसा बनवायचा?</summary>
+<ol>
+<li><a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens/new</a></li>
+<li>Note: "htk-ich admin"</li>
+<li>Expiration: No expiration / 1 year</li>
+<li>"repo" checkbox वर टिक करा → Generate token → copy करून वर paste करा</li>
+</ol>
+</details>
+</fieldset>
+
+<div class="tabbar">
+<button type="button" class="tab-btn active" data-tab="entries">📚 नोंदी</button>
+<button type="button" class="tab-btn" data-tab="content">📝 साईट मजकूर</button>
+<button type="button" class="tab-btn" data-tab="gallery">🖼️ गॅलरी</button>
+<button type="button" class="tab-btn" data-tab="theme">🎨 रंग</button>
+</div>
+
+<!-- ============ TAB 1: ENTRIES ============ -->
+<div class="tabpanel active" id="tab-entries">
+
+<h2>📚 अस्तित्वात असलेल्या नोंदी</h2>
+<button id="loadBtn">नोंदी लोड करा</button>
+<div id="entriesList" style="display:none; margin-top:10px;"></div>
+
+<h2 id="formHeading">➕ नवीन नोंद जोडा</h2>
+<div id="editBanner">✏️ Entry #<span id="editingIdLabel"></span> edit करत आहात. <button type="button" class="secondary" onclick="cancelEdit()" style="padding:4px 10px;font-size:.78rem;">रद्द करा</button></div>
+
+<form id="entryForm">
+<fieldset>
+<legend>📋 माहिती</legend>
+<label>श्रेणी</label>
+<select id="category" required>
+<option value="rti">RTI</option>
+<option value="grievance">Grievance</option>
+<option value="petition">Petition</option>
+<option value="letter">पत्र</option>
+<option value="social">Social Media</option>
+<option value="media">बातमी / Media</option>
+</select>
+<div class="row">
+<div><label>तारीख</label><input type="date" id="date" required></div>
+<div><label>स्थिती</label>
+<select id="status">
+<option value="replied">उत्तर आलं</option>
+<option value="pending">प्रलंबित</option>
+<option value="no-response" selected>उत्तर आलं नाही</option>
+</select></div>
+</div>
+<label>शीर्षक</label>
+<input type="text" id="title" required>
+<label>कुणाला पाठवलं</label>
+<input type="text" id="toWhom">
+<label>तपशील</label>
+<textarea id="description"></textarea>
+<label>उत्तर (नसेल तर रिकामं)</label>
+<textarea id="response"></textarea>
+<label>Reference No. (optional)</label>
+<input type="text" id="referenceNo">
+</fieldset>
+
+<fieldset>
+<legend>📎 पुरावा</legend>
+<label>प्रकार</label>
+<select id="proofType">
+<option value="image">फोटो</option>
+<option value="video">व्हिडिओ</option>
+<option value="pdf">PDF</option>
+<option value="link">Link</option>
+<option value="text">मजकूर</option>
+</select>
+<div id="fileWrap"><label>नवीन फाईल (edit मध्ये रिकामं ठेवलं तर जुनी फाईल कायम राहील)</label><input type="file" id="proofFile" accept="image/*,video/*,.pdf"></div>
+<div id="linkWrap" style="display:none;"><label>Link</label><input type="text" id="proofLink" placeholder="https://..."></div>
+<div id="textWrap" style="display:none;"><label>मजकूर</label><textarea id="proofText"></textarea></div>
+<p class="hint" id="currentProofHint"></p>
+</fieldset>
+
+<fieldset>
+<legend>🇬🇧 English (optional — रिकामं ठेवलं तर आधीचं इंग्रजी कायम राहील / भरलं नाही तर तयार होणार नाही)</legend>
+<label>Title (EN)</label>
+<input type="text" id="titleEn">
+<label>To whom (EN)</label>
+<input type="text" id="toWhomEn">
+<label>Description (EN)</label>
+<textarea id="descriptionEn"></textarea>
+<label>Response (EN)</label>
+<textarea id="responseEn"></textarea>
+</fieldset>
+
+<button type="submit" id="submitBtn" class="wide">🚀 साईटवर टाका</button>
+</form>
+</div>
+
+<!-- ============ TAB 2: SITE TEXT ============ -->
+<div class="tabpanel" id="tab-content">
+<h2>📝 मुख्य पानावरचा मजकूर</h2>
+<p class="hint">आधी "सध्याचा मजकूर लोड करा" दाबा, मग बदल करून संबंधित बटण दाबा.</p>
+<button type="button" class="wide secondary" onclick="loadSiteContent()">🔄 सध्याचा मजकूर लोड करा</button>
+
+<fieldset>
+<legend>🏠 शीर्षक (Hero)</legend>
+<label>मुख्य शीर्षक (H1)</label>
+<textarea id="ct_heroTitle"></textarea>
+<button type="button" class="wide" onclick="saveContentBlock('HERO_TITLE','ct_heroTitle','h1', 'Hero title update')">🚀 शीर्षक अपडेट करा</button>
+<label style="margin-top:16px;">उपशीर्षक / वर्णन</label>
+<textarea id="ct_heroLede"></textarea>
+<button type="button" class="wide secondary" onclick="saveContentBlock('HERO_LEDE','ct_heroLede','p class=&quot;lede&quot;', 'Hero lede update')">🚀 उपशीर्षक अपडेट करा</button>
+</fieldset>
+
+<fieldset>
+<legend>ℹ️ "मागणी काय आहे" विभाग</legend>
+<label>तीन परिच्छेद (प्रत्येक नवीन रिकाम्या ओळीने वेगळा परिच्छेद)</label>
+<textarea id="ct_about" style="min-height:180px;"></textarea>
+<button type="button" class="wide" onclick="saveAboutBlock()">🚀 विभाग अपडेट करा</button>
+</fieldset>
+
+<fieldset>
+<legend>📞 फूटर संपर्क माहिती</legend>
+<label>संस्थेचं नाव</label>
+<input type="text" id="ct_footerOrg">
+<label>व्यक्ती / ईमेल / फोन ओळ</label>
+<input type="text" id="ct_footerLine">
+<button type="button" class="wide" onclick="saveFooterBlock()">🚀 संपर्क अपडेट करा</button>
+</fieldset>
+</div>
+
+<!-- ============ TAB 3: GALLERY ============ -->
+<div class="tabpanel" id="tab-gallery">
+<h2>🖼️ गॅलरी</h2>
+<button type="button" id="loadGalleryBtn" onclick="loadGallery()">गॅलरी लोड करा</button>
+<div id="galleryList" style="display:none; margin-top:10px; background:#fff; border:1px solid var(--line); border-radius:10px; padding:6px 12px; max-height:400px; overflow-y:auto;"></div>
+
+<h2>➕ नवीन फोटो जोडा</h2>
+<fieldset>
+<label>फोटो निवडा</label>
+<input type="file" id="galFile" accept="image/*">
+<label>कॅप्शन</label>
+<input type="text" id="galCaption" placeholder="उदा. पत्रकार परिषद 2026">
+<button type="button" class="wide" onclick="addGalleryPhoto()">🚀 गॅलरीत टाका</button>
+</fieldset>
+</div>
+
+<!-- ============ TAB 4: THEME ============ -->
+<div class="tabpanel" id="tab-theme">
+<h2>🎨 साईटचे रंग</h2>
+<p class="hint">रंग बदलल्यावर संपूर्ण साईटवर लगेच लागू होतील.</p>
+<fieldset>
+<div class="color-row"><label>Paper (पार्श्वभूमी)</label><input type="color" id="th_paper"><input type="text" id="th_paper_hex"></div>
+<div class="color-row"><label>Ink (मजकूर रंग)</label><input type="color" id="th_ink"><input type="text" id="th_ink_hex"></div>
+<div class="color-row"><label>Navy (गडद निळा)</label><input type="color" id="th_navy"><input type="text" id="th_navy_hex"></div>
+<div class="color-row"><label>Signal Red (लाल अधोरेखन)</label><input type="color" id="th_signal_red"><input type="text" id="th_signal_red_hex"></div>
+<div class="color-row"><label>Brass (सोनेरी)</label><input type="color" id="th_brass"><input type="text" id="th_brass_hex"></div>
+<button type="button" class="wide secondary" onclick="loadTheme()">🔄 सध्याचे रंग लोड करा</button>
+<button type="button" class="wide" style="margin-top:8px;" onclick="saveTheme()">🚀 रंग साईटवर लागू करा</button>
+</fieldset>
+</div>
+
+<div id="status"></div>
+
+<script>
+const REPO = "ichalkaranjirailway/htk-ich";
+const BRANCH = "main";
+const API = "https://api.github.com";
+let editingId = null;
+
+const tokenInput = document.getElementById('ghToken');
+tokenInput.value = localStorage.getItem('gh_token') || '';
+tokenInput.addEventListener('change', () => localStorage.setItem('gh_token', tokenInput.value.trim()));
+
+// ---- Tabs ----
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tabpanel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+const proofType = document.getElementById('proofType');
+proofType.addEventListener('change', refreshProofFields);
+function refreshProofFields(){
+  document.getElementById('fileWrap').style.display = (proofType.value === 'image' || proofType.value === 'pdf' || proofType.value === 'video') ? 'block' : 'none';
+  document.getElementById('linkWrap').style.display = (proofType.value === 'link') ? 'block' : 'none';
+  document.getElementById('textWrap').style.display = (proofType.value === 'text') ? 'block' : 'none';
+}
+refreshProofFields();
+
+function showStatus(msg, cls){
+  const el = document.getElementById('status');
+  el.className = cls; el.textContent = msg; el.style.display = 'block';
+  el.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+function b64EncodeUnicode(str){ return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (m,p1)=>String.fromCharCode('0x'+p1))); }
+function b64DecodeUnicode(str){ return decodeURIComponent(atob(str).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')); }
+function fileToBase64(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+function slugify(name){ return name.trim().toLowerCase().replace(/[^a-z0-9.]+/g, '-').replace(/-+/g,'-'); }
+
+function requireToken(){
+  const t = tokenInput.value.trim();
+  if(!t) throw new Error('आधी वरती GitHub Token टाका.');
+  localStorage.setItem('gh_token', t);
+  return t;
+}
+async function ghGet(path){
+  const res = await fetch(`${API}/repos/${REPO}/contents/${encodeURIComponent(path)}?ref=${BRANCH}`, { headers: { Authorization: `token ${requireToken()}` } });
+  if(!res.ok) throw new Error(`GET ${path} failed: ${res.status} ${await res.text()}`);
+  return res.json();
+}
+async function ghPut(path, contentB64, message, sha){
+  const body = { message, content: contentB64, branch: BRANCH };
+  if(sha) body.sha = sha;
+  const res = await fetch(`${API}/repos/${REPO}/contents/${encodeURIComponent(path)}`, {
+    method: 'PUT', headers: { Authorization: `token ${requireToken()}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+  });
+  if(!res.ok) throw new Error(`PUT ${path} failed: ${res.status} ${await res.text()}`);
+  return res.json();
+}
+
+function extractEntriesArrayText(content){
+  const startMarker = 'const ENTRIES = ';
+  const startIdx = content.indexOf(startMarker) + startMarker.length;
+  if(startIdx < startMarker.length) throw new Error('data.js मध्ये ENTRIES सापडली नाही.');
+  const closeIdx = content.indexOf('\n];', startIdx);
+  if(closeIdx === -1) throw new Error('ENTRIES array चा शेवट सापडला नाही.');
+  return { text: content.slice(startIdx, closeIdx + 2), startIdx, endIdx: closeIdx + 2 };
+}
+
+function entryToText(entry){
+  let out = `  {\n` +
+    `    id: ${entry.id},\n` +
+    `    date: ${JSON.stringify(entry.date)},\n` +
+    `    category: ${JSON.stringify(entry.category)},\n` +
+    `    title: ${JSON.stringify(entry.title)},\n` +
+    `    to_whom: ${JSON.stringify(entry.to_whom)},\n` +
+    `    description: ${JSON.stringify(entry.description)},\n` +
+    `    response: ${JSON.stringify(entry.response)},\n` +
+    `    status: ${JSON.stringify(entry.status)},\n` +
+    `    proofType: ${JSON.stringify(entry.proofType)},\n` +
+    `    proofSrc: ${JSON.stringify(entry.proofSrc)},\n` +
+    `    referenceNo: ${JSON.stringify(entry.referenceNo)}`;
+  if(entry.en){
+    out += `,\n    en: {\n` +
+      `      title: ${JSON.stringify(entry.en.title)},\n` +
+      `      to_whom: ${JSON.stringify(entry.en.to_whom)},\n` +
+      `      description: ${JSON.stringify(entry.en.description)},\n` +
+      `      response: ${JSON.stringify(entry.en.response)},\n` +
+      `    },\n`;
+  } else {
+    out += `\n`;
+  }
+  out += `  },\n\n`;
+  return out;
+}
+
+// ---- Load & list entries ----
+document.getElementById('loadBtn').addEventListener('click', async () => {
+  try {
+    requireToken();
+    showStatus('नोंदी लोड होत आहेत...', 'busy');
+    const dataFile = await ghGet('data.js');
+    const content = b64DecodeUnicode(dataFile.content);
+    const { text } = extractEntriesArrayText(content);
+    const entries = new Function('return ' + text)();
+    entries.sort((a,b) => b.id - a.id);
+    const listEl = document.getElementById('entriesList');
+    listEl.innerHTML = '';
+    entries.forEach(e => {
+      const row = document.createElement('div');
+      row.className = 'entry-row';
+      row.innerHTML = `<div class="meta"><b>#${e.id} — ${e.title}</b><span>${e.date} · ${e.category} · ${e.status}</span></div>
+        <div class="btns">
+          <button type="button" onclick='loadForEdit(${JSON.stringify(JSON.stringify(e))})'>Edit</button>
+          <button type="button" class="danger" onclick="deleteEntry(${e.id}, ${JSON.stringify(e.title)})">Delete</button>
+        </div>`;
+      listEl.appendChild(row);
+    });
+    listEl.style.display = 'block';
+    showStatus(`✅ ${entries.length} नोंदी लोड झाल्या.`, 'ok');
+  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
+});
+
+function loadForEdit(entryJsonStr){
+  const e = JSON.parse(entryJsonStr);
+  editingId = e.id;
+  document.getElementById('editingIdLabel').textContent = e.id;
+  document.getElementById('editBanner').style.display = 'block';
+  document.getElementById('formHeading').textContent = '✏️ नोंद बदला';
+  document.getElementById('category').value = e.category;
+  document.getElementById('date').value = e.date;
+  document.getElementById('status').value = e.status;
+  document.getElementById('title').value = e.title;
+  document.getElementById('toWhom').value = e.to_whom || '';
+  document.getElementById('description').value = e.description || '';
+  document.getElementById('response').value = e.response || '';
+  document.getElementById('referenceNo').value = e.referenceNo || '';
+  proofType.value = e.proofType;
+  refreshProofFields();
+  document.getElementById('proofLink').value = e.proofType === 'link' ? e.proofSrc : '';
+  document.getElementById('proofText').value = e.proofType === 'text' ? e.proofSrc : '';
+  document.getElementById('currentProofHint').textContent = (e.proofType === 'image' || e.proofType === 'pdf' || e.proofType === 'video') ? `सध्याची फाईल: ${e.proofSrc} (नवीन निवडली नाही तर हीच राहील)` : '';
+  document.getElementById('titleEn').value = e.en ? (e.en.title || '') : '';
+  document.getElementById('toWhomEn').value = e.en ? (e.en.to_whom || '') : '';
+  document.getElementById('descriptionEn').value = e.en ? (e.en.description || '') : '';
+  document.getElementById('responseEn').value = e.en ? (e.en.response || '') : '';
+  window._editingProofSrc = e.proofSrc;
+  window._editingProofType = e.proofType;
+  window._editingEnBlock = e.en || null;
+  window.scrollTo({ top: document.getElementById('entryForm').offsetTop - 20, behavior: 'smooth' });
+}
+function cancelEdit(){
+  editingId = null;
+  window._editingProofSrc = null;
+  window._editingProofType = null;
+  window._editingEnBlock = null;
+  document.getElementById('editBanner').style.display = 'none';
+  document.getElementById('formHeading').textContent = '➕ नवीन नोंद जोडा';
+  document.getElementById('entryForm').reset();
+  refreshProofFields();
+}
+
+async function deleteEntry(id, title){
+  if(!confirm(`खरंच "#${id} — ${title}" ही नोंद कायमची काढायची आहे का?`)) return;
+  try {
+    requireToken();
+    showStatus('नोंद काढली जात आहे...', 'busy');
+    const dataFile = await ghGet('data.js');
+    let content = b64DecodeUnicode(dataFile.content);
+    const re = new RegExp('  \\{\\s*\\n\\s*id:\\s*' + id + ',[\\s\\S]*?\\n  \\},\\n\\n');
+    if(!re.test(content)) throw new Error('ती नोंद data.js मध्ये सापडली नाही.');
+    content = content.replace(re, '');
+    await ghPut('data.js', b64EncodeUnicode(content), `Delete entry #${id}`, dataFile.sha);
+    showStatus('✅ नोंद काढली. 1-2 मिनिटांत साईटवर दिसेल.', 'ok');
+    document.getElementById('loadBtn').click();
+  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
+}
+
+// ---- Add / Update entry ----
+document.getElementById('entryForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  try {
+    requireToken();
+    btn.disabled = true;
+    showStatus('काम सुरू आहे...', 'busy');
+
+    const dataFile = await ghGet('data.js');
+    let content = b64DecodeUnicode(dataFile.content);
+
+    let id = editingId;
+    if(id === null){
+      const ids = [...content.matchAll(/id:\s*(\d+)/g)].map(m => parseInt(m[1]));
+      id = (ids.length ? Math.max(...ids) : 2) + 1;
+    }
+
+    const pType = proofType.value;
+    let proofSrc = '';
+    if(pType === 'image' || pType === 'pdf' || pType === 'video'){
+      const file = document.getElementById('proofFile').files[0];
+      if(file){
+        showStatus('फाईल अपलोड होतेय...', 'busy');
+        const filename = `${id}-${slugify(file.name)}`;
+        const b64 = await fileToBase64(file);
+        await ghPut(filename, b64, `Proof file for entry ${id}`);
+        proofSrc = filename;
+      } else if(editingId !== null && window._editingProofSrc){
+        proofSrc = window._editingProofSrc;
+      } else {
+        throw new Error('कृपया फाईल निवडा.');
+      }
+    } else if(pType === 'link'){
+      proofSrc = document.getElementById('proofLink').value.trim();
+      if(!proofSrc) throw new Error('कृपया link टाका.');
+    } else {
+      proofSrc = document.getElementById('proofText').value.trim();
+      if(!proofSrc) throw new Error('कृपया मजकूर टाका.');
+    }
+
+    const entry = {
+      id, date: document.getElementById('date').value, category: document.getElementById('category').value,
+      title: document.getElementById('title').value.trim(), to_whom: document.getElementById('toWhom').value.trim(),
+      description: document.getElementById('description').value.trim(),
+      response: document.getElementById('response').value.trim() || 'No response received yet.',
+      status: document.getElementById('status').value, proofType: pType, proofSrc,
+      referenceNo: document.getElementById('referenceNo').value.trim()
+    };
+    const titleEn = document.getElementById('titleEn').value.trim();
+    const toWhomEn = document.getElementById('toWhomEn').value.trim();
+    const descriptionEn = document.getElementById('descriptionEn').value.trim();
+    const responseEn = document.getElementById('responseEn').value.trim();
+    if(titleEn || toWhomEn || descriptionEn || responseEn){
+      entry.en = { title: titleEn, to_whom: toWhomEn, description: descriptionEn, response: responseEn };
+    } else if(editingId !== null && window._editingEnBlock){
+      entry.en = window._editingEnBlock;
+    }
+    const entryText = entryToText(entry);
+
+    if(editingId !== null){
+      const re = new RegExp('  \\{\\s*\\n\\s*id:\\s*' + editingId + ',[\\s\\S]*?\\n  \\},\\n\\n');
+      if(!re.test(content)) throw new Error('ती नोंद data.js मध्ये सापडली नाही (कदाचित आधीच बदलली गेली — नोंदी परत लोड करा).');
+      content = content.replace(re, entryText);
+    } else {
+      if(!/\n\];/.test(content)) throw new Error('ENTRIES array सापडली नाही.');
+      content = content.replace(/\n\];/, `\n${entryText}];`);
+    }
+
+    showStatus('data.js अपडेट होतंय...', 'busy');
+    await ghPut('data.js', b64EncodeUnicode(content), (editingId !== null ? `Update entry #${editingId}` : `Add entry: ${entry.title}`), dataFile.sha);
+
+    showStatus(`✅ झालं! 1-2 मिनिटांत साईटवर live दिसेल.`, 'ok');
+    cancelEdit();
+    document.getElementById('loadBtn').click();
+  } catch(err){
+    showStatus('❌ चूक झाली: ' + err.message, 'err');
+  } finally { btn.disabled = false; }
+});
+
+// ============ TAB 2: SITE CONTENT ============
+function extractMarked(content, key){
+  const start = `<!--EDIT:${key}-->`;
+  const end = `<!--/EDIT:${key}-->`;
+  const si = content.indexOf(start);
+  const ei = content.indexOf(end);
+  if(si === -1 || ei === -1) throw new Error(`${key} भाग index.html मध्ये सापडला नाही.`);
+  return { inner: content.slice(si + start.length, ei), si, ei: ei + end.length, start, end };
+}
+function stripTags(html){
+  const d = document.createElement('div');
+  d.innerHTML = html;
+  return d.textContent.trim();
+}
+function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+async function loadSiteContent(){
+  try {
+    requireToken();
+    showStatus('मजकूर लोड होतोय...', 'busy');
+    const file = await ghGet('index.html');
+    const content = b64DecodeUnicode(file.content);
+    document.getElementById('ct_heroTitle').value = stripTags(extractMarked(content,'HERO_TITLE').inner);
+    document.getElementById('ct_heroLede').value = stripTags(extractMarked(content,'HERO_LEDE').inner);
+    const aboutHtml = extractMarked(content,'ABOUT_BODY').inner;
+    const paras = [...aboutHtml.matchAll(/<p>([\s\S]*?)<\/p>/g)].map(m => stripTags(m[1]));
+    document.getElementById('ct_about').value = paras.join('\n\n');
+    const footerHtml = extractMarked(content,'FOOTER_CONTACT').inner;
+    const strongMatch = footerHtml.match(/<strong>([\s\S]*?)<\/strong>/);
+    document.getElementById('ct_footerOrg').value = strongMatch ? stripTags(strongMatch[1]) : '';
+    const afterBr = footerHtml.split('<br>')[1] || '';
+    document.getElementById('ct_footerLine').value = stripTags(afterBr);
+    showStatus('✅ सध्याचा मजकूर लोड झाला.', 'ok');
+  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
+}
+
+async function saveContentBlock(key, fieldId, wrapTag, commitMsg){
+  try {
+    requireToken();
+    showStatus('अपडेट होतंय...', 'busy');
+    const file = await ghGet('index.html');
+    let content = b64DecodeUnicode(file.content);
+    const { start, end, si, ei } = extractMarked(content, key);
+    const newText = document.getElementById(fieldId).value.trim();
+    const closeTag = wrapTag.split(' ')[0];
+    const newInner = `<${wrapTag}>${escapeHtml(newText)}</${closeTag}>`;
+    content = content.slice(0, si) + start + newInner + end + content.slice(ei);
+    await ghPut('index.html', b64EncodeUnicode(content), commitMsg, file.sha);
+    showStatus('✅ झालं! 1-2 मिनिटांत साईटवर दिसेल.', 'ok');
+  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
+}
+
+async function saveAboutBlock(){
+  try {
+    requireToken();
+    showStatus('अपडेट होतंय...', 'busy');
+    const file = await ghGet('index.html');
+    let content = b64DecodeUnicode(file.content);
+    const { start, end, si, ei } = extractMarked(content, 'ABOUT_BODY');
+    const paras = document.getElementById('ct_about').value.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+    const newInner = paras.map(p => `<p>${escapeHtml(p)}</p>`).join('\n');
+    content = content.slice(0, si) + start + newInner + end + content.slice(ei);
+    await ghPut('index.html', b64EncodeUnicode(content), 'About section update', file.sha);
+    showStatus('✅ झालं! 1-2 मिनिटांत साईटवर दिसेल.', 'ok');
+  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
+}
+
+async function saveFooterBlock(){
+  try {
+    requireToken();
+    showStatus('अपडेट होतंय...', 'busy');
+    const file = await ghGet('index.html');
+    let content = b64DecodeUnicode(file.content);
+    const { start, end, si, ei } = extractMarked(content, 'FOOTER_CONTACT');
+    const org = document.getElementById('ct_footerOrg').value.trim();
+    const line = document.getElementById('ct_footerLine').value.trim();
+    const newInner = `<div><strong>${escapeHtml(org)}</strong><br>${escapeHtml(line)}</div>`;
+    content = content.slice(0, si) + start + newInner + end + content.slice(ei);
+    await ghPut('index.html', b64EncodeUnicode(content), 'Footer contact update', file.sha);
+    showStatus('✅ झालं! 1-2 मिनिटांत साईटवर दिसेल.', 'ok');
+  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
+}
+
+// ============ TAB 3: GALLERY ============
+function parseGalleryItems(html){
+  const re = /<div class="gallery-item"[^>]*>\s*<img src="([^"]+)"[^>]*alt="([^"]*)"[^>]*>\s*<span>([^<]*)<\/span>\s*<\/div>/g;
+  const items = [];
+  let m;
+  while((m = re.exec(html)) !== null){
+    items.push({ src: m[1], alt: m[2], caption: m[3], full: m[0] });
+  }
+  return items;
+}
+
+async function loadGallery(){
+  try {
+    requireToken();
+    showStatus('गॅलरी लोड होतेय...', 'busy');
+    const file = await ghGet('index.html');
+    const content = b64DecodeUnicode(file.content);
+    const si = content.indexOf('<!--EDIT:GALLERY_START-->');
+    const ei = content.indexOf('<!--EDIT:GALLERY_END-->');
+    if(si === -1 || ei === -1) throw new Error('गॅलरी विभाग सापडला नाही.');
+    const inner = content.slice(si + '<!--EDIT:GALLERY_START-->'.length, ei);
+    const items = parseGalleryItems(inner);
+    const listEl = document.getElementById('galleryList');
+    listEl.innerHTML = '';
+    items.forEach((it) => {
+      const row = document.createElement('div');
+      row.className = 'gal-item';
+      row.innerHTML = `<img src="https://raw.githubusercontent.com/${REPO}/${BRANCH}/${it.src}" onerror="this.style.display='none'">
+        <div class="cap">${it.caption}<br><span style="color:#999;font-size:.75rem;">${it.src}</span></div>
+        <button type="button" class="danger" style="padding:6px 10px;font-size:.78rem;" onclick='deleteGalleryPhoto(${JSON.stringify(it.src)})'>Delete</button>`;
+      listEl.appendChild(row);
+    });
+    listEl.style.display = 'block';
+    showStatus(`✅ ${items.length} फोटो लोड झाले.`, 'ok');
+  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
+}
+
+async function addGalleryPhoto(){
+  try {
+    requireToken();
+    const file = document.getElementById('galFile').files[0];
+    const caption = document.getElementById('galCaption').value.trim();
+    if(!file) throw new Error('कृपया फोटो निवडा.');
+    if(!caption) throw new Error('कृपया कॅप्शन टाका.');
+    showStatus('फोटो अपलोड होतोय...', 'busy');
+    const filename = `gallery-${Date.now()}-${slugify(file.name)}`;
+    const b64 = await fileToBase64(file);
+    await ghPut(filename, b64, `Add gallery photo: ${caption}`);
+
+    showStatus('गॅलरीत टाकत आहे...', 'busy');
+    const idxFile = await ghGet('index.html');
+    let content = b64DecodeUnicode(idxFile.content);
+    const endMarker = '<!--EDIT:GALLERY_END-->';
+    const ei = content.indexOf(endMarker);
+    if(ei === -1) throw new Error('गॅलरी विभाग सापडला नाही.');
+    const newItem = `<div class="gallery-item" onclick="openLightbox(this)"><img src="${filename}" alt="${escapeHtml(caption)}" loading="lazy"><span>${escapeHtml(caption)}</span></div>\n`;
+    content = content.slice(0, ei) + newItem + content.slice(ei);
+    await ghPut('index.html', b64EncodeUnicode(content), `Add gallery photo: ${caption}`, idxFile.sha);
+
+    showStatus('✅ फोटो गॅलरीत टाकला! 1-2 मिनिटांत दिसेल.', 'ok');
+    document.getElementById('galFile').value = '';
+    document.getElementById('galCaption').value = '';
+    loadGallery();
+  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
+}
+
+async function deleteGalleryPhoto(src){
+  if(!confirm('हा फोटो गॅलरीतून कायमचा काढायचा आहे का?')) return;
+  try {
+    requireToken();
+    showStatus('काढत आहे...', 'busy');
+    const idxFile = await ghGet('index.html');
+    let content = b64DecodeUnicode(idxFile.content);
+    const re = new RegExp('<div class="gallery-item"[^>]*><img src="' + src.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + '"[\\s\\S]*?<\\/div>\\n?');
+    if(!re.test(content)) throw new Error('तो फोटो सापडला नाही.');
+    content = content.replace(re, '');
+    await ghPut('index.html', b64EncodeUnicode(content), `Remove gallery photo: ${src}`, idxFile.sha);
+    showStatus('✅ फोटो काढला.', 'ok');
+    loadGallery();
+  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
+}
+
+// ============ TAB 4: THEME ============
+const THEME_VARS = [
+  {css:'--paper', color:'th_paper', hex:'th_paper_hex'},
+  {css:'--ink', color:'th_ink', hex:'th_ink_hex'},
+  {css:'--navy', color:'th_navy', hex:'th_navy_hex'},
+  {css:'--signal-red', color:'th_signal_red', hex:'th_signal_red_hex'},
+  {css:'--brass', color:'th_brass', hex:'th_brass_hex'},
+];
+THEME_VARS.forEach(v => {
+  document.getElementById(v.color).addEventListener('input', () => {
+    document.getElementById(v.hex).value = document.getElementById(v.color).value;
+  });
+  document.getElementById(v.hex).addEventListener('change', () => {
+    const val = document.getElementById(v.hex).value.trim();
+    if(/^#[0-9a-fA-F]{6}$/.test(val)) document.getElementById(v.color).value = val;
+  });
+});
+
+async function loadTheme(){
+  try {
+    requireToken();
+    showStatus('रंग लोड होत आहेत...', 'busy');
+    const file = await ghGet('styles.css');
+    const content = b64DecodeUnicode(file.content);
+    const si = content.indexOf('/*EDIT:THEME_START*/');
+    const ei = content.indexOf('/*EDIT:THEME_END*/');
+    if(si === -1 || ei === -1) throw new Error('थीम विभाग styles.css मध्ये सापडला नाही.');
+    const block = content.slice(si, ei);
+    THEME_VARS.forEach(v => {
+      const m = block.match(new RegExp(v.css.replace(/[-]/g,'\\-') + ':\\s*(#[0-9a-fA-F]{3,6})'));
+      if(m){
+        document.getElementById(v.color).value = m[1];
+        document.getElementById(v.hex).value = m[1];
+      }
+    });
+    showStatus('✅ सध्याचे रंग लोड झाले.', 'ok');
+  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
+}
+
+async function saveTheme(){
+  try {
+    requireToken();
+    showStatus('रंग साईटवर लागू होत आहेत...', 'busy');
+    const file = await ghGet('styles.css');
+    let content = b64DecodeUnicode(file.content);
+    const si = content.indexOf('/*EDIT:THEME_START*/');
+    const ei = content.indexOf('/*EDIT:THEME_END*/');
+    if(si === -1 || ei === -1) throw new Error('थीम विभाग सापडला नाही.');
+    let block = content.slice(si, ei);
+    THEME_VARS.forEach(v => {
+      const newVal = document.getElementById(v.hex).value.trim();
+      if(/^#[0-9a-fA-F]{6}$/.test(newVal)){
+        block = block.replace(new RegExp(v.css.replace(/[-]/g,'\\-') + ':\\s*#[0-9a-fA-F]{3,6}'), `${v.css}: ${newVal}`);
+      }
+    });
+    content = content.slice(0, si) + block + content.slice(ei);
+    await ghPut('styles.css', b64EncodeUnicode(content), 'Theme colors update', file.sha);
+    showStatus('✅ रंग लागू झाले! 1-2 मिनिटांत साईटवर दिसतील.', 'ok');
+  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
+}
+</script>
+</body>
+</html>
