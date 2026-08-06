@@ -518,16 +518,10 @@ const ENTRIES = [
     to_whom: "केंद्रीय गृहमंत्री अमित शाह",
     description: "इचलकरंजी भेटीदरम्यान, कृती समितीच्या प्रतिनिधींनी प्रत्यक्ष भेटून अमित शाह यांना रेल्वे मागणीचे निवेदन सुपूर्द केले — ९ जूनच्या ईमेलमध्ये उल्लेख केलेल्या भेटीचा हा प्रत्यक्ष पुरावा.",
     response: "निवेदन स्वीकारले गेले; औपचारिक लेखी उत्तर अद्याप आलेले नाही.",
-    status: "pending",
+    status: "",
     proofType: "image",
-    proofSrc: "photo-amit-shah-meeting-21jun2026.jpg",
-    referenceNo: "",
-    en: {
-      title: "In-Person Meeting — Memorandum Handed to Union Home Minister Amit Shah",
-      to_whom: "Union Home Minister Amit Shah",
-      description: "During his visit to Ichalkaranji, representatives of the Action Committee personally met Union Home Minister Amit Shah and handed over a memorandum on the railway demand — physical proof of the meeting mentioned in the 9 June email.",
-      response: "Memorandum accepted; a formal written response has not been received yet.",
-    },
+    proofSrc: "28-amit-shah-ichalkaranji-railway-nivedan.jpg.jpeg",
+    referenceNo: ""
   },
 
   {
