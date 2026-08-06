@@ -245,8 +245,7 @@ const ENTRIES = [
     description: "नकारात्मक ROR मुळे प्रकल्पाला 'विशेष औद्योगिक प्रकल्प' म्हणून मान्यता द्यावी, ROR सुधारण्यासाठी राज्य सरकारचा ५०% खर्चवाटा, आणि तातडीने भूसंपादन सुरू करण्याची मागणी.",
     response: "अद्याप कोणतेही उत्तर मिळालेले नाही.",
     status: "no-response",
-    proofType: "pdf",
-    proofSrc: "letter-sanjay-savkare-09may2026.pdf",
+    
     referenceNo: "",
     en: {
       title: "Letter — Maharashtra Textile Minister Sanjay Savkare",
