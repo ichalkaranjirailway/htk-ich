@@ -189,17 +189,11 @@ const ENTRIES = [
     title: "तीव्र आक्षेप — शंकेश्वर–पारकनट्टी सर्वेक्षण; कराड–इचलकरंजी–निपाणी–बेळगाव मार्गासाठी विनंती",
     to_whom: "अध्यक्ष, रेल्वे बोर्ड; प्रत पंतप्रधान कार्यालय, रेल्वे मंत्री, मुख्यमंत्री महाराष्ट्र, महाव्यवस्थापक पुणे विभाग, खासदार/आमदार",
     description: "बेळगाव–कोल्हापूर मार्गासाठी इचलकरंजीला वगळणाऱ्या नवीन शंकेश्वर–पारकनट्टी सर्वेक्षणाला तीव्र आक्षेप. आधीच सर्वेक्षण झालेल्या कराड–इचलकरंजी–निपाणी–बेळगाव मार्गाला (१९१ किमी, ₹२,१०० कोटी) तात्काळ मंजुरी आणि हातकणंगले–इचलकरंजी ८ किमी विभाग त्याला जोडण्याची ५ विशिष्ट मागण्या.",
-    response: "२ ईमेल पत्ते (devendrafadnavis@yahoo.com, contact@devendrafadnavis.in) बाउन्स झाले — अवैध/बंद मेलबॉक्स. वैध प्राप्तकर्त्यांकडून अद्याप कोणताही प्रतिसाद नाही.",
-    status: "no-response",
+    response: "प्रिय अर्जदार,आपला ई-मेल या कार्यालयास प्राप्त झाला असून, सदर ई-मेल योग्य त्या कार्यवाहीसाठी परिवहन व बंदरे- गृह विभाग यांना, विमान चालन  (२२०२५००९, २२०२४२४३)  पाठविण्यात आला आहे. तरी आपल्या या ई-मेलबाबत यापुढे उपरोक्त विभागात चौकशी करण्यात यावी.मा. मुख्यमंत्री सचिवालय मंत्रालय, मुंबई",
+    status: "",
     proofType: "pdf",
-    proofSrc: "letter-railway-board-sankeshwar-objection-07jun2026.pdf",
-    referenceNo: "",
-    en: {
-      title: "Strong Objection — Sankeshwar–Parknatti Survey; Request for Karad–Ichalkaranji–Nipani–Belagavi Route",
-      to_whom: "Chairman Railway Board; cc PM Office, Railway Minister, CM Maharashtra, GM Pune Division, MPs/MLAs",
-      description: "Raised strong objection to the new Sankeshwar–Parknatti survey for the Belagavi–Kolhapur line, which bypasses Ichalkaranji. Made 5 specific demands for immediate approval of the already-surveyed Karad–Ichalkaranji–Nipani–Belagavi route (191 km, ₹2,100 crore) and for linking the Hatkanangale–Ichalkaranji 8 km section to it.",
-      response: "2 email addresses (devendrafadnavis@yahoo.com, contact@devendrafadnavis.in) bounced — invalid/disabled mailbox. No response yet from the valid recipients.",
-    },
+    proofSrc: "11-gmail-strong-objection-to-the-new-sankeshwar-parknatti-survey-for-belagavi-kolhapur-railway-line-and-urgent-request-for-approval-of-karad-ichalkaranji-nipani-belagavi-191-km-route-1-.pdf",
+    referenceNo: ""
   },
 
   {
