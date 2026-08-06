@@ -531,17 +531,11 @@ const ENTRIES = [
     title: "लोकसभा — खासदार धैर्यशील माने यांनी इचलकरंजी रेल्वे प्रश्न उपस्थित केला",
     to_whom: "लोकसभा / रेल्वे मंत्रालय (संसदेच्या सभागृहात मांडले)",
     description: "खासदार धैर्यशील माने यांनी लोकसभेत इचलकरंजीचा रखडलेला रेल्वे प्रश्न उपस्थित केला — वर्षानुवर्षे प्रलंबित असलेल्या ८ किमी मार्गाबाबत चिंता व्यक्त केली. (नेमकी अधिवेशन तारीख निश्चित नाही, फाईल २ एप्रिल २०२६ रोजी शेअर झाली.)",
-    response: "लागू नाही — संसदीय प्रतिनिधित्वाची अधिकृत नोंद.",
-    status: "no-response",
-    proofType: "video",
-    proofSrc: "video-loksabha-dhairyashil-mane.mp4",
-    referenceNo: "",
-    en: {
-      title: "Lok Sabha — MP Dhairyashil Mane Raises Ichalkaranji Railway Issue",
-      to_whom: "Lok Sabha / Ministry of Railways (raised on the floor of Parliament)",
-      description: "MP Dhairyashil Mane raised the long-pending Ichalkaranji railway issue in the Lok Sabha — expressing concern over the 8 km line that had been stalled for years. (Exact session date not confirmed; the file was shared on 2 April 2026.)",
-      response: "N/A — parliamentary representation on record.",
-    },
+    response: "संसदीय प्रतिनिधित्वाची अधिकृत नोंद.",
+    status: "",
+    proofType: "image",
+    proofSrc: "29-vid-20260402-wa0002.mp4",
+    referenceNo: ""
   },
 
   {
