@@ -368,16 +368,10 @@ const ENTRIES = [
     to_whom: "पंतप्रधान, मुख्यमंत्री, राज्य/केंद्रीय मंत्री, खासदार, आमदार — मोठ्या प्रमाणावरील पोस्टकार्ड मोहिमेद्वारे",
     description: "रेल्वे कृती समितीने २०११ साली नवीन पाठपुरावा मोहीम सुरू केली होती, त्या मोहिमेचा भाग म्हणून हातकणंगले–इचलकरंजीसाठी १०,००० पत्रे मुख्यमंत्री आणि पंतप्रधानांकडे पाठवण्यात आली — केसरी वृत्तपत्राचे वृत्तांकन.",
     response: "लागू नाही — मास लेटर मोहिमेचे प्रसारमाध्यम वृत्तांकन.",
-    status: "no-response",
+    status: "",
     proofType: "image",
-    proofSrc: "news-10000-letters-campaign.jpg",
-    referenceNo: "",
-    en: {
-      title: "News — Mass Letter Campaign: \"An Emotional Appeal\" to the State Government",
-      to_whom: "PM, CM, State/Central Ministers, MPs, MLAs — via mass postcard campaign",
-      description: "The Railway Action Committee had launched a fresh follow-up campaign in 2011; as part of it, 10,000 letters for Hatkanangale–Ichalkaranji were sent to the CM and the PM — covered by Kesari newspaper.",
-      response: "N/A — press coverage of the mass letter-writing campaign.",
-    },
+    proofSrc: "19-ichalkaranji-railway-10-thousand-letters-news.jpg.jpeg",
+    referenceNo: ""
   },
 
   {
