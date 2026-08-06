@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ichalkaranjirailway.github.io/htk-ich/sitemap.xml
