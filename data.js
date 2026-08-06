@@ -122,16 +122,10 @@ const ENTRIES = [
     to_whom: "वरिष्ठ विभागीय अभियंता (समन्वय), पुणे, प्रत CRPG, उप CPO, मध्य रेल्वे अधिकारी",
     description: "हस्तांतरित झालेल्या RTI चा पाठपुरावा — DPR ची स्थिती, PEC बैठका, विलंबाची नेमकी कारणे, सुधारित ROR/FIRR, सुधारित खर्च, कालबद्ध कृती आराखडा, आणि पिंक बुक स्थिती यावर ७ सविस्तर प्रश्न.",
     response: "अद्याप कोणतेही उत्तर मिळालेले नाही (या पाठपुराव्याच्या सादरीकरणापर्यंत).",
-    status: "pending",
+    status: "",
     proofType: "pdf",
-    proofSrc: "rti-followup-questionnaire-27may2026.pdf",
-    referenceNo: "DRMOP/R/E/26/00164",
-    en: {
-      title: "RTI Follow-up — Detailed 7-Point Questionnaire",
-      to_whom: "Pune Sr. DEN (Co-ord), cc CRPG, Dy CPO, Central Railway officials",
-      description: "Follow-up on the transferred RTI — 7 detailed questions on DPR status, PEC meetings, specific reasons for delay, revised ROR/FIRR, revised cost, a time-bound action plan, and Pink Book status.",
-      response: "No response received yet (as of this follow-up submission).",
-    },
+    proofSrc: "7-gmail-follow-up-and-detailed-questionnaire-for-transferred-rti-application-reg-no.-drmop-r-e-26-00164-3-.pdf",
+    referenceNo: "DRMOP/R/E/26/00164"
   },
 
   {
