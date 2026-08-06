@@ -156,16 +156,10 @@ const ENTRIES = [
     to_whom: "सचिव, रेल्वे बोर्ड; प्रत अध्यक्ष रेल्वे बोर्ड, DRM पुणे, रेल्वे मंत्री कार्यालय",
     description: "नकारात्मक ROR च्या आधारावर प्रकल्प नाकारण्याऐवजी, PM गती शक्ती मार्गदर्शक तत्त्वांनुसार सामाजिक-आर्थिक निकषांवर पुनर्विचार करण्याची विनंती. ५०:५० राज्य खर्चवाटप प्रारूपाचा प्रस्ताव दिला.",
     response: "अद्याप कोणतेही उत्तर मिळालेले नाही.",
-    status: "no-response",
+    status: "",
     proofType: "pdf",
-    proofSrc: "letter-railway-board-27may2026.pdf",
-    referenceNo: "",
-    en: {
-      title: "Appeal for Reconsideration on Socio-Economic Grounds (ROR -12.73%)",
-      to_whom: "Secretary, Railway Board; cc Chairman RB, DRM Pune, Office of Minister of Railways",
-      description: "Appeal not to reject the project on the basis of negative ROR, but to reconsider it on socio-economic grounds under PM Gati Shakti guidelines. Proposed a 50:50 state cost-sharing model.",
-      response: "No response received yet.",
-    },
+    proofSrc: "9-gmail-appeal-for-reconsideration-of-hatkanangale-ichalkaranji-new-line-project-on-socio-economic-grounds-despite-negative-ror-12.73-1-.pdf",
+    referenceNo: ""
   },
 
   {
