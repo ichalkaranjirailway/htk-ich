@@ -108,14 +108,27 @@
 <label>प्रकार</label>
 <select id="proofType">
 <option value="image">फोटो</option>
+<option value="video">व्हिडिओ</option>
 <option value="pdf">PDF</option>
 <option value="link">Link</option>
 <option value="text">मजकूर</option>
 </select>
-<div id="fileWrap"><label>नवीन फाईल (edit मध्ये रिकामं ठेवलं तर जुनी फाईल कायम राहील)</label><input type="file" id="proofFile" accept="image/*,.pdf"></div>
+<div id="fileWrap"><label>नवीन फाईल (edit मध्ये रिकामं ठेवलं तर जुनी फाईल कायम राहील)</label><input type="file" id="proofFile" accept="image/*,video/*,.pdf"></div>
 <div id="linkWrap" style="display:none;"><label>Link</label><input type="text" id="proofLink" placeholder="https://..."></div>
 <div id="textWrap" style="display:none;"><label>मजकूर</label><textarea id="proofText"></textarea></div>
 <p class="hint" id="currentProofHint"></p>
+</fieldset>
+
+<fieldset>
+<legend>🇬🇧 English (optional — रिकामं ठेवलं तर आधीचं इंग्रजी कायम राहील / भरलं नाही तर तयार होणार नाही)</legend>
+<label>Title (EN)</label>
+<input type="text" id="titleEn">
+<label>To whom (EN)</label>
+<input type="text" id="toWhomEn">
+<label>Description (EN)</label>
+<textarea id="descriptionEn"></textarea>
+<label>Response (EN)</label>
+<textarea id="responseEn"></textarea>
 </fieldset>
 
 <button type="submit" id="submitBtn" class="wide">🚀 साईटवर टाका</button>
@@ -137,7 +150,7 @@ tokenInput.addEventListener('change', () => localStorage.setItem('gh_token', tok
 const proofType = document.getElementById('proofType');
 proofType.addEventListener('change', refreshProofFields);
 function refreshProofFields(){
-  document.getElementById('fileWrap').style.display = (proofType.value === 'image' || proofType.value === 'pdf') ? 'block' : 'none';
+  document.getElementById('fileWrap').style.display = (proofType.value === 'image' || proofType.value === 'pdf' || proofType.value === 'video') ? 'block' : 'none';
   document.getElementById('linkWrap').style.display = (proofType.value === 'link') ? 'block' : 'none';
   document.getElementById('textWrap').style.display = (proofType.value === 'text') ? 'block' : 'none';
 }
@@ -190,7 +203,7 @@ function extractEntriesArrayText(content){
 }
 
 function entryToText(entry){
-  return `  {\n` +
+  let out = `  {\n` +
     `    id: ${entry.id},\n` +
     `    date: ${JSON.stringify(entry.date)},\n` +
     `    category: ${JSON.stringify(entry.category)},\n` +
@@ -201,8 +214,19 @@ function entryToText(entry){
     `    status: ${JSON.stringify(entry.status)},\n` +
     `    proofType: ${JSON.stringify(entry.proofType)},\n` +
     `    proofSrc: ${JSON.stringify(entry.proofSrc)},\n` +
-    `    referenceNo: ${JSON.stringify(entry.referenceNo)}\n` +
-    `  },\n\n`;
+    `    referenceNo: ${JSON.stringify(entry.referenceNo)}`;
+  if(entry.en){
+    out += `,\n    en: {\n` +
+      `      title: ${JSON.stringify(entry.en.title)},\n` +
+      `      to_whom: ${JSON.stringify(entry.en.to_whom)},\n` +
+      `      description: ${JSON.stringify(entry.en.description)},\n` +
+      `      response: ${JSON.stringify(entry.en.response)},\n` +
+      `    },\n`;
+  } else {
+    out += `\n`;
+  }
+  out += `  },\n\n`;
+  return out;
 }
 
 // ---- Load & list entries ----
@@ -247,17 +271,25 @@ function loadForEdit(entryJsonStr){
   document.getElementById('description').value = e.description || '';
   document.getElementById('response').value = e.response || '';
   document.getElementById('referenceNo').value = e.referenceNo || '';
-  proofType.value = (e.proofType === 'video') ? 'pdf' : e.proofType;
+  proofType.value = e.proofType;
   refreshProofFields();
   document.getElementById('proofLink').value = e.proofType === 'link' ? e.proofSrc : '';
   document.getElementById('proofText').value = e.proofType === 'text' ? e.proofSrc : '';
   document.getElementById('currentProofHint').textContent = (e.proofType === 'image' || e.proofType === 'pdf' || e.proofType === 'video') ? `सध्याची फाईल: ${e.proofSrc} (नवीन निवडली नाही तर हीच राहील)` : '';
+  document.getElementById('titleEn').value = e.en ? (e.en.title || '') : '';
+  document.getElementById('toWhomEn').value = e.en ? (e.en.to_whom || '') : '';
+  document.getElementById('descriptionEn').value = e.en ? (e.en.description || '') : '';
+  document.getElementById('responseEn').value = e.en ? (e.en.response || '') : '';
   window._editingProofSrc = e.proofSrc;
   window._editingProofType = e.proofType;
+  window._editingEnBlock = e.en || null;
   window.scrollTo({ top: document.getElementById('entryForm').offsetTop - 20, behavior: 'smooth' });
 }
 function cancelEdit(){
   editingId = null;
+  window._editingProofSrc = null;
+  window._editingProofType = null;
+  window._editingEnBlock = null;
   document.getElementById('editBanner').style.display = 'none';
   document.getElementById('formHeading').textContent = '➕ नवीन नोंद जोडा';
   document.getElementById('entryForm').reset();
@@ -300,7 +332,7 @@ document.getElementById('entryForm').addEventListener('submit', async (e) => {
 
     const pType = proofType.value;
     let proofSrc = '';
-    if(pType === 'image' || pType === 'pdf'){
+    if(pType === 'image' || pType === 'pdf' || pType === 'video'){
       const file = document.getElementById('proofFile').files[0];
       if(file){
         showStatus('फाईल अपलोड होतेय...', 'busy');
@@ -329,6 +361,15 @@ document.getElementById('entryForm').addEventListener('submit', async (e) => {
       status: document.getElementById('status').value, proofType: pType, proofSrc,
       referenceNo: document.getElementById('referenceNo').value.trim()
     };
+    const titleEn = document.getElementById('titleEn').value.trim();
+    const toWhomEn = document.getElementById('toWhomEn').value.trim();
+    const descriptionEn = document.getElementById('descriptionEn').value.trim();
+    const responseEn = document.getElementById('responseEn').value.trim();
+    if(titleEn || toWhomEn || descriptionEn || responseEn){
+      entry.en = { title: titleEn, to_whom: toWhomEn, description: descriptionEn, response: responseEn };
+    } else if(editingId !== null && window._editingEnBlock){
+      entry.en = window._editingEnBlock;
+    }
     const entryText = entryToText(entry);
 
     if(editingId !== null){
