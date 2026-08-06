@@ -108,16 +108,10 @@ const ENTRIES = [
     to_whom: "वरिष्ठ विभागीय अभियंता (समन्वय) व CPIO, पुणे विभाग → उप मुख्य अभियंता/बांधकाम, सातारा यांच्याकडे हस्तांतरित",
     description: "RTI अर्ज कलम ६(३) अंतर्गत योग्य विभागाकडे हस्तांतरित करण्यात आला, कारण मागितलेली माहिती उप मुख्य अभियंता/बांधकाम, सातारा यांच्याशी संबंधित होती.",
     response: "RTI अधिकृतपणे १५.०५.२०२६ रोजी उप मुख्य अभियंता/बांधकाम, सातारा यांच्याकडे थेट निकालासाठी हस्तांतरित करण्यात आला.",
-    status: "pending",
+    status: "",
     proofType: "pdf",
-    proofSrc: "rti-transfer-order-15may2026.pdf",
-    referenceNo: "DRMOP/R/P/24/00164",
-    en: {
-      title: "RTI Transfer Order — Central Railway Pune Division",
-      to_whom: "Sr. Divisional Engineer (Co-ord) & CPIO, Pune Division → transferred to Dy CE/Construction, Satara",
-      description: "The RTI application was transferred under Section 6(3) to the appropriate department, as the information sought related to Dy CE/Construction, Satara.",
-      response: "RTI officially transferred on 15.05.2026 to Dy CE/Construction, Satara for direct disposal.",
-    },
+    proofSrc: "6-cr-15-5-26.pdf",
+    referenceNo: "DRMOP/R/P/24/00164"
   },
 
   {
