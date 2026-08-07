@@ -5,11 +5,11 @@ const TEAM_MEMBERS = [
     "name": "श्री. नंदकुमार बांगड"
   },
   {
-    "photo": "team-1786108094942-whatsapp-image-2026-08-07-at-6.35.24-pm.jpeg",
-    "name": "श्री.दिपक पंडीत"
-  },
-  {
     "photo": "",
     "name": "Vicky Lokare"
+  },
+  {
+    "photo": "team-1786108094942-whatsapp-image-2026-08-07-at-6.35.24-pm.jpeg",
+    "name": "श्री.दिपक पंडीत"
   }
 ];
