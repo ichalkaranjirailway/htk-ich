@@ -63,47 +63,11 @@
 </details>
 </fieldset>
 
-<h2>📝 पानावरचा मजकूर</h2>
-<button id="loadTextBtn">मजकूर लोड करा</button>
-<div id="textFields" style="display:none; margin-top:10px;">
-<label>मुख्य शीर्षक (Hero Title)</label><textarea id="t-heroTitle"></textarea>
-<label>मुख्य ओळी (Hero Lede)</label><textarea id="t-heroLede"></textarea>
-<label>Status पट्टी</label><input type="text" id="t-statusChip">
-<label>मागणी — परिच्छेद 1</label><textarea id="t-aboutP1"></textarea>
-<label>मागणी — परिच्छेद 2</label><textarea id="t-aboutP2"></textarea>
-<label>मागणी — परिच्छेद 3</label><textarea id="t-aboutP3"></textarea>
-<label>"ही साईट का?" शीर्षक</label><input type="text" id="t-calloutTitle">
-<label>"ही साईट का?" मजकूर</label><textarea id="t-calloutText"></textarea>
-<label>तथ्य 1 — शीर्षक</label><input type="text" id="t-fact1Title">
-<label>तथ्य 1 — मजकूर</label><textarea id="t-fact1Text"></textarea>
-<label>तथ्य 2 — शीर्षक</label><input type="text" id="t-fact2Title">
-<label>तथ्य 2 — मजकूर</label><textarea id="t-fact2Text"></textarea>
-<label>तथ्य 3 — शीर्षक</label><input type="text" id="t-fact3Title">
-<label>तथ्य 3 — मजकूर</label><textarea id="t-fact3Text"></textarea>
-<label>तथ्य 4 — शीर्षक</label><input type="text" id="t-fact4Title">
-<label>तथ्य 4 — मजकूर</label><textarea id="t-fact4Text"></textarea>
-<label>तथ्य 5 — शीर्षक</label><input type="text" id="t-fact5Title">
-<label>तथ्य 5 — मजकूर</label><textarea id="t-fact5Text"></textarea>
-<label>Footer संपर्क ओळ</label><input type="text" id="t-footerContact">
-<button type="button" id="saveTextBtn" class="wide">💾 मजकूर सेव्ह करा</button>
-</div>
-
-<h2>🖼️ Gallery फोटो</h2>
-<button id="loadGalleryBtn">Gallery लोड करा</button>
-<div id="galleryList" style="display:none; margin-top:10px;"></div>
-<div style="margin-top:14px;">
-<label>नवीन फोटो जोडा</label>
-<input type="file" id="galleryFile" accept="image/*">
-<label>कॅप्शन</label>
-<input type="text" id="galleryCaption" placeholder="उदा. आंदोलनाचा फोटो">
-<button type="button" id="addGalleryBtn" class="wide">➕ Gallery मध्ये जोडा</button>
-</div>
-
-<h2>📚 अस्तित्वात असलेल्या Timeline नोंदी</h2>
+<h2>📚 अस्तित्वात असलेल्या नोंदी</h2>
 <button id="loadBtn">नोंदी लोड करा</button>
 <div id="entriesList" style="display:none; margin-top:10px;"></div>
 
-<h2 id="formHeading">➕ नवीन Timeline नोंद जोडा</h2>
+<h2 id="formHeading">➕ नवीन नोंद जोडा</h2>
 <div id="editBanner">✏️ Entry #<span id="editingIdLabel"></span> edit करत आहात. <button type="button" class="secondary" onclick="cancelEdit()" style="padding:4px 10px;font-size:.78rem;">रद्द करा</button></div>
 
 <form id="entryForm">
@@ -144,14 +108,27 @@
 <label>प्रकार</label>
 <select id="proofType">
 <option value="image">फोटो</option>
+<option value="video">व्हिडिओ</option>
 <option value="pdf">PDF</option>
 <option value="link">Link</option>
 <option value="text">मजकूर</option>
 </select>
-<div id="fileWrap"><label>नवीन फाईल (edit मध्ये रिकामं ठेवलं तर जुनी फाईल कायम राहील)</label><input type="file" id="proofFile" accept="image/*,.pdf"></div>
+<div id="fileWrap"><label>नवीन फाईल (edit मध्ये रिकामं ठेवलं तर जुनी फाईल कायम राहील)</label><input type="file" id="proofFile" accept="image/*,video/*,.pdf"></div>
 <div id="linkWrap" style="display:none;"><label>Link</label><input type="text" id="proofLink" placeholder="https://..."></div>
 <div id="textWrap" style="display:none;"><label>मजकूर</label><textarea id="proofText"></textarea></div>
 <p class="hint" id="currentProofHint"></p>
+</fieldset>
+
+<fieldset>
+<legend>🇬🇧 English (optional — रिकामं ठेवलं तर आधीचं इंग्रजी कायम राहील / भरलं नाही तर तयार होणार नाही)</legend>
+<label>Title (EN)</label>
+<input type="text" id="titleEn">
+<label>To whom (EN)</label>
+<input type="text" id="toWhomEn">
+<label>Description (EN)</label>
+<textarea id="descriptionEn"></textarea>
+<label>Response (EN)</label>
+<textarea id="responseEn"></textarea>
 </fieldset>
 
 <button type="submit" id="submitBtn" class="wide">🚀 साईटवर टाका</button>
@@ -173,7 +150,7 @@ tokenInput.addEventListener('change', () => localStorage.setItem('gh_token', tok
 const proofType = document.getElementById('proofType');
 proofType.addEventListener('change', refreshProofFields);
 function refreshProofFields(){
-  document.getElementById('fileWrap').style.display = (proofType.value === 'image' || proofType.value === 'pdf') ? 'block' : 'none';
+  document.getElementById('fileWrap').style.display = (proofType.value === 'image' || proofType.value === 'pdf' || proofType.value === 'video') ? 'block' : 'none';
   document.getElementById('linkWrap').style.display = (proofType.value === 'link') ? 'block' : 'none';
   document.getElementById('textWrap').style.display = (proofType.value === 'text') ? 'block' : 'none';
 }
@@ -226,7 +203,7 @@ function extractEntriesArrayText(content){
 }
 
 function entryToText(entry){
-  return `  {\n` +
+  let out = `  {\n` +
     `    id: ${entry.id},\n` +
     `    date: ${JSON.stringify(entry.date)},\n` +
     `    category: ${JSON.stringify(entry.category)},\n` +
@@ -237,8 +214,19 @@ function entryToText(entry){
     `    status: ${JSON.stringify(entry.status)},\n` +
     `    proofType: ${JSON.stringify(entry.proofType)},\n` +
     `    proofSrc: ${JSON.stringify(entry.proofSrc)},\n` +
-    `    referenceNo: ${JSON.stringify(entry.referenceNo)}\n` +
-    `  },\n\n`;
+    `    referenceNo: ${JSON.stringify(entry.referenceNo)}`;
+  if(entry.en){
+    out += `,\n    en: {\n` +
+      `      title: ${JSON.stringify(entry.en.title)},\n` +
+      `      to_whom: ${JSON.stringify(entry.en.to_whom)},\n` +
+      `      description: ${JSON.stringify(entry.en.description)},\n` +
+      `      response: ${JSON.stringify(entry.en.response)},\n` +
+      `    },\n`;
+  } else {
+    out += `\n`;
+  }
+  out += `  },\n\n`;
+  return out;
 }
 
 // ---- Load & list entries ----
@@ -283,17 +271,25 @@ function loadForEdit(entryJsonStr){
   document.getElementById('description').value = e.description || '';
   document.getElementById('response').value = e.response || '';
   document.getElementById('referenceNo').value = e.referenceNo || '';
-  proofType.value = (e.proofType === 'video') ? 'pdf' : e.proofType;
+  proofType.value = e.proofType;
   refreshProofFields();
   document.getElementById('proofLink').value = e.proofType === 'link' ? e.proofSrc : '';
   document.getElementById('proofText').value = e.proofType === 'text' ? e.proofSrc : '';
   document.getElementById('currentProofHint').textContent = (e.proofType === 'image' || e.proofType === 'pdf' || e.proofType === 'video') ? `सध्याची फाईल: ${e.proofSrc} (नवीन निवडली नाही तर हीच राहील)` : '';
+  document.getElementById('titleEn').value = e.en ? (e.en.title || '') : '';
+  document.getElementById('toWhomEn').value = e.en ? (e.en.to_whom || '') : '';
+  document.getElementById('descriptionEn').value = e.en ? (e.en.description || '') : '';
+  document.getElementById('responseEn').value = e.en ? (e.en.response || '') : '';
   window._editingProofSrc = e.proofSrc;
   window._editingProofType = e.proofType;
+  window._editingEnBlock = e.en || null;
   window.scrollTo({ top: document.getElementById('entryForm').offsetTop - 20, behavior: 'smooth' });
 }
 function cancelEdit(){
   editingId = null;
+  window._editingProofSrc = null;
+  window._editingProofType = null;
+  window._editingEnBlock = null;
   document.getElementById('editBanner').style.display = 'none';
   document.getElementById('formHeading').textContent = '➕ नवीन नोंद जोडा';
   document.getElementById('entryForm').reset();
@@ -316,96 +312,6 @@ async function deleteEntry(id, title){
   } catch(err){ showStatus('❌ ' + err.message, 'err'); }
 }
 
-// ---- Site Text tab ----
-const TEXT_KEYS = ["heroTitle","heroLede","statusChip","aboutP1","aboutP2","aboutP3","calloutTitle","calloutText","fact1Title","fact1Text","fact2Title","fact2Text","fact3Title","fact3Text","fact4Title","fact4Text","fact5Title","fact5Text","footerContact"];
-let textSha = null;
-document.getElementById('loadTextBtn').addEventListener('click', async () => {
-  try {
-    requireToken();
-    showStatus('मजकूर लोड होत आहे...', 'busy');
-    const f = await ghGet('content.js');
-    textSha = f.sha;
-    const content = b64DecodeUnicode(f.content);
-    const jsonText = content.slice(content.indexOf('{'), content.lastIndexOf('}') + 1);
-    const obj = new Function('return ' + jsonText)();
-    TEXT_KEYS.forEach(k => { const el = document.getElementById('t-' + k); if (el) el.value = obj[k] || ''; });
-    document.getElementById('textFields').style.display = 'block';
-    showStatus('✅ मजकूर लोड झाला.', 'ok');
-  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
-});
-document.getElementById('saveTextBtn').addEventListener('click', async () => {
-  try {
-    requireToken();
-    showStatus('सेव्ह होतंय...', 'busy');
-    const obj = {};
-    TEXT_KEYS.forEach(k => { obj[k] = document.getElementById('t-' + k).value; });
-    const body = "// Editable site text — edited via admin.html \"Site Text\" tab.\nconst SITE_CONTENT = " + JSON.stringify(obj, null, 2) + ";\n";
-    await ghPut('content.js', b64EncodeUnicode(body), 'Update site text', textSha);
-    showStatus('✅ मजकूर साईटवर सेव्ह झाला. 1-2 मिनिटांत दिसेल.', 'ok');
-    document.getElementById('loadTextBtn').click();
-  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
-});
-
-// ---- Gallery tab ----
-let gallerySha = null;
-async function loadGallery(){
-  requireToken();
-  showStatus('Gallery लोड होत आहे...', 'busy');
-  const f = await ghGet('gallery-data.js');
-  gallerySha = f.sha;
-  const content = b64DecodeUnicode(f.content);
-  const arrText = content.slice(content.indexOf('['), content.lastIndexOf(']') + 1);
-  const items = new Function('return ' + arrText)();
-  const el = document.getElementById('galleryList');
-  el.innerHTML = '';
-  items.forEach((item, idx) => {
-    const row = document.createElement('div');
-    row.className = 'entry-row';
-    row.innerHTML = `<div class="meta"><b>${item.caption}</b><span>${item.src}</span></div>
-      <div class="btns"><button type="button" class="danger" onclick="deleteGalleryItem(${idx})">Delete</button></div>`;
-    el.appendChild(row);
-  });
-  window._galleryItems = items;
-  el.style.display = 'block';
-  showStatus(`✅ ${items.length} फोटो लोड झाले.`, 'ok');
-}
-document.getElementById('loadGalleryBtn').addEventListener('click', () => loadGallery().catch(err => showStatus('❌ ' + err.message, 'err')));
-
-async function saveGalleryItems(items, message){
-  const body = "// Gallery images — edited via admin.html \"Gallery\" tab.\nconst GALLERY_ITEMS = " + JSON.stringify(items, null, 2) + ";\n";
-  await ghPut('gallery-data.js', b64EncodeUnicode(body), message, gallerySha);
-}
-async function deleteGalleryItem(idx){
-  if(!confirm('हा फोटो Gallery मधून काढायचा आहे का?')) return;
-  try {
-    const items = window._galleryItems.filter((_, i) => i !== idx);
-    showStatus('काढलं जात आहे...', 'busy');
-    await saveGalleryItems(items, 'Remove gallery item');
-    showStatus('✅ फोटो काढला.', 'ok');
-    loadGallery();
-  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
-}
-document.getElementById('addGalleryBtn').addEventListener('click', async () => {
-  try {
-    requireToken();
-    const file = document.getElementById('galleryFile').files[0];
-    const caption = document.getElementById('galleryCaption').value.trim();
-    if(!file || !caption){ throw new Error('फोटो आणि कॅप्शन दोन्ही द्या.'); }
-    showStatus('फोटो अपलोड होतोय...', 'busy');
-    const filename = 'gallery-' + Date.now() + '-' + slugify(file.name);
-    const b64 = await fileToBase64(file);
-    await ghPut(filename, b64, 'Add gallery photo: ' + caption);
-    if(!window._galleryItems) await loadGallery();
-    const items = window._galleryItems.concat([{ src: filename, caption }]);
-    showStatus('Gallery अपडेट होतंय...', 'busy');
-    await saveGalleryItems(items, 'Add gallery item: ' + caption);
-    showStatus('✅ फोटो Gallery मध्ये जोडला!', 'ok');
-    document.getElementById('galleryFile').value = '';
-    document.getElementById('galleryCaption').value = '';
-    loadGallery();
-  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
-});
-
 // ---- Add / Update ----
 document.getElementById('entryForm').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -426,7 +332,7 @@ document.getElementById('entryForm').addEventListener('submit', async (e) => {
 
     const pType = proofType.value;
     let proofSrc = '';
-    if(pType === 'image' || pType === 'pdf'){
+    if(pType === 'image' || pType === 'pdf' || pType === 'video'){
       const file = document.getElementById('proofFile').files[0];
       if(file){
         showStatus('फाईल अपलोड होतेय...', 'busy');
@@ -455,6 +361,15 @@ document.getElementById('entryForm').addEventListener('submit', async (e) => {
       status: document.getElementById('status').value, proofType: pType, proofSrc,
       referenceNo: document.getElementById('referenceNo').value.trim()
     };
+    const titleEn = document.getElementById('titleEn').value.trim();
+    const toWhomEn = document.getElementById('toWhomEn').value.trim();
+    const descriptionEn = document.getElementById('descriptionEn').value.trim();
+    const responseEn = document.getElementById('responseEn').value.trim();
+    if(titleEn || toWhomEn || descriptionEn || responseEn){
+      entry.en = { title: titleEn, to_whom: toWhomEn, description: descriptionEn, response: responseEn };
+    } else if(editingId !== null && window._editingEnBlock){
+      entry.en = window._editingEnBlock;
+    }
     const entryText = entryToText(entry);
 
     if(editingId !== null){
