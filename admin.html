@@ -99,6 +99,17 @@
 <button type="button" id="addGalleryBtn" class="wide">➕ Gallery मध्ये जोडा</button>
 </div>
 
+<h2>👥 सदस्य</h2>
+<button id="loadTeamBtn">सदस्य लोड करा</button>
+<div id="teamList" style="display:none; margin-top:10px;"></div>
+<div style="margin-top:14px;">
+<label>नवीन सदस्य फोटो (गोल दाखवला जाईल — चौकोनी फोटो चालेल)</label>
+<input type="file" id="teamFile" accept="image/*">
+<label>नाव</label>
+<input type="text" id="teamName" placeholder="उदा. विकी लोकरे">
+<button type="button" id="addTeamBtn" class="wide">➕ सदस्य जोडा</button>
+</div>
+
 <h2>📚 अस्तित्वात असलेल्या Timeline नोंदी</h2>
 <button id="loadBtn">नोंदी लोड करा</button>
 <div id="entriesList" style="display:none; margin-top:10px;"></div>
@@ -164,6 +175,7 @@ const REPO = "ichalkaranjirailway/htk-ich";
 const BRANCH = "main";
 const API = "https://api.github.com";
 let editingId = null;
+let currentDataSha = null;
 
 const tokenInput = document.getElementById('ghToken');
 tokenInput.value = localStorage.getItem('gh_token') || '';
@@ -215,20 +227,15 @@ async function ghPut(path, contentB64, message, sha){
   return res.json();
 }
 
-// ---- Robust ENTRIES parse / rebuild (no regex text-splicing — parses real data, rebuilds the whole array) ----
-function parseDataJs(content){
+function extractEntriesArrayText(content){
   const startMarker = 'const ENTRIES = ';
-  const startIdx = content.indexOf(startMarker);
-  if(startIdx === -1) throw new Error('data.js मध्ये ENTRIES सापडली नाही.');
-  const arrStart = startIdx + startMarker.length;
-  const closeIdx = content.indexOf('\n];', arrStart);
+  const startIdx = content.indexOf(startMarker) + startMarker.length;
+  if(startIdx < startMarker.length) throw new Error('data.js मध्ये ENTRIES सापडली नाही.');
+  const closeIdx = content.indexOf('\n];', startIdx);
   if(closeIdx === -1) throw new Error('ENTRIES array चा शेवट सापडला नाही.');
-  const arrText = content.slice(arrStart, closeIdx + 2);
-  const entries = new Function('return ' + arrText)();
-  const before = content.slice(0, arrStart);
-  const after = content.slice(closeIdx + 3);
-  return { entries, before, after };
+  return { text: content.slice(startIdx, closeIdx + 2), startIdx, endIdx: closeIdx + 2 };
 }
+
 function entryToText(entry){
   return `  {\n` +
     `    id: ${entry.id},\n` +
@@ -244,11 +251,6 @@ function entryToText(entry){
     `    referenceNo: ${JSON.stringify(entry.referenceNo)}\n` +
     `  },\n\n`;
 }
-function rebuildDataJs(before, entries, after){
-  const sorted = entries.slice().sort((a,b) => a.id - b.id);
-  const body = sorted.map(entryToText).join('');
-  return before + '[\n' + body + ']' + after;
-}
 
 // ---- Load & list entries ----
 document.getElementById('loadBtn').addEventListener('click', async () => {
@@ -256,8 +258,10 @@ document.getElementById('loadBtn').addEventListener('click', async () => {
     requireToken();
     showStatus('नोंदी लोड होत आहेत...', 'busy');
     const dataFile = await ghGet('data.js');
+    currentDataSha = dataFile.sha;
     const content = b64DecodeUnicode(dataFile.content);
-    const { entries } = parseDataJs(content);
+    const { text } = extractEntriesArrayText(content);
+    const entries = new Function('return ' + text)();
     entries.sort((a,b) => b.id - a.id);
     const listEl = document.getElementById('entriesList');
     listEl.innerHTML = '';
@@ -321,12 +325,11 @@ async function deleteEntry(id, title){
     requireToken();
     showStatus('नोंद काढली जात आहे...', 'busy');
     const dataFile = await ghGet('data.js');
-    const content = b64DecodeUnicode(dataFile.content);
-    const { entries, before, after } = parseDataJs(content);
-    const filtered = entries.filter(e => e.id !== id);
-    if(filtered.length === entries.length) throw new Error('ती नोंद data.js मध्ये सापडली नाही.');
-    const newContent = rebuildDataJs(before, filtered, after);
-    await ghPut('data.js', b64EncodeUnicode(newContent), `Delete entry #${id}`, dataFile.sha);
+    let content = b64DecodeUnicode(dataFile.content);
+    const re = new RegExp('  \\{\\s*\\n\\s*id:\\s*' + id + ',[\\s\\S]*?\\n  \\},\\n\\n');
+    if(!re.test(content)) throw new Error('ती नोंद data.js मध्ये सापडली नाही.');
+    content = content.replace(re, '');
+    await ghPut('data.js', b64EncodeUnicode(content), `Delete entry #${id}`, dataFile.sha);
     showStatus('✅ नोंद काढली. 1-2 मिनिटांत साईटवर दिसेल.', 'ok');
     document.getElementById('loadBtn').click();
   } catch(err){ showStatus('❌ ' + err.message, 'err'); }
@@ -422,6 +425,69 @@ document.getElementById('addGalleryBtn').addEventListener('click', async () => {
   } catch(err){ showStatus('❌ ' + err.message, 'err'); }
 });
 
+// ---- Team tab ----
+let teamSha = null;
+async function loadTeam(){
+  requireToken();
+  showStatus('सदस्य लोड होत आहेत...', 'busy');
+  const f = await ghGet('team-data.js');
+  teamSha = f.sha;
+  const content = b64DecodeUnicode(f.content);
+  const arrText = content.slice(content.indexOf('['), content.lastIndexOf(']') + 1);
+  const members = new Function('return ' + arrText)();
+  const el = document.getElementById('teamList');
+  el.innerHTML = '';
+  members.forEach((m, idx) => {
+    const row = document.createElement('div');
+    row.className = 'entry-row';
+    row.innerHTML = `<div class="meta"><b>${m.name}</b><span>${m.photo || 'फोटो नाही'}</span></div>
+      <div class="btns"><button type="button" class="danger" onclick="deleteTeamMember(${idx})">Delete</button></div>`;
+    el.appendChild(row);
+  });
+  window._teamMembers = members;
+  el.style.display = 'block';
+  showStatus(`✅ ${members.length} सदस्य लोड झाले.`, 'ok');
+}
+document.getElementById('loadTeamBtn').addEventListener('click', () => loadTeam().catch(err => showStatus('❌ ' + err.message, 'err')));
+
+async function saveTeamMembers(members, message){
+  const body = "// Team / committee members — edited via admin.html \"सदस्य\" tab.\nconst TEAM_MEMBERS = " + JSON.stringify(members, null, 2) + ";\n";
+  await ghPut('team-data.js', b64EncodeUnicode(body), message, teamSha);
+}
+async function deleteTeamMember(idx){
+  if(!confirm('हा सदस्य यादीतून काढायचा आहे का?')) return;
+  try {
+    const members = window._teamMembers.filter((_, i) => i !== idx);
+    showStatus('काढलं जात आहे...', 'busy');
+    await saveTeamMembers(members, 'Remove team member');
+    showStatus('✅ सदस्य काढला.', 'ok');
+    loadTeam();
+  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
+}
+document.getElementById('addTeamBtn').addEventListener('click', async () => {
+  try {
+    requireToken();
+    const file = document.getElementById('teamFile').files[0];
+    const name = document.getElementById('teamName').value.trim();
+    if(!name){ throw new Error('नाव द्या.'); }
+    let photo = '';
+    if(file){
+      showStatus('फोटो अपलोड होतोय...', 'busy');
+      photo = 'team-' + Date.now() + '-' + slugify(file.name);
+      const b64 = await fileToBase64(file);
+      await ghPut(photo, b64, 'Add team photo: ' + name);
+    }
+    if(!window._teamMembers) await loadTeam();
+    const members = window._teamMembers.concat([{ photo, name }]);
+    showStatus('सदस्य यादी अपडेट होतेय...', 'busy');
+    await saveTeamMembers(members, 'Add team member: ' + name);
+    showStatus('✅ सदस्य जोडला!', 'ok');
+    document.getElementById('teamFile').value = '';
+    document.getElementById('teamName').value = '';
+    loadTeam();
+  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
+});
+
 // ---- Add / Update ----
 document.getElementById('entryForm').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -432,12 +498,11 @@ document.getElementById('entryForm').addEventListener('submit', async (e) => {
     showStatus('काम सुरू आहे...', 'busy');
 
     const dataFile = await ghGet('data.js');
-    const content = b64DecodeUnicode(dataFile.content);
-    const { entries, before, after } = parseDataJs(content);
+    let content = b64DecodeUnicode(dataFile.content);
 
     let id = editingId;
     if(id === null){
-      const ids = entries.map(e => e.id);
+      const ids = [...content.matchAll(/id:\s*(\d+)/g)].map(m => parseInt(m[1]));
       id = (ids.length ? Math.max(...ids) : 2) + 1;
     }
 
@@ -472,19 +537,19 @@ document.getElementById('entryForm').addEventListener('submit', async (e) => {
       status: document.getElementById('status').value, proofType: pType, proofSrc,
       referenceNo: document.getElementById('referenceNo').value.trim()
     };
+    const entryText = entryToText(entry);
 
     if(editingId !== null){
-      const idx = entries.findIndex(e => e.id === editingId);
-      if(idx === -1) throw new Error('ती नोंद data.js मध्ये सापडली नाही (कदाचित आधीच बदलली गेली — नोंदी परत लोड करा).');
-      entries[idx] = entry;
+      const re = new RegExp('  \\{\\s*\\n\\s*id:\\s*' + editingId + ',[\\s\\S]*?\\n  \\},\\n\\n');
+      if(!re.test(content)) throw new Error('ती नोंद data.js मध्ये सापडली नाही (कदाचित आधीच बदलली गेली — नोंदी परत लोड करा).');
+      content = content.replace(re, entryText);
     } else {
-      entries.push(entry);
+      if(!/\n\];/.test(content)) throw new Error('ENTRIES array सापडली नाही.');
+      content = content.replace(/\n\];/, `\n${entryText}];`);
     }
 
-    const newContent = rebuildDataJs(before, entries, after);
-
     showStatus('data.js अपडेट होतंय...', 'busy');
-    await ghPut('data.js', b64EncodeUnicode(newContent), (editingId !== null ? `Update entry #${editingId}` : `Add entry: ${entry.title}`), dataFile.sha);
+    await ghPut('data.js', b64EncodeUnicode(content), (editingId !== null ? `Update entry #${editingId}` : `Add entry: ${entry.title}`), dataFile.sha);
 
     showStatus(`✅ झालं! 1-2 मिनिटांत साईटवर live दिसेल.`, 'ok');
     cancelEdit();

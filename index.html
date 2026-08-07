@@ -37,6 +37,7 @@
 <a href="#about">मागणी काय आहे</a>
 <a href="#facts">तथ्ये</a>
 <a href="#gallery">गॅलरी</a>
+<a href="#team">सदस्य</a>
 <a href="#timeline">Timeline</a>
 <a href="#footer">संपर्क</a>
 </div>
@@ -110,10 +111,21 @@
 </div>
 </section>
 
-<section id="timeline">
+<section id="team">
 <div class="wrap">
 <div class="section-head">
 <span class="section-num">05</span>
+<h2>कृती समिती सदस्य</h2>
+<p>या मागणीसाठी सातत्याने पाठपुरावा करणारे सदस्य.</p>
+</div>
+<div class="team-grid" id="team-grid"></div>
+</div>
+</section>
+
+<section id="timeline">
+<div class="wrap">
+<div class="section-head">
+<span class="section-num">06</span>
 <h2>Evidence Timeline</h2>
 <p>श्रेणीनुसार फिल्टर करा — RTI, तक्रार पोर्टल्स, याचिका, अधिकाऱ्यांना पत्रे, सोशल मीडिया आणि प्रसारमाध्यमे.</p>
 </div>
@@ -133,6 +145,7 @@
 
 <script src="content.js"></script>
 <script src="gallery-data.js"></script>
+<script src="team-data.js"></script>
 <script src="data.js"></script>
 <script>
 document.querySelectorAll('[id^="c-"]').forEach(function(el){
@@ -167,6 +180,28 @@ GALLERY_ITEMS.forEach(function(item){
   div.appendChild(span);
   grid.appendChild(div);
 });
+
+var teamGrid = document.getElementById('team-grid');
+if (typeof TEAM_MEMBERS !== 'undefined' && teamGrid) {
+  TEAM_MEMBERS.forEach(function(member){
+    var item = document.createElement('div');
+    item.className = 'team-item';
+    if (member.photo) {
+      var img = document.createElement('img');
+      img.className = 'avatar'; img.loading = 'lazy'; img.alt = member.name; img.src = member.photo;
+      item.appendChild(img);
+    } else {
+      var ph = document.createElement('div');
+      ph.className = 'avatar placeholder';
+      ph.textContent = (member.name || '?').trim().charAt(0);
+      item.appendChild(ph);
+    }
+    var span = document.createElement('span');
+    span.textContent = member.name;
+    item.appendChild(span);
+    teamGrid.appendChild(item);
+  });
+}
 </script>
 <script src="script.js"></script>
 </body>
