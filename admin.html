@@ -164,7 +164,6 @@ const REPO = "ichalkaranjirailway/htk-ich";
 const BRANCH = "main";
 const API = "https://api.github.com";
 let editingId = null;
-let currentDataSha = null;
 
 const tokenInput = document.getElementById('ghToken');
 tokenInput.value = localStorage.getItem('gh_token') || '';
@@ -216,15 +215,20 @@ async function ghPut(path, contentB64, message, sha){
   return res.json();
 }
 
-function extractEntriesArrayText(content){
+// ---- Robust ENTRIES parse / rebuild (no regex text-splicing — parses real data, rebuilds the whole array) ----
+function parseDataJs(content){
   const startMarker = 'const ENTRIES = ';
-  const startIdx = content.indexOf(startMarker) + startMarker.length;
-  if(startIdx < startMarker.length) throw new Error('data.js मध्ये ENTRIES सापडली नाही.');
-  const closeIdx = content.indexOf('\n];', startIdx);
+  const startIdx = content.indexOf(startMarker);
+  if(startIdx === -1) throw new Error('data.js मध्ये ENTRIES सापडली नाही.');
+  const arrStart = startIdx + startMarker.length;
+  const closeIdx = content.indexOf('\n];', arrStart);
   if(closeIdx === -1) throw new Error('ENTRIES array चा शेवट सापडला नाही.');
-  return { text: content.slice(startIdx, closeIdx + 2), startIdx, endIdx: closeIdx + 2 };
+  const arrText = content.slice(arrStart, closeIdx + 2);
+  const entries = new Function('return ' + arrText)();
+  const before = content.slice(0, arrStart);
+  const after = content.slice(closeIdx + 3);
+  return { entries, before, after };
 }
-
 function entryToText(entry){
   return `  {\n` +
     `    id: ${entry.id},\n` +
@@ -240,6 +244,11 @@ function entryToText(entry){
     `    referenceNo: ${JSON.stringify(entry.referenceNo)}\n` +
     `  },\n\n`;
 }
+function rebuildDataJs(before, entries, after){
+  const sorted = entries.slice().sort((a,b) => a.id - b.id);
+  const body = sorted.map(entryToText).join('');
+  return before + '[\n' + body + ']' + after;
+}
 
 // ---- Load & list entries ----
 document.getElementById('loadBtn').addEventListener('click', async () => {
@@ -247,10 +256,8 @@ document.getElementById('loadBtn').addEventListener('click', async () => {
     requireToken();
     showStatus('नोंदी लोड होत आहेत...', 'busy');
     const dataFile = await ghGet('data.js');
-    currentDataSha = dataFile.sha;
     const content = b64DecodeUnicode(dataFile.content);
-    const { text } = extractEntriesArrayText(content);
-    const entries = new Function('return ' + text)();
+    const { entries } = parseDataJs(content);
     entries.sort((a,b) => b.id - a.id);
     const listEl = document.getElementById('entriesList');
     listEl.innerHTML = '';
@@ -259,18 +266,26 @@ document.getElementById('loadBtn').addEventListener('click', async () => {
       row.className = 'entry-row';
       row.innerHTML = `<div class="meta"><b>#${e.id} — ${e.title}</b><span>${e.date} · ${e.category} · ${e.status}</span></div>
         <div class="btns">
-          <button type="button" onclick='loadForEdit(${JSON.stringify(JSON.stringify(e))})'>Edit</button>
-          <button type="button" class="danger" onclick="deleteEntry(${e.id}, ${JSON.stringify(e.title)})">Delete</button>
+          <button type="button" class="editBtn" data-id="${e.id}">Edit</button>
+          <button type="button" class="danger deleteBtn" data-id="${e.id}">Delete</button>
         </div>`;
       listEl.appendChild(row);
+    });
+    window._entriesById = {};
+    entries.forEach(e => { window._entriesById[e.id] = e; });
+    listEl.querySelectorAll('.editBtn').forEach(btn => {
+      btn.addEventListener('click', () => loadForEdit(window._entriesById[btn.dataset.id]));
+    });
+    listEl.querySelectorAll('.deleteBtn').forEach(btn => {
+      const e = window._entriesById[btn.dataset.id];
+      btn.addEventListener('click', () => deleteEntry(e.id, e.title));
     });
     listEl.style.display = 'block';
     showStatus(`✅ ${entries.length} नोंदी लोड झाल्या.`, 'ok');
   } catch(err){ showStatus('❌ ' + err.message, 'err'); }
 });
 
-function loadForEdit(entryJsonStr){
-  const e = JSON.parse(entryJsonStr);
+function loadForEdit(e){
   editingId = e.id;
   document.getElementById('editingIdLabel').textContent = e.id;
   document.getElementById('editBanner').style.display = 'block';
@@ -306,11 +321,12 @@ async function deleteEntry(id, title){
     requireToken();
     showStatus('नोंद काढली जात आहे...', 'busy');
     const dataFile = await ghGet('data.js');
-    let content = b64DecodeUnicode(dataFile.content);
-    const re = new RegExp('  \\{\\s*\\n\\s*id:\\s*' + id + ',[\\s\\S]*?\\n  \\},\\n\\n');
-    if(!re.test(content)) throw new Error('ती नोंद data.js मध्ये सापडली नाही.');
-    content = content.replace(re, '');
-    await ghPut('data.js', b64EncodeUnicode(content), `Delete entry #${id}`, dataFile.sha);
+    const content = b64DecodeUnicode(dataFile.content);
+    const { entries, before, after } = parseDataJs(content);
+    const filtered = entries.filter(e => e.id !== id);
+    if(filtered.length === entries.length) throw new Error('ती नोंद data.js मध्ये सापडली नाही.');
+    const newContent = rebuildDataJs(before, filtered, after);
+    await ghPut('data.js', b64EncodeUnicode(newContent), `Delete entry #${id}`, dataFile.sha);
     showStatus('✅ नोंद काढली. 1-2 मिनिटांत साईटवर दिसेल.', 'ok');
     document.getElementById('loadBtn').click();
   } catch(err){ showStatus('❌ ' + err.message, 'err'); }
@@ -416,11 +432,12 @@ document.getElementById('entryForm').addEventListener('submit', async (e) => {
     showStatus('काम सुरू आहे...', 'busy');
 
     const dataFile = await ghGet('data.js');
-    let content = b64DecodeUnicode(dataFile.content);
+    const content = b64DecodeUnicode(dataFile.content);
+    const { entries, before, after } = parseDataJs(content);
 
     let id = editingId;
     if(id === null){
-      const ids = [...content.matchAll(/id:\s*(\d+)/g)].map(m => parseInt(m[1]));
+      const ids = entries.map(e => e.id);
       id = (ids.length ? Math.max(...ids) : 2) + 1;
     }
 
@@ -455,19 +472,19 @@ document.getElementById('entryForm').addEventListener('submit', async (e) => {
       status: document.getElementById('status').value, proofType: pType, proofSrc,
       referenceNo: document.getElementById('referenceNo').value.trim()
     };
-    const entryText = entryToText(entry);
 
     if(editingId !== null){
-      const re = new RegExp('  \\{\\s*\\n\\s*id:\\s*' + editingId + ',[\\s\\S]*?\\n  \\},\\n\\n');
-      if(!re.test(content)) throw new Error('ती नोंद data.js मध्ये सापडली नाही (कदाचित आधीच बदलली गेली — नोंदी परत लोड करा).');
-      content = content.replace(re, entryText);
+      const idx = entries.findIndex(e => e.id === editingId);
+      if(idx === -1) throw new Error('ती नोंद data.js मध्ये सापडली नाही (कदाचित आधीच बदलली गेली — नोंदी परत लोड करा).');
+      entries[idx] = entry;
     } else {
-      if(!/\n\];/.test(content)) throw new Error('ENTRIES array सापडली नाही.');
-      content = content.replace(/\n\];/, `\n${entryText}];`);
+      entries.push(entry);
     }
 
+    const newContent = rebuildDataJs(before, entries, after);
+
     showStatus('data.js अपडेट होतंय...', 'busy');
-    await ghPut('data.js', b64EncodeUnicode(content), (editingId !== null ? `Update entry #${editingId}` : `Add entry: ${entry.title}`), dataFile.sha);
+    await ghPut('data.js', b64EncodeUnicode(newContent), (editingId !== null ? `Update entry #${editingId}` : `Add entry: ${entry.title}`), dataFile.sha);
 
     showStatus(`✅ झालं! 1-2 मिनिटांत साईटवर live दिसेल.`, 'ok');
     cancelEdit();
