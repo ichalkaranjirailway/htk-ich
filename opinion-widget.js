@@ -65,6 +65,12 @@
   }
   applyOpinionContent();
 
+  // आधीच या ब्राऊझरवरून मत दिलं असेल तर परत विचारू नका — सरळ धन्यवाद पॅनल दाखवा
+  if (localStorage.getItem('htk_ich_voted') === 'true') {
+    document.getElementById('voteStep').style.display = 'none';
+    document.getElementById('thanksPanel').classList.add('show');
+  }
+
   let chosenVote = null;
 
   window.owSelectVote = function(vote){
@@ -117,6 +123,8 @@
           });
         }
         await bumpCounter(chosenVote);
+        // या ब्राऊझरवर मत नोंदवलं गेल्याची खूण साठवा — परत विचारू नये म्हणून
+        localStorage.setItem('htk_ich_voted', 'true');
       } catch (e) {
         if (btn) { btn.disabled = false; }
         errEl.classList.add('show');
@@ -128,7 +136,8 @@
     document.getElementById('thanksPanel').classList.add('show');
     document.getElementById('thanksPanel').scrollIntoView({behavior:'smooth', block:'center'});
     loadCounts();
-    loadPublicVoters();
+    // सार्वजनिक यादी वेगळं काही करायची गरज नाही — ती आधीच "live" (onSnapshot) आहे,
+    // त्यामुळे नवीन एंट्री आपोआप यादीत दिसेल.
   };
 
   // Share links — WhatsApp, Facebook, Twitter/X.
@@ -163,30 +172,49 @@
   }
   loadCounts();
 
-  // सार्वजनिक यादी — नाव + परिसर (फोन नंबर नाही) — सगळ्यांना दिसते, login लागत नाही
-  function loadPublicVoters(){
+  // सार्वजनिक "Live" यादी — नाव + परिसर (फोन नंबर नाही) — सगळ्यांना दिसते, login लागत नाही.
+  // onSnapshot वापरल्यामुळे कोणीही नवीन मत दिलं की सगळ्यांच्या पानावर आपोआप,
+  // page refresh न करता, लगेच अपडेट होतं — Change.org च्या "recently signed" सारखं.
+  function timeAgo(date){
+    if (!date) return '';
+    const sec = Math.floor((Date.now() - date.getTime()) / 1000);
+    if (sec < 60) return 'आत्ताच';
+    const min = Math.floor(sec / 60);
+    if (min < 60) return min + ' मि. पूर्वी';
+    const hr = Math.floor(min / 60);
+    if (hr < 24) return hr + ' तास पूर्वी';
+    const day = Math.floor(hr / 24);
+    return day + ' दिवस पूर्वी';
+  }
+
+  function startPublicVotersLiveFeed(){
     if (!db) return;
     const listEl = document.getElementById('publicVotersList');
     if (!listEl) return;
-    db.collection('voter_public').orderBy('timestamp', 'desc').limit(200).get().then(snapshot => {
-      if (snapshot.empty) {
-        listEl.innerHTML = '<p style="opacity:.7;">अजून कोणी नाव नोंदवलेलं नाही.</p>';
-        return;
-      }
-      let html = '<ol style="padding-left:20px;margin:0;">';
-      snapshot.forEach(doc => {
-        const d = doc.data();
-        const name = d.name ? String(d.name) : '';
-        const area = d.area ? String(d.area) : '';
-        if (!name && !area) return;
-        html += '<li>' + (name || '—') + (area ? ' — <em>' + area + '</em>' : '') + '</li>';
-      });
-      html += '</ol>';
-      listEl.innerHTML = html;
-      const section = document.getElementById('publicVotersSection');
-      if (section) section.classList.remove('hidden');
-    }).catch(()=>{});
+
+    db.collection('voter_public').orderBy('timestamp', 'desc').limit(50)
+      .onSnapshot(snapshot => {
+        if (snapshot.empty) {
+          listEl.innerHTML = '<p style="opacity:.7;">अजून कोणी नाव नोंदवलेलं नाही.</p>';
+          return;
+        }
+        let html = '<ol style="padding-left:20px;margin:0;">';
+        snapshot.forEach(doc => {
+          const d = doc.data();
+          const name = d.name ? String(d.name) : '';
+          const area = d.area ? String(d.area) : '';
+          if (!name && !area) return;
+          const ts = d.timestamp && d.timestamp.toDate ? d.timestamp.toDate() : null;
+          const when = ts ? timeAgo(ts) : '';
+          html += '<li>' + (name || '—') + (area ? ' — <em>' + area + '</em>' : '')
+                + (when ? ' <span style="opacity:.6;font-size:12px;">(' + when + ')</span>' : '') + '</li>';
+        });
+        html += '</ol>';
+        listEl.innerHTML = html;
+        const section = document.getElementById('publicVotersSection');
+        if (section) section.classList.remove('hidden');
+      }, () => {}); // silently ignore errors (e.g. offline)
   }
-  loadPublicVoters();
+  startPublicVotersLiveFeed();
 
 })();
