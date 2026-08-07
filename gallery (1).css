@@ -1,0 +1,17 @@
+/* Gallery section — added independently, does not modify styles.css */
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-top:24px;}
+.gallery-item{position:relative;border-radius:10px;overflow:hidden;cursor:pointer;aspect-ratio:4/3;background:#eee;box-shadow:0 2px 10px rgba(0,0,0,.12);transition:transform .2s ease;}
+.gallery-item:hover{transform:translateY(-4px);}
+.gallery-item img{width:100%;height:100%;object-fit:cover;display:block;}
+.gallery-item span{position:absolute;left:0;right:0;bottom:0;padding:8px 10px;background:linear-gradient(transparent,rgba(0,0,0,.75));color:#fff;font-size:.8rem;line-height:1.2;}
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:999;align-items:center;justify-content:center;flex-direction:column;padding:24px;}
+.lightbox img{max-width:90vw;max-height:80vh;border-radius:8px;}
+.lightbox p{color:#fff;margin-top:12px;text-align:center;}
+.lightbox-close{position:absolute;top:20px;right:30px;color:#fff;font-size:2.5rem;cursor:pointer;}
+
+/* Team members grid */
+.team-grid{display:flex;flex-wrap:wrap;gap:24px;margin-top:24px;justify-content:flex-start;}
+.team-item{display:flex;flex-direction:column;align-items:center;width:110px;text-align:center;}
+.team-item .avatar{width:88px;height:88px;border-radius:50%;object-fit:cover;background:#ddd;border:2px solid var(--line,#ddd);}
+.team-item .avatar.placeholder{display:flex;align-items:center;justify-content:center;font-size:1.6rem;color:#888;background:#eee;}
+.team-item span{margin-top:8px;font-size:.85rem;line-height:1.2;}
