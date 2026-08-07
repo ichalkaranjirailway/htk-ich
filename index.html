@@ -12,8 +12,96 @@
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="gallery.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="opinion-widget.css">
 </head>
 <body>
+
+<!-- ============================================================
+     सोशल मीडिया मोहीम — मतदान विजेट (सर्वात वर, पहिलं दिसणारं)
+     मजकूर व लॉजिक opinion-content.js / opinion-widget.js मध्ये —
+     हीच विजेट opinion.html वरही (शेअर करण्यासाठी) वापरली आहे.
+     ============================================================ -->
+<div id="opinion-widget" class="opw-top-banner">
+<div class="opw-wrap">
+
+  <header>
+    <div class="eyebrow" id="opEyebrow">इचलकरंजी रेल्वे कृती समिती</div>
+    <h1 id="opHeroTitle">इचलकरंजीला रेल्वे हवी का?</h1>
+    <p class="sub" id="opHeroSub">३० सेकंदात तुमचं मत नोंदवा. जमा झालेली सर्व मतं रेल्वे प्रशासन आणि लोकप्रतिनिधींपर्यंत पुराव्यासहित पोहोचवली जातील.</p>
+    <p class="pop-note">जवळपास <b id="opPopNum">६ लाख</b> <span id="opPopText">नागरिकांचा हा प्रश्न आहे — तुमचा आवाजही मोजला जाईल.</span></p>
+  </header>
+
+  <div class="track"><span class="train">🚂</span></div>
+
+  <!-- Live tally — shows once Firebase is configured, hidden otherwise -->
+  <div class="board hidden" id="board">
+    <div class="stat"><div class="num" id="yesNum">–</div><div class="lbl">होय म्हणाले</div></div>
+    <div class="stat"><div class="num" id="noNum">–</div><div class="lbl">नाही म्हणाले</div></div>
+    <div class="stat"><div class="num" id="totalNum">–</div><div class="lbl">एकूण मतं</div></div>
+  </div>
+
+  <!-- STEP 1: Vote -->
+  <div id="voteStep">
+    <div class="vote-row">
+      <button class="vote-btn vote-yes" onclick="owSelectVote('होय')">
+        <span class="icon">✅</span> <span id="opYesLabel">होय, रेल्वे हवी</span>
+      </button>
+      <button class="vote-btn vote-no" onclick="owSelectVote('नाही')">
+        <span class="icon">❌</span> <span id="opNoLabel">नाही</span>
+      </button>
+    </div>
+    <p class="vote-hint" id="opVoteHint">वरील दोनपैकी एका बटणावर फक्त एकदा क्लिक करा.</p>
+  </div>
+
+  <!-- STEP 2: Optional details -->
+  <div class="panel" id="detailPanel">
+    <h3 id="opDetailTitle">तुमची माहिती (ऐच्छिक)</h3>
+    <p class="note" id="opDetailNote">नाव व मोबाईल दिल्यास मत अधिक विश्वासार्ह ठरतं — रेल्वे प्रशासनाला हे खरे नागरिक आहेत हे सिद्ध करता येतं. माहिती फक्त याच कामासाठी वापरली जाईल.</p>
+
+    <div class="field">
+      <label for="fname">नाव</label>
+      <input type="text" id="fname" placeholder="उदा. सुरेश पाटील">
+    </div>
+    <div class="field">
+      <label for="fmobile">मोबाईल नंबर</label>
+      <input type="tel" id="fmobile" inputmode="numeric" maxlength="10" placeholder="10 अंकी नंबर">
+    </div>
+    <div class="field">
+      <label for="farea">परिसर / वॉर्ड</label>
+      <input type="text" id="farea" placeholder="उदा. शिवाजी पेठ, इचलकरंजी">
+    </div>
+    <p class="err" id="submitErr">मत नोंदवताना अडचण आली. कृपया पुन्हा प्रयत्न करा.</p>
+
+    <button class="submit-btn" id="submitBtn" onclick="owSubmitVote()">मत नोंदवा</button>
+    <button class="skip" id="skipBtn" onclick="owSubmitVote(true)">माहिती न देता फक्त मत नोंदवा</button>
+  </div>
+
+  <!-- STEP 3: Thank you -->
+  <div class="thanks" id="thanksPanel">
+    <div class="big">🙏</div>
+    <h3 id="opThanksTitle">धन्यवाद! तुमचं मत नोंदवलं गेलं.</h3>
+    <p id="opThanksText">आता कृपया खाली दिलेल्या बटणावरून हे तुमच्या ५ ओळखीच्या लोकांना/ग्रुप्सना पाठवा — जितकी जास्त मतं, तितका आवाज मोठा.</p>
+  </div>
+
+  <div class="share">
+    <p id="opShareLine">हे सर्वांपर्यंत पोहोचवा —</p>
+    <div class="share-buttons">
+      <a class="share-btn wa" id="waShare" href="#" target="_blank" rel="noopener">📲 WhatsApp</a>
+      <a class="share-btn fb" id="fbShare" href="#" target="_blank" rel="noopener">📘 Facebook</a>
+      <a class="share-btn tw" id="twShare" href="#" target="_blank" rel="noopener">🐦 Twitter / X</a>
+      <button class="share-btn more" id="moreShare" type="button" style="display:none;">📤 अजून पर्याय</button>
+    </div>
+  </div>
+
+  <footer class="opw-foot" id="opFooter">इचलकरंजी रेल्वे कृती समिती &nbsp;•&nbsp; ही मोहीम पूर्णपणे नागरिकांच्या पुढाकाराने चालवली जाते</footer>
+</div>
+</div>
+<p style="text-align:center;margin:14px 0 0;font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;">
+  <a href="#stats" style="color:var(--ink-soft);">↓ खाली संपूर्ण पुरावा व Timeline पहा</a>
+</p>
 
 <header class="masthead">
 <div class="wrap masthead-top">
@@ -142,6 +230,14 @@
 <div>Citizen-maintained evidence archive · अद्ययावत केले जात आहे</div>
 </div>
 </footer>
+
+<!-- Firebase (compat SDK) + shared config + widget logic — powers the vote
+     widget at the top of this page. Same files used by opinion.html. -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="opinion-content.js" onerror="console.log('opinion-content.js not published yet — using default text')"></script>
+<script src="opinion-widget.js"></script>
 
 <script src="content.js"></script>
 <script src="gallery-data.js"></script>

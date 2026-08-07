@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>इचलकरंजीला रेल्वे हवी का? — तुमचं मत नोंदवा</title>
+<meta name="description" content="इचलकरंजी रेल्वे हवी की नाही? तुमचं मत नोंदवा — ६ लाख नागरिकांचा आवाज रेल्वे प्रशासनापर्यंत पोहोचवूया.">
+<link rel="canonical" href="https://ichalkaranjirailway.github.io/htk-ich/opinion.html">
+
+<!-- Open Graph so WhatsApp/Facebook shares show a nice card -->
+<meta property="og:title" content="इचलकरंजीला रेल्वे हवी का? तुमचं मत नोंदवा">
+<meta property="og:description" content="३० सेकंदात मत नोंदवा. तुमचा आवाज रेल्वे प्रशासनापर्यंत पोहोचेल.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="opinion-widget.css">
+<style>
+  /* Standalone-page-only chrome (not part of the shared widget) */
+  body{margin:0;background:#0B1F2E;}
+  .opw-back{
+    display:block; text-align:center; margin:-16px auto 0; max-width:640px;
+    padding:0 20px 30px; font-family:'IBM Plex Sans',sans-serif; font-size:13px;
+  }
+  .opw-back a{color:#B9C6CE;}
+</style>
+</head>
+<body>
+
+<div id="opinion-widget">
+<div class="opw-wrap">
+
+  <header>
+    <div class="eyebrow" id="opEyebrow">इचलकरंजी रेल्वे कृती समिती</div>
+    <h1 id="opHeroTitle">इचलकरंजीला रेल्वे हवी का?</h1>
+    <p class="sub" id="opHeroSub">३० सेकंदात तुमचं मत नोंदवा. जमा झालेली सर्व मतं रेल्वे प्रशासन आणि लोकप्रतिनिधींपर्यंत पुराव्यासहित पोहोचवली जातील.</p>
+    <p class="pop-note">जवळपास <b id="opPopNum">६ लाख</b> <span id="opPopText">नागरिकांचा हा प्रश्न आहे — तुमचा आवाजही मोजला जाईल.</span></p>
+  </header>
+
+  <div class="track"><span class="train">🚂</span></div>
+
+  <!-- Live tally — shows once Firebase is configured, hidden otherwise -->
+  <div class="board hidden" id="board">
+    <div class="stat"><div class="num" id="yesNum">–</div><div class="lbl">होय म्हणाले</div></div>
+    <div class="stat"><div class="num" id="noNum">–</div><div class="lbl">नाही म्हणाले</div></div>
+    <div class="stat"><div class="num" id="totalNum">–</div><div class="lbl">एकूण मतं</div></div>
+  </div>
+
+  <!-- STEP 1: Vote -->
+  <div id="voteStep">
+    <div class="vote-row">
+      <button class="vote-btn vote-yes" onclick="owSelectVote('होय')">
+        <span class="icon">✅</span> <span id="opYesLabel">होय, रेल्वे हवी</span>
+      </button>
+      <button class="vote-btn vote-no" onclick="owSelectVote('नाही')">
+        <span class="icon">❌</span> <span id="opNoLabel">नाही</span>
+      </button>
+    </div>
+    <p class="vote-hint" id="opVoteHint">वरील दोनपैकी एका बटणावर फक्त एकदा क्लिक करा.</p>
+  </div>
+
+  <!-- STEP 2: Optional details -->
+  <div class="panel" id="detailPanel">
+    <h3 id="opDetailTitle">तुमची माहिती (ऐच्छिक)</h3>
+    <p class="note" id="opDetailNote">नाव व मोबाईल दिल्यास मत अधिक विश्वासार्ह ठरतं — रेल्वे प्रशासनाला हे खरे नागरिक आहेत हे सिद्ध करता येतं. माहिती फक्त याच कामासाठी वापरली जाईल.</p>
+
+    <div class="field">
+      <label for="fname">नाव</label>
+      <input type="text" id="fname" placeholder="उदा. सुरेश पाटील">
+    </div>
+    <div class="field">
+      <label for="fmobile">मोबाईल नंबर</label>
+      <input type="tel" id="fmobile" inputmode="numeric" maxlength="10" placeholder="10 अंकी नंबर">
+    </div>
+    <div class="field">
+      <label for="farea">परिसर / वॉर्ड</label>
+      <input type="text" id="farea" placeholder="उदा. शिवाजी पेठ, इचलकरंजी">
+    </div>
+    <p class="err" id="submitErr">मत नोंदवताना अडचण आली. कृपया पुन्हा प्रयत्न करा.</p>
+
+    <button class="submit-btn" id="submitBtn" onclick="owSubmitVote()">मत नोंदवा</button>
+    <button class="skip" id="skipBtn" onclick="owSubmitVote(true)">माहिती न देता फक्त मत नोंदवा</button>
+  </div>
+
+  <!-- STEP 3: Thank you -->
+  <div class="thanks" id="thanksPanel">
+    <div class="big">🙏</div>
+    <h3 id="opThanksTitle">धन्यवाद! तुमचं मत नोंदवलं गेलं.</h3>
+    <p id="opThanksText">आता कृपया खाली दिलेल्या बटणावरून हे तुमच्या ५ ओळखीच्या लोकांना/ग्रुप्सना पाठवा — जितकी जास्त मतं, तितका आवाज मोठा.</p>
+  </div>
+
+  <div class="share">
+    <p id="opShareLine">हे सर्वांपर्यंत पोहोचवा —</p>
+    <div class="share-buttons">
+      <a class="share-btn wa" id="waShare" href="#" target="_blank" rel="noopener">📲 WhatsApp</a>
+      <a class="share-btn fb" id="fbShare" href="#" target="_blank" rel="noopener">📘 Facebook</a>
+      <a class="share-btn tw" id="twShare" href="#" target="_blank" rel="noopener">🐦 Twitter / X</a>
+      <button class="share-btn more" id="moreShare" type="button" style="display:none;">📤 अजून पर्याय</button>
+    </div>
+  </div>
+
+  <footer class="opw-foot" id="opFooter">इचलकरंजी रेल्वे कृती समिती &nbsp;•&nbsp; ही मोहीम पूर्णपणे नागरिकांच्या पुढाकाराने चालवली जाते</footer>
+</div>
+</div>
+
+<p class="opw-back"><a href="index.html">← इचलकरंजी रेल्वे पुरावा संग्रह (संपूर्ण साईट) पहा</a></p>
+
+<!-- Firebase (compat SDK — no build step needed) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<!-- Shared Firebase config — same file used by index.html's widget and admin.html's results tab -->
+<script src="firebase-config.js"></script>
+
+<!-- Editable page text — edited via admin.html "मतदान पानाचा मजकूर" tab. -->
+<script src="opinion-content.js" onerror="console.log('opinion-content.js not published yet — using default text')"></script>
+
+<!-- Shared widget logic — same file used on index.html -->
+<script src="opinion-widget.js"></script>
+
+</body>
+</html>

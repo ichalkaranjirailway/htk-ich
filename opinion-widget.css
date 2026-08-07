@@ -1,0 +1,197 @@
+/* ============================================================================
+   OPINION / VOTE WIDGET — scoped under #opinion-widget so it never clashes
+   with the main site's styles.css or gallery.css, even though some class
+   names (e.g. .track) repeat. All rules below are prefixed with the
+   #opinion-widget ancestor selector, and its own colour variables are
+   defined on #opinion-widget itself (not :root), so they can't leak into
+   or be overridden by the rest of the page. Used by BOTH index.html (top
+   banner) and opinion.html (standalone share page) — edit only here.
+   ============================================================================ */
+
+#opinion-widget{
+  --ow-navy:#0B1F2E;
+  --ow-panel:#132C3D;
+  --ow-panel-line:#24445A;
+  --ow-green:#2FA84F;
+  --ow-green-deep:#1F7A38;
+  --ow-red:#D93B3B;
+  --ow-red-deep:#A82C2C;
+  --ow-amber:#E8A93B;
+  --ow-ink:#F3EFE6;
+  --ow-ink-dim:#B9C6CE;
+
+  display:block;
+  background:var(--ow-navy);
+  color:var(--ow-ink);
+  font-family:'Mukta','IBM Plex Sans',sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+#opinion-widget .opw-wrap{max-width:640px;margin:0 auto;padding:30px 20px 40px;}
+
+/* ---- Track divider signature element ---- */
+#opinion-widget .track{
+  position:relative;
+  height:26px;
+  margin:0 0 8px;
+  background:
+    repeating-linear-gradient(90deg,
+      var(--ow-panel-line) 0 18px, transparent 18px 34px);
+  background-position:center;
+}
+#opinion-widget .track::before{
+  content:"";
+  position:absolute; left:0; right:0; top:50%;
+  height:3px; background:var(--ow-amber); opacity:.55;
+  transform:translateY(-50%);
+}
+#opinion-widget .train{
+  position:absolute; top:50%; font-size:20px; left:-30px;
+  transform:translateY(-60%);
+  animation:opw-chug 9s linear infinite;
+}
+@keyframes opw-chug{
+  0%{left:calc(100% + 10px);}
+  100%{left:-30px;}
+}
+@media (prefers-reduced-motion: reduce){ #opinion-widget .train{animation:none; left:calc(100% - 40px);} }
+
+/* ---- Hero ---- */
+#opinion-widget header{padding:6px 0 8px; text-align:center;}
+#opinion-widget .eyebrow{
+  font-family:'IBM Plex Sans','Inter',sans-serif;
+  font-size:13px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ow-amber); font-weight:600; margin-bottom:14px;
+}
+#opinion-widget h1{
+  font-size:clamp(26px,6.5vw,38px);
+  line-height:1.25; font-weight:800; margin:0 0 14px;
+  color:var(--ow-ink);
+}
+#opinion-widget .sub{
+  font-size:16px; line-height:1.6; color:var(--ow-ink-dim); margin:0 auto 6px;
+  max-width:480px;
+}
+#opinion-widget .pop-note{
+  font-family:'IBM Plex Sans','Inter',sans-serif; font-size:14px; color:var(--ow-ink-dim);
+  margin-top:14px;
+}
+#opinion-widget .pop-note b{color:var(--ow-amber);}
+
+/* ---- Departure-board counter ---- */
+#opinion-widget .board{
+  display:flex; justify-content:center; gap:10px; margin:26px 0 4px;
+  flex-wrap:wrap;
+}
+#opinion-widget .board .stat{
+  background:var(--ow-panel); border:1px solid var(--ow-panel-line);
+  border-radius:10px; padding:14px 20px; min-width:120px; text-align:center;
+}
+#opinion-widget .board .num{
+  font-family:'IBM Plex Sans','Inter',sans-serif; font-weight:700; font-size:26px;
+  letter-spacing:.02em;
+}
+#opinion-widget .board .lbl{
+  font-size:13px; color:var(--ow-ink-dim); margin-top:2px;
+}
+#opinion-widget #yesNum{color:var(--ow-green);}
+#opinion-widget #noNum{color:var(--ow-red);}
+#opinion-widget .board.hidden{display:none;}
+
+/* ---- Vote cards ---- */
+#opinion-widget .vote-row{
+  display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:26px 0 10px;
+}
+@media (max-width:420px){ #opinion-widget .vote-row{grid-template-columns:1fr;} }
+
+#opinion-widget .vote-btn{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:8px; padding:24px 12px; border-radius:16px; border:none; cursor:pointer;
+  font-family:'Mukta',sans-serif; font-weight:700; font-size:19px; color:#fff;
+  min-height:92px;
+  transition:transform .15s ease, box-shadow .15s ease;
+  box-shadow:0 6px 0 rgba(0,0,0,.25);
+}
+#opinion-widget .vote-btn:active{transform:translateY(4px); box-shadow:0 2px 0 rgba(0,0,0,.25);}
+#opinion-widget .vote-btn .icon{font-size:28px;}
+#opinion-widget .vote-yes{background:linear-gradient(180deg,var(--ow-green),var(--ow-green-deep));}
+#opinion-widget .vote-no{background:linear-gradient(180deg,var(--ow-red),var(--ow-red-deep));}
+#opinion-widget .vote-hint{
+  text-align:center; font-family:'IBM Plex Sans','Inter',sans-serif; font-size:13px;
+  color:var(--ow-ink-dim); margin-bottom:6px;
+}
+
+/* ---- Detail panel (name/mobile/area) ---- */
+#opinion-widget .panel{
+  background:var(--ow-panel); border:1px solid var(--ow-panel-line);
+  border-radius:16px; padding:22px 20px; margin-top:6px;
+  display:none;
+}
+#opinion-widget .panel.show{display:block; animation:opw-fade .25s ease;}
+@keyframes opw-fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+#opinion-widget .panel h3{margin:0 0 4px; font-size:19px;}
+#opinion-widget .panel p.note{
+  font-family:'IBM Plex Sans','Inter',sans-serif; font-size:13px; color:var(--ow-ink-dim);
+  margin:0 0 16px;
+}
+#opinion-widget .field{margin-bottom:14px;}
+#opinion-widget .field label{
+  display:block; font-family:'IBM Plex Sans','Inter',sans-serif; font-size:13px;
+  color:var(--ow-ink-dim); margin-bottom:6px;
+}
+#opinion-widget .field input, #opinion-widget .field select{
+  width:100%; padding:14px 14px; border-radius:10px; border:1px solid var(--ow-panel-line);
+  background:#0F2534; color:var(--ow-ink); font-family:'Mukta',sans-serif; font-size:17px;
+}
+#opinion-widget .field input:focus, #opinion-widget .field select:focus{outline:2px solid var(--ow-amber); outline-offset:1px;}
+#opinion-widget .submit-btn{
+  width:100%; padding:16px; border:none; border-radius:12px;
+  background:var(--ow-amber); color:#1a1200; font-weight:700; font-size:18px;
+  cursor:pointer; margin-top:6px;
+}
+#opinion-widget .submit-btn:disabled{opacity:.6; cursor:default;}
+#opinion-widget .submit-btn:active{transform:translateY(2px);}
+#opinion-widget .skip{
+  display:block; text-align:center; margin-top:10px;
+  font-family:'IBM Plex Sans','Inter',sans-serif; font-size:13px; color:var(--ow-ink-dim);
+  text-decoration:underline; cursor:pointer; background:none; border:none;
+}
+#opinion-widget .err{
+  font-family:'IBM Plex Sans','Inter',sans-serif; font-size:13px; color:var(--ow-red);
+  margin:-6px 0 14px; display:none;
+}
+#opinion-widget .err.show{display:block;}
+
+/* ---- Thank you state ---- */
+#opinion-widget .thanks{
+  display:none; text-align:center; padding:30px 20px; background:var(--ow-panel);
+  border:1px solid var(--ow-panel-line); border-radius:16px; margin-top:6px;
+}
+#opinion-widget .thanks.show{display:block; animation:opw-fade .3s ease;}
+#opinion-widget .thanks .big{font-size:44px; margin-bottom:8px;}
+#opinion-widget .thanks h3{margin:0 0 10px; font-size:22px;}
+#opinion-widget .thanks p{color:var(--ow-ink-dim); font-family:'IBM Plex Sans','Inter',sans-serif; font-size:14px; line-height:1.6;}
+
+/* ---- Share ---- */
+#opinion-widget .share{margin-top:26px; text-align:center;}
+#opinion-widget .share p{font-family:'IBM Plex Sans','Inter',sans-serif; font-size:14px; color:var(--ow-ink-dim); margin-bottom:12px;}
+#opinion-widget .share-buttons{display:flex; flex-wrap:wrap; justify-content:center; gap:10px;}
+#opinion-widget .share-btn{
+  display:inline-flex; align-items:center; gap:8px;
+  font-weight:700; text-decoration:none; border:none; cursor:pointer;
+  padding:14px 20px; border-radius:30px; font-family:'Mukta',sans-serif; font-size:16px;
+}
+#opinion-widget .share-btn.wa{background:#25D366; color:#08210f;}
+#opinion-widget .share-btn.fb{background:#1877F2; color:#fff;}
+#opinion-widget .share-btn.tw{background:#111; color:#fff;}
+#opinion-widget .share-btn.more{background:var(--ow-panel); color:var(--ow-ink); border:1px solid var(--ow-panel-line);}
+
+#opinion-widget footer.opw-foot{
+  text-align:center; margin-top:34px; font-family:'IBM Plex Sans','Inter',sans-serif;
+  font-size:12px; color:var(--ow-ink-dim); opacity:.8; line-height:1.7;
+}
+
+/* On the homepage, the widget sits directly above the existing masthead —
+   give it a bottom edge so it reads as a distinct top banner, not part
+   of the archive design below it. */
+#opinion-widget.opw-top-banner{border-bottom:6px solid var(--ow-amber);}

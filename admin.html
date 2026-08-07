@@ -117,6 +117,93 @@
 <button type="button" id="addTeamBtn" class="wide">➕ सदस्य जोडा</button>
 </div>
 
+<h2>✏️ मतदान पानाचा मजकूर (opinion.html)</h2>
+<p class="sub" style="margin-top:-4px;">वरचाच GitHub Token वापरून opinion.html वरचं सगळं वाक्य/मजकूर इथून बदलता येईल.</p>
+<button id="loadOpTextBtn">मजकूर लोड करा</button>
+<div id="opTextFields" style="display:none; margin-top:10px;">
+<label>Eyebrow (सगळ्यात वरची छोटी ओळ)</label><input type="text" id="op-eyebrow">
+<label>मुख्य शीर्षक (Hero Title)</label><textarea id="op-heroTitle"></textarea>
+<label>मुख्य उपओळ (Hero Sub)</label><textarea id="op-heroSub"></textarea>
+<div class="row">
+<div><label>लोकसंख्या आकडा (ठळक दाखवला जातो)</label><input type="text" id="op-popNoteNum"></div>
+<div><label>लोकसंख्या ओळीतला उर्वरित मजकूर</label><input type="text" id="op-popNoteText"></div>
+</div>
+<div class="row">
+<div><label>"होय" बटणावरचा मजकूर</label><input type="text" id="op-yesLabel"></div>
+<div><label>"नाही" बटणावरचा मजकूर</label><input type="text" id="op-noLabel"></div>
+</div>
+<label>मत-बटणांखालील सूचना</label><input type="text" id="op-voteHint">
+<label>तपशील पॅनल — शीर्षक</label><input type="text" id="op-detailTitle">
+<label>तपशील पॅनल — सूचना मजकूर</label><textarea id="op-detailNote"></textarea>
+<div class="row">
+<div><label>"मत नोंदवा" बटण मजकूर</label><input type="text" id="op-submitLabel"></div>
+<div><label>"माहिती न देता" बटण मजकूर</label><input type="text" id="op-skipLabel"></div>
+</div>
+<label>धन्यवाद पॅनल — शीर्षक</label><input type="text" id="op-thanksTitle">
+<label>धन्यवाद पॅनल — मजकूर</label><textarea id="op-thanksText"></textarea>
+<label>Share बटणांवरची ओळ</label><input type="text" id="op-shareLine">
+<label>Share मजकूर (WhatsApp/Facebook/Twitter वर हाच मजकूर जातो)</label><textarea id="op-shareMessage"></textarea>
+<label>Footer ओळ</label><input type="text" id="op-footer">
+<button type="button" id="saveOpTextBtn" class="wide">💾 मतदान पानाचा मजकूर सेव्ह करा</button>
+</div>
+
+<h2>🗳️ मतदान निकाल (opinion.html)</h2>
+<p class="sub" style="margin-top:-4px;">हे GitHub token पेक्षा वेगळं लॉगिन आहे — एकदाच सेटअप, खाली सूचना.</p>
+
+<div id="voteLoginBox">
+<label>Admin Email</label>
+<input type="text" id="voteEmail" placeholder="you@example.com">
+<label>Password</label>
+<input type="password" id="votePassword">
+<button type="button" id="voteLoginBtn" class="wide">🔐 लॉगिन करा</button>
+<details style="margin-top:10px;">
+<summary>हे कसं सेटअप करायचं? (एकदाच)</summary>
+<ol>
+<li><a href="https://console.firebase.google.com" target="_blank">Firebase Console</a> → तुमचा opinion.html चा प्रोजेक्ट उघडा.</li>
+<li>Build → Authentication → Get started → "Email/Password" provider चालू करा (Enable).</li>
+<li>Authentication → Users → Add user → तुमचा स्वतःचा email + password टाका (हाच वर वापरा).</li>
+<li>Firestore → Rules मध्ये जाऊन खालील नियम paste करा आणि Publish करा:</li>
+</ol>
+<pre style="background:#0F2534;color:#eee;padding:12px;border-radius:8px;font-size:.75rem;overflow-x:auto;white-space:pre;">rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /votes/{voteId} {
+      allow create: if request.resource.data.vote in ['होय','नाही']
+                    && request.resource.data.keys().hasOnly(['vote','timestamp']);
+      allow read: if request.auth != null;
+      allow update, delete: if false;
+    }
+    match /voter_details/{id} {
+      allow create: if true;
+      allow read: if request.auth != null;
+      allow update, delete: if false;
+    }
+    match /meta/counts {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['yes','no'])
+                    && request.resource.data.yes is int
+                    && request.resource.data.no is int;
+      allow update: if
+        (request.resource.data.yes == resource.data.yes + 1
+         && request.resource.data.no == resource.data.no) ||
+        (request.resource.data.no == resource.data.no + 1
+         && request.resource.data.yes == resource.data.yes);
+      allow delete: if false;
+    }
+  }
+}</pre>
+<li style="margin-top:8px;">GitHub repo मधल्या <code>firebase-config.js</code> फाईलमध्ये हेच values भरा — तीच फाईल opinion.html आणि होमपेजवरच्या मतदान विजेटलाही वापरते, त्यामुळे एकदाच भरलं की तिन्हीकडे लागू होतं.</li>
+</ol>
+</details>
+</div>
+
+<div id="voteResultsBox" style="display:none; margin-top:14px;">
+<button type="button" id="loadVotesBtn">निकाल लोड करा</button>
+<div id="voteTally" style="margin:14px 0; display:flex; gap:12px; flex-wrap:wrap;"></div>
+<button type="button" id="exportCsvBtn" class="secondary" style="display:none;">⬇️ CSV म्हणून export करा</button>
+<div id="voterDetailsList" style="max-height:400px; overflow-y:auto; background:#fff; border:1px solid var(--line); border-radius:10px; padding:6px 12px; margin-top:12px;"></div>
+</div>
+
 <h2>📚 अस्तित्वात असलेल्या Timeline नोंदी</h2>
 <button id="loadBtn">नोंदी लोड करा</button>
 <div id="entriesList" style="display:none; margin-top:10px;"></div>
@@ -176,6 +263,13 @@
 </form>
 
 <div id="status"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<!-- Same config file opinion.html and index.html's vote widget use — edit it
+     once there, it applies here too. -->
+<script src="firebase-config.js"></script>
 
 <script>
 const REPO = "ichalkaranjirailway/htk-ich";
@@ -369,6 +463,36 @@ document.getElementById('saveTextBtn').addEventListener('click', async () => {
     await ghPut('content.js', b64EncodeUnicode(body), 'Update site text', textSha);
     showStatus('✅ मजकूर साईटवर सेव्ह झाला. 1-2 मिनिटांत दिसेल.', 'ok');
     document.getElementById('loadTextBtn').click();
+  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
+});
+
+// ---- Opinion Page Text tab (opinion.html / opinion-content.js) ----
+const OP_TEXT_KEYS = ["eyebrow","heroTitle","heroSub","popNoteNum","popNoteText","yesLabel","noLabel","voteHint","detailTitle","detailNote","submitLabel","skipLabel","thanksTitle","thanksText","shareLine","shareMessage","footer"];
+let opTextSha = null;
+document.getElementById('loadOpTextBtn').addEventListener('click', async () => {
+  try {
+    requireToken();
+    showStatus('मजकूर लोड होत आहे...', 'busy');
+    const f = await ghGet('opinion-content.js');
+    opTextSha = f.sha;
+    const content = b64DecodeUnicode(f.content);
+    const jsonText = content.slice(content.indexOf('{'), content.lastIndexOf('}') + 1);
+    const obj = new Function('return ' + jsonText)();
+    OP_TEXT_KEYS.forEach(k => { const el = document.getElementById('op-' + k); if (el) el.value = obj[k] || ''; });
+    document.getElementById('opTextFields').style.display = 'block';
+    showStatus('✅ मजकूर लोड झाला.', 'ok');
+  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
+});
+document.getElementById('saveOpTextBtn').addEventListener('click', async () => {
+  try {
+    requireToken();
+    showStatus('सेव्ह होतंय...', 'busy');
+    const obj = {};
+    OP_TEXT_KEYS.forEach(k => { obj[k] = document.getElementById('op-' + k).value; });
+    const body = "// Editable opinion-page text — edited via admin.html \"मतदान पानाचा मजकूर\" tab.\nconst OPINION_CONTENT = " + JSON.stringify(obj, null, 2) + ";\n";
+    await ghPut('opinion-content.js', b64EncodeUnicode(body), 'Update opinion page text', opTextSha);
+    showStatus('✅ मजकूर साईटवर सेव्ह झाला. 1-2 मिनिटांत दिसेल.', 'ok');
+    document.getElementById('loadOpTextBtn').click();
   } catch(err){ showStatus('❌ ' + err.message, 'err'); }
 });
 
@@ -643,6 +767,80 @@ document.getElementById('entryForm').addEventListener('submit', async (e) => {
   } catch(err){
     showStatus('❌ चूक झाली: ' + err.message, 'err');
   } finally { btn.disabled = false; }
+});
+
+// ---- Voting results tab (opinion.html data) ----
+// FIREBASE_CONFIG now comes from the shared firebase-config.js file
+// (loaded above) — same values as opinion.html and index.html's widget.
+let voteDb = null;
+if (FIREBASE_CONFIG.apiKey.indexOf('PASTE_YOUR') === -1) {
+  const voteApp = firebase.initializeApp(FIREBASE_CONFIG, 'voteApp');
+  voteDb = voteApp.firestore();
+  var voteAuth = voteApp.auth();
+}
+
+let _voterDetailsCache = [];
+
+document.getElementById('voteLoginBtn').addEventListener('click', async () => {
+  try {
+    if (!voteDb) throw new Error('आधी वर FIREBASE_CONFIG भरा (सूचना पहा).');
+    const email = document.getElementById('voteEmail').value.trim();
+    const pass = document.getElementById('votePassword').value;
+    if (!email || !pass) throw new Error('Email आणि password दोन्ही द्या.');
+    showStatus('लॉगिन होत आहे...', 'busy');
+    await voteAuth.signInWithEmailAndPassword(email, pass);
+    document.getElementById('voteLoginBox').style.display = 'none';
+    document.getElementById('voteResultsBox').style.display = 'block';
+    showStatus('✅ लॉगिन यशस्वी.', 'ok');
+  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
+});
+
+document.getElementById('loadVotesBtn').addEventListener('click', async () => {
+  try {
+    showStatus('निकाल लोड होत आहेत...', 'busy');
+
+    const countsSnap = await voteDb.collection('meta').doc('counts').get();
+    const { yes = 0, no = 0 } = countsSnap.exists ? countsSnap.data() : {};
+    document.getElementById('voteTally').innerHTML = `
+      <div class="entry-row" style="flex:1;min-width:120px;"><div class="meta"><b style="font-size:1.3rem;">${yes}</b><span>होय</span></div></div>
+      <div class="entry-row" style="flex:1;min-width:120px;"><div class="meta"><b style="font-size:1.3rem;">${no}</b><span>नाही</span></div></div>
+      <div class="entry-row" style="flex:1;min-width:120px;"><div class="meta"><b style="font-size:1.3rem;">${yes+no}</b><span>एकूण</span></div></div>
+    `;
+
+    const detailsSnap = await voteDb.collection('voter_details').orderBy('timestamp', 'desc').limit(500).get();
+    const rows = [];
+    detailsSnap.forEach(doc => {
+      const d = doc.data();
+      const ts = d.timestamp && d.timestamp.toDate ? d.timestamp.toDate().toLocaleString('en-IN') : '';
+      rows.push({ name: d.name || '', mobile: d.mobile || '', area: d.area || '', vote: d.vote || '', ts });
+    });
+    _voterDetailsCache = rows;
+
+    const listEl = document.getElementById('voterDetailsList');
+    listEl.innerHTML = rows.length ? '' : '<p class="hint">अजून कुणीही तपशील दिलेला नाही.</p>';
+    rows.forEach(r => {
+      const row = document.createElement('div');
+      row.className = 'entry-row';
+      row.innerHTML = `<div class="meta"><b>${r.name || '(नाव नाही)'} — ${r.vote}</b><span>${r.mobile} · ${r.area} · ${r.ts}</span></div>`;
+      listEl.appendChild(row);
+    });
+
+    document.getElementById('exportCsvBtn').style.display = rows.length ? 'inline-block' : 'none';
+    showStatus(`✅ निकाल लोड झाले. ${rows.length} जणांनी तपशील दिला आहे.`, 'ok');
+  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
+});
+
+document.getElementById('exportCsvBtn').addEventListener('click', () => {
+  const header = 'Name,Mobile,Area,Vote,Timestamp\n';
+  const csv = header + _voterDetailsCache.map(r =>
+    [r.name, r.mobile, r.area, r.vote, r.ts].map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')
+  ).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'voter-details.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 });
 </script>
 </body>
