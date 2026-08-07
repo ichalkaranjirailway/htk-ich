@@ -109,6 +109,13 @@
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
           });
         }
+        // सार्वजनिक यादीसाठी — फक्त नाव + परिसर (मोबाईल नंबर कधीच नाही)
+        if (name || area) {
+          await db.collection('voter_public').add({
+            name, area,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        }
         await bumpCounter(chosenVote);
       } catch (e) {
         if (btn) { btn.disabled = false; }
@@ -121,6 +128,7 @@
     document.getElementById('thanksPanel').classList.add('show');
     document.getElementById('thanksPanel').scrollIntoView({behavior:'smooth', block:'center'});
     loadCounts();
+    loadPublicVoters();
   };
 
   // Share links — WhatsApp, Facebook, Twitter/X.
@@ -154,5 +162,31 @@
     }).catch(()=>{});
   }
   loadCounts();
+
+  // सार्वजनिक यादी — नाव + परिसर (फोन नंबर नाही) — सगळ्यांना दिसते, login लागत नाही
+  function loadPublicVoters(){
+    if (!db) return;
+    const listEl = document.getElementById('publicVotersList');
+    if (!listEl) return;
+    db.collection('voter_public').orderBy('timestamp', 'desc').limit(200).get().then(snapshot => {
+      if (snapshot.empty) {
+        listEl.innerHTML = '<p style="opacity:.7;">अजून कोणी नाव नोंदवलेलं नाही.</p>';
+        return;
+      }
+      let html = '<ol style="padding-left:20px;margin:0;">';
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        const name = d.name ? String(d.name) : '';
+        const area = d.area ? String(d.area) : '';
+        if (!name && !area) return;
+        html += '<li>' + (name || '—') + (area ? ' — <em>' + area + '</em>' : '') + '</li>';
+      });
+      html += '</ol>';
+      listEl.innerHTML = html;
+      const section = document.getElementById('publicVotersSection');
+      if (section) section.classList.remove('hidden');
+    }).catch(()=>{});
+  }
+  loadPublicVoters();
 
 })();
