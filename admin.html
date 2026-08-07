@@ -39,11 +39,7 @@
   .entry-row .btns button{padding:6px 10px;font-size:.78rem;}
   #entriesList{max-height:400px;overflow-y:auto;background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px 12px;}
   #loadBtn{margin-bottom:12px;}
-  #editBanner,#teamEditBanner{display:none;background:#e3edf7;border:1px solid #a9c6e8;color:#1a4d7a;padding:10px 14px;border-radius:8px;margin-bottom:12px;font-size:.88rem;}
-  .entry-row .thumb{width:38px;height:38px;border-radius:50%;object-fit:cover;background:#eee;flex-shrink:0;border:1px solid var(--line);}
-  .entry-row .thumb.ph{display:flex;align-items:center;justify-content:center;color:#999;font-size:.75rem;}
-  .entry-row .meta-with-thumb{display:flex;align-items:center;gap:10px;flex:1;min-width:0;}
-  .btns button.moveBtn{padding:6px 9px;}
+  #editBanner{display:none;background:#e3edf7;border:1px solid #a9c6e8;color:#1a4d7a;padding:10px 14px;border-radius:8px;margin-bottom:12px;font-size:.88rem;}
 </style>
 </head>
 <body>
@@ -104,17 +100,27 @@
 </div>
 
 <h2>👥 सदस्य</h2>
-<p class="sub" style="margin-top:-4px;">▲▼ ने क्रम (sequence) बदला, Edit ने नाव/फोटो बदला.</p>
 <button id="loadTeamBtn">सदस्य लोड करा</button>
 <div id="teamList" style="display:none; margin-top:10px;"></div>
-<div id="teamEditBanner">✏️ सदस्य edit करत आहात. <button type="button" class="secondary" onclick="cancelTeamEdit()" style="padding:4px 10px;font-size:.78rem;">रद्द करा</button></div>
 <div style="margin-top:14px;">
-<label id="teamFormLabel">नवीन सदस्य फोटो (गोल दाखवला जाईल — चौकोनी फोटो चालेल)</label>
+<label>नवीन सदस्य फोटो (गोल दाखवला जाईल — चौकोनी फोटो चालेल)</label>
 <input type="file" id="teamFile" accept="image/*">
-<p class="hint" id="teamCurrentPhotoHint"></p>
 <label>नाव</label>
 <input type="text" id="teamName" placeholder="उदा. विकी लोकरे">
 <button type="button" id="addTeamBtn" class="wide">➕ सदस्य जोडा</button>
+</div>
+
+<h2>🗂️ कोणतीही फाईल Repo वर टाका (HTML / CSS / JS)</h2>
+<p class="sub">styles.css, index.html, gallery.css, script.js सारख्या कोडिंग फाईल्स इथून थेट repo वर update करा — GitHub website उघडायची गरज नाही.</p>
+<div>
+<label>फाईलचं नाव / path (उदा. styles.css, index.html)</label>
+<input type="text" id="codePath" placeholder="उदा. gallery.css">
+<label>पद्धत १ — तुमच्या कॉम्प्युटरवरची फाईल निवडा</label>
+<input type="file" id="codeFile">
+<label>पद्धत २ — किंवा इथे थेट मजकूर paste करा (वरची फाईल निवडली नसेल तरच वापरलं जाईल)</label>
+<textarea id="codeText" style="min-height:160px;font-family:monospace;font-size:.82rem;"></textarea>
+<button type="button" id="uploadCodeBtn" class="wide">🚀 Repo वर टाका (जुनी फाईल असेल तर overwrite होईल)</button>
+<p class="hint">सूचना: फाईलचं नाव आधीपासून repo मध्ये असलेल्या नावाशी अगदी तंतोतंत जुळायला हवं (उदा. <code>styles.css</code>, केस-सेन्सिटिव्ह), नाहीतर नवीन वेगळी फाईल तयार होईल आणि site ती वापरणार नाही.</p>
 </div>
 
 <h2>📚 अस्तित्वात असलेल्या Timeline नोंदी</h2>
@@ -434,8 +440,6 @@ document.getElementById('addGalleryBtn').addEventListener('click', async () => {
 
 // ---- Team tab ----
 let teamSha = null;
-let teamEditingIdx = null;
-
 async function loadTeam(){
   requireToken();
   showStatus('सदस्य लोड होत आहेत...', 'busy');
@@ -444,133 +448,91 @@ async function loadTeam(){
   const content = b64DecodeUnicode(f.content);
   const arrText = content.slice(content.indexOf('['), content.lastIndexOf(']') + 1);
   const members = new Function('return ' + arrText)();
-  window._teamMembers = members;
-  renderTeamList();
-  showStatus(`✅ ${members.length} सदस्य लोड झाले.`, 'ok');
-}
-document.getElementById('loadTeamBtn').addEventListener('click', () => loadTeam().catch(err => showStatus('❌ ' + err.message, 'err')));
-
-function renderTeamList(){
-  const members = window._teamMembers || [];
   const el = document.getElementById('teamList');
   el.innerHTML = '';
   members.forEach((m, idx) => {
     const row = document.createElement('div');
     row.className = 'entry-row';
-    const thumbHtml = m.photo
-      ? `<img class="thumb" src="${m.photo}" alt="${m.name}">`
-      : `<div class="thumb ph">${(m.name || '?').trim().charAt(0)}</div>`;
-    row.innerHTML = `<div class="meta-with-thumb">${thumbHtml}<div class="meta"><b>${m.name}</b><span>${m.photo || 'फोटो नाही'} · क्रम #${idx + 1}</span></div></div>
-      <div class="btns">
-        <button type="button" class="secondary moveBtn" ${idx === 0 ? 'disabled' : ''} onclick="moveTeamMember(${idx}, -1)">▲</button>
-        <button type="button" class="secondary moveBtn" ${idx === members.length - 1 ? 'disabled' : ''} onclick="moveTeamMember(${idx}, 1)">▼</button>
-        <button type="button" onclick="editTeamMember(${idx})">Edit</button>
-        <button type="button" class="danger" onclick="deleteTeamMember(${idx})">Delete</button>
-      </div>`;
+    row.innerHTML = `<div class="meta"><b>${m.name}</b><span>${m.photo || 'फोटो नाही'}</span></div>
+      <div class="btns"><button type="button" class="danger" onclick="deleteTeamMember(${idx})">Delete</button></div>`;
     el.appendChild(row);
   });
+  window._teamMembers = members;
   el.style.display = 'block';
+  showStatus(`✅ ${members.length} सदस्य लोड झाले.`, 'ok');
 }
+document.getElementById('loadTeamBtn').addEventListener('click', () => loadTeam().catch(err => showStatus('❌ ' + err.message, 'err')));
 
 async function saveTeamMembers(members, message){
   const body = "// Team / committee members — edited via admin.html \"सदस्य\" tab.\nconst TEAM_MEMBERS = " + JSON.stringify(members, null, 2) + ";\n";
-  const res = await ghPut('team-data.js', b64EncodeUnicode(body), message, teamSha);
-  teamSha = res.content.sha;
-  window._teamMembers = members;
+  await ghPut('team-data.js', b64EncodeUnicode(body), message, teamSha);
 }
-
-async function moveTeamMember(idx, dir){
-  try {
-    requireToken();
-    const members = window._teamMembers.slice();
-    const j = idx + dir;
-    if(j < 0 || j >= members.length) return;
-    [members[idx], members[j]] = [members[j], members[idx]];
-    showStatus('क्रम बदलला जात आहे...', 'busy');
-    await saveTeamMembers(members, `Reorder team member: ${members[j].name}`);
-    renderTeamList();
-    showStatus('✅ क्रम अपडेट झाला. 1-2 मिनिटांत साईटवर दिसेल.', 'ok');
-  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
-}
-
-function editTeamMember(idx){
-  teamEditingIdx = idx;
-  const m = window._teamMembers[idx];
-  document.getElementById('teamEditBanner').style.display = 'block';
-  document.getElementById('teamFormLabel').textContent = 'नवीन फोटो निवडा (बदलायचा नसेल तर रिकामं ठेवा)';
-  document.getElementById('teamName').value = m.name;
-  document.getElementById('teamCurrentPhotoHint').textContent = m.photo ? `सध्याचा फोटो: ${m.photo}` : 'सध्या फोटो नाही (placeholder दाखवला जातो)';
-  document.getElementById('teamFile').value = '';
-  document.getElementById('addTeamBtn').textContent = '💾 सदस्य अपडेट करा';
-  document.getElementById('teamFile').scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
-function cancelTeamEdit(){
-  teamEditingIdx = null;
-  document.getElementById('teamEditBanner').style.display = 'none';
-  document.getElementById('teamFormLabel').textContent = 'नवीन सदस्य फोटो (गोल दाखवला जाईल — चौकोनी फोटो चालेल)';
-  document.getElementById('teamCurrentPhotoHint').textContent = '';
-  document.getElementById('teamFile').value = '';
-  document.getElementById('teamName').value = '';
-  document.getElementById('addTeamBtn').textContent = '➕ सदस्य जोडा';
-}
-
 async function deleteTeamMember(idx){
-  const m = window._teamMembers[idx];
-  if(!confirm(`"${m.name}" ला सदस्य यादीतून काढायचं आहे का?`)) return;
+  if(!confirm('हा सदस्य यादीतून काढायचा आहे का?')) return;
   try {
-    requireToken();
     const members = window._teamMembers.filter((_, i) => i !== idx);
     showStatus('काढलं जात आहे...', 'busy');
-    await saveTeamMembers(members, 'Remove team member: ' + m.name);
-    if(teamEditingIdx === idx) cancelTeamEdit();
-    renderTeamList();
-    showStatus('✅ सदस्य काढला. 1-2 मिनिटांत साईटवर दिसेल.', 'ok');
+    await saveTeamMembers(members, 'Remove team member');
+    showStatus('✅ सदस्य काढला.', 'ok');
+    loadTeam();
   } catch(err){ showStatus('❌ ' + err.message, 'err'); }
 }
-
 document.getElementById('addTeamBtn').addEventListener('click', async () => {
   try {
     requireToken();
     const file = document.getElementById('teamFile').files[0];
     const name = document.getElementById('teamName').value.trim();
     if(!name){ throw new Error('नाव द्या.'); }
-    if(!window._teamMembers) await loadTeam();
-
-    if(teamEditingIdx !== null){
-      // ---- Update existing member ----
-      const idx = teamEditingIdx;
-      const existing = window._teamMembers[idx];
-      let photo = existing.photo || '';
-      if(file){
-        showStatus('नवीन फोटो अपलोड होतोय...', 'busy');
-        photo = 'team-' + Date.now() + '-' + slugify(file.name);
-        const b64 = await fileToBase64(file);
-        await ghPut(photo, b64, 'Update team photo: ' + name);
-      }
-      const members = window._teamMembers.slice();
-      members[idx] = { photo, name };
-      showStatus('सदस्य यादी अपडेट होतेय...', 'busy');
-      await saveTeamMembers(members, 'Update team member: ' + name);
-      showStatus('✅ सदस्य अपडेट झाला!', 'ok');
-      cancelTeamEdit();
-      renderTeamList();
-    } else {
-      // ---- Add new member ----
-      let photo = '';
-      if(file){
-        showStatus('फोटो अपलोड होतोय...', 'busy');
-        photo = 'team-' + Date.now() + '-' + slugify(file.name);
-        const b64 = await fileToBase64(file);
-        await ghPut(photo, b64, 'Add team photo: ' + name);
-      }
-      const members = window._teamMembers.concat([{ photo, name }]);
-      showStatus('सदस्य यादी अपडेट होतेय...', 'busy');
-      await saveTeamMembers(members, 'Add team member: ' + name);
-      showStatus('✅ सदस्य जोडला!', 'ok');
-      document.getElementById('teamFile').value = '';
-      document.getElementById('teamName').value = '';
-      renderTeamList();
+    let photo = '';
+    if(file){
+      showStatus('फोटो अपलोड होतोय...', 'busy');
+      photo = 'team-' + Date.now() + '-' + slugify(file.name);
+      const b64 = await fileToBase64(file);
+      await ghPut(photo, b64, 'Add team photo: ' + name);
     }
+    if(!window._teamMembers) await loadTeam();
+    const members = window._teamMembers.concat([{ photo, name }]);
+    showStatus('सदस्य यादी अपडेट होतेय...', 'busy');
+    await saveTeamMembers(members, 'Add team member: ' + name);
+    showStatus('✅ सदस्य जोडला!', 'ok');
+    document.getElementById('teamFile').value = '';
+    document.getElementById('teamName').value = '';
+    loadTeam();
+  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
+});
+
+// ---- Code / Any-file upload tab ----
+document.getElementById('uploadCodeBtn').addEventListener('click', async () => {
+  try {
+    requireToken();
+    const path = document.getElementById('codePath').value.trim();
+    if(!path) throw new Error('फाईलचं नाव / path टाका (उदा. styles.css).');
+    const file = document.getElementById('codeFile').files[0];
+    const text = document.getElementById('codeText').value;
+    if(!file && !text.trim()) throw new Error('फाईल निवडा किंवा मजकूर paste करा.');
+
+    let contentB64;
+    if(file){
+      showStatus('फाईल वाचली जात आहे...', 'busy');
+      contentB64 = await fileToBase64(file);
+    } else {
+      contentB64 = b64EncodeUnicode(text);
+    }
+
+    showStatus(`तपासत आहे — "${path}" आधीपासून repo मध्ये आहे का...`, 'busy');
+    let sha;
+    try {
+      const existing = await ghGet(path);
+      sha = existing.sha;
+    } catch(e){
+      sha = undefined; // फाईल अस्तित्वात नाही — नवीन तयार होईल
+    }
+
+    showStatus(`"${path}" अपलोड होत आहे...`, 'busy');
+    await ghPut(path, contentB64, `Update ${path} via admin panel`, sha);
+    showStatus(`✅ "${path}" repo वर टाकली! 1-2 मिनिटांत साईटवर live दिसेल.`, 'ok');
+    document.getElementById('codeFile').value = '';
+    document.getElementById('codeText').value = '';
   } catch(err){ showStatus('❌ ' + err.message, 'err'); }
 });
 
