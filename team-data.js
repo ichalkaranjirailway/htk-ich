@@ -7,5 +7,9 @@ const TEAM_MEMBERS = [
   {
     "photo": "",
     "name": "Vicky Lokare"
+  },
+  {
+    "photo": "team-1786108355741-img-20260807-wa0095.jpg",
+    "name": "श्री. नंदकुमार बांगड"
   }
 ];
