@@ -16,6 +16,18 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="opinion-widget.css">
+<style>
+  /* सार्वजनिक "पाठिंबा देणारे नागरिक" यादी — नाव + परिसर (फोन नंबर नाही) */
+  #publicVotersSection{
+    max-width:640px; margin:0 auto 30px; padding:20px 24px;
+    font-family:'IBM Plex Sans',sans-serif; color:#E6ECEF;
+    background:rgba(255,255,255,.05); border-radius:14px;
+  }
+  #publicVotersSection.hidden{display:none;}
+  #publicVotersSection h3{margin:0 0 12px; font-size:16px; color:#fff;}
+  #publicVotersSection ol{max-height:320px; overflow-y:auto; font-size:14px; line-height:1.9;}
+  #publicVotersSection em{color:#B9C6CE; font-style:normal;}
+</style>
 </head>
 <body>
 
@@ -99,6 +111,13 @@
   <footer class="opw-foot" id="opFooter">इचलकरंजी रेल्वे कृती समिती &nbsp;•&nbsp; ही मोहीम पूर्णपणे नागरिकांच्या पुढाकाराने चालवली जाते</footer>
 </div>
 </div>
+
+<!-- सार्वजनिक "Live" यादी — नाव + परिसर (फोन नंबर नाही), सगळ्यांना दिसते -->
+<div id="publicVotersSection" class="hidden">
+  <h3>पाठिंबा देणारे नागरिक</h3>
+  <div id="publicVotersList">यादी लोड होत आहे...</div>
+</div>
+
 <p style="text-align:center;margin:14px 0 0;font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;">
   <a href="#stats" style="color:var(--ink-soft);">↓ खाली संपूर्ण पुरावा व Timeline पहा</a>
 </p>
