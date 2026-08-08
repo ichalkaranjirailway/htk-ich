@@ -29,12 +29,12 @@ const TEAM_MEMBERS = [
     "name": "श्री. दिलीप पाटील"
   },
   {
-    "photo": "team-1786108094942-whatsapp-image-2026-08-07-at-6.35.24-pm.jpeg",
-    "name": "श्री. दिपक पंडीत"
-  },
-  {
     "photo": "team-1786202039738-img-20260808-wa0062.jpg",
     "name": "श्री. बाळकृष्ण तोतला"
+  },
+  {
+    "photo": "team-1786108094942-whatsapp-image-2026-08-07-at-6.35.24-pm.jpeg",
+    "name": "श्री. दिपक पंडीत"
   },
   {
     "photo": "team-1786193814057-img-20260808-wa0050.jpg",
