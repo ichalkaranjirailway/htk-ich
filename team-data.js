@@ -13,12 +13,12 @@ const TEAM_MEMBERS = [
     "name": "श्री. रमेश शर्मा"
   },
   {
-    "photo": "team-1786108094942-whatsapp-image-2026-08-07-at-6.35.24-pm.jpeg",
-    "name": "श्री. दिपक पंडीत"
-  },
-  {
     "photo": "team-1786184496510-img-20260808-wa0039.jpg",
     "name": "श्री. धर्मराज सोपान जाधव"
+  },
+  {
+    "photo": "team-1786108094942-whatsapp-image-2026-08-07-at-6.35.24-pm.jpeg",
+    "name": "श्री. दिपक पंडीत"
   },
   {
     "photo": "team-1786184426833-img-20260808-wa0045.jpg",
