@@ -9,11 +9,11 @@ const TEAM_MEMBERS = [
     "name": "श्री. दिपक पंडीत"
   },
   {
-    "photo": "",
-    "name": "Vicky Lokare"
-  },
-  {
     "photo": "team-1786177073058-img-20260808-wa0037.jpg",
     "name": "श्री. अजय जाधव (आबा)"
+  },
+  {
+    "photo": "",
+    "name": "Vicky Lokare"
   }
 ];
