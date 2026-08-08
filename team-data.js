@@ -13,7 +13,7 @@ const TEAM_MEMBERS = [
     "name": "श्री. दिपक पंडीत"
   },
   {
-    "photo": "",
-    "name": "Vicky Lokare"
+    "photo": "team-1786177219304-img-20260612-161650.jpg",
+    "name": "श्री. विकी मनिषा बाळू लोकरे"
   }
 ];
