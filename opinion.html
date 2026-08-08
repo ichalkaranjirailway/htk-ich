@@ -25,16 +25,32 @@
   }
   .opw-back a{color:#B9C6CE;}
 
-  /* Public supporters list (name + area only — no phone numbers) */
+  /* Public supporters list (name + area only — no phone numbers).
+     Solid dark background (not transparent) so text stays clearly
+     readable regardless of what sits behind it on the page. */
   #publicVotersSection{
-    max-width:640px; margin:0 auto 30px; padding:20px 24px;
-    font-family:'IBM Plex Sans',sans-serif; color:#E6ECEF;
-    background:rgba(255,255,255,.05); border-radius:14px;
+    max-width:640px; margin:26px auto 34px; padding:26px 24px;
+    font-family:'IBM Plex Sans',sans-serif;
+    background:#0B1F2E;
+    border:1px solid #D4AF37;
+    border-radius:16px;
+    box-shadow:0 8px 28px rgba(0,0,0,.35);
   }
   #publicVotersSection.hidden{display:none;}
-  #publicVotersSection h3{margin:0 0 12px; font-size:16px; color:#fff;}
-  #publicVotersSection ol{max-height:320px; overflow-y:auto; font-size:14px; line-height:1.9;}
-  #publicVotersSection em{color:#B9C6CE; font-style:normal;}
+  #publicVotersSection h3{
+    margin:0 0 16px; font-size:18px; font-weight:700;
+    color:#F3D27A; letter-spacing:.5px; text-align:center;
+    text-shadow:0 1px 0 rgba(0,0,0,.4);
+  }
+  #publicVotersSection ol{
+    max-height:320px; overflow-y:auto; margin:0; padding-left:22px;
+    font-size:14.5px; line-height:2.1; color:#FFFFFF;
+  }
+  #publicVotersSection li{ padding-left:4px; }
+  #publicVotersSection li::marker{ color:#D4AF37; font-weight:700; }
+  #publicVotersSection em{ color:#F3D27A; font-style:normal; font-weight:600; }
+  #publicVotersSection span{ color:#9FB0BA; }
+  #publicVotersSection p{ color:#E6ECEF; text-align:center; margin:0; }
 </style>
 </head>
 <body>
