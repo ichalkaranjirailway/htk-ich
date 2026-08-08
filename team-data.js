@@ -25,12 +25,12 @@ const TEAM_MEMBERS = [
     "name": "श्री. पांडुरंग पिसे"
   },
   {
-    "photo": "team-1786108094942-whatsapp-image-2026-08-07-at-6.35.24-pm.jpeg",
-    "name": "श्री. दिपक पंडीत"
-  },
-  {
     "photo": "team-1786194446164-img-20260808-183705.jpg",
     "name": "श्री. दिलीप पाटील"
+  },
+  {
+    "photo": "team-1786108094942-whatsapp-image-2026-08-07-at-6.35.24-pm.jpeg",
+    "name": "श्री. दिपक पंडीत"
   },
   {
     "photo": "team-1786193814057-img-20260808-wa0050.jpg",
