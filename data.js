@@ -89,8 +89,6 @@ const ENTRIES = [
     description: "प्रकल्पाची सद्यस्थिती (भौतिक/आर्थिक प्रगती), भूसंपादनाची स्थिती, DPR ची स्थिती, मंजूर खर्च, वेळापत्रक, आणि विलंबाची कारणे — असे ७ सविस्तर प्रश्न विचारले.",
     response: "सर्व ७ प्रश्नांना एकच उत्तर: DPR रेल्वे बोर्डाकडे २०१८ मध्ये सादर करण्यात आला होता. प्रकल्पाला अद्याप रेल्वे बोर्डाकडून मंजुरी मिळालेली नाही आणि कोणतेही काम सुरू झालेले नाही.",
     status: "replied",
-    proofType: "image",
-    proofSrc: "rti-reply-satara-10apr2026.jpg",
     referenceNo: "DRMOP/R/E/26/00107",
     en: {
       title: "RTI Reply — Dy. Chief Engineer/Const., Satara",
@@ -137,8 +135,6 @@ const ENTRIES = [
     description: "इचलकरंजीची आर्थिक बाजू (महाराष्ट्राचे मँचेस्टर, मोठी मालवाहतूक क्षमता), PM गती शक्तीशी सुसंगती, आणि कराड–इचलकरंजी–निपाणी–बेळगाव सर्वेक्षण पुनरुज्जीवित करण्याची मागणी मांडली.",
     response: "मध्य रेल्वेने अधिकृतपणे पुष्टी केली: DPR प्रथम ३०.११.२०१७ रोजी सादर — खर्च ₹१९१.५९ कोटी, ROR −१०.११%. सुधारित DPR ०२.०१.२०२० रोजी सादर — खर्च ₹१८०.७३ कोटी, ROR −१२.७३%. प्रकल्प अद्याप मंजूर झालेला नाही. कराड–इचलकरंजी–निपाणी–बेळगाव व्यवहार्यता अहवाल २२.०३.२०१६ रोजी सादर झाला होता; रेल्वे बोर्डाने तो १०.०२.२०१७ रोजी बासनात गुंडाळला.",
     status: "replied",
-    proofType: "pdf",
-    proofSrc: "grievance-reply-bansode-02jul2026.pdf",
     referenceNo: "PMOPG/E/2026/0107756",
     en: {
       title: "CPGRAMS Grievance Reply — Central Railway CAO(Const.)",
@@ -171,8 +167,6 @@ const ENTRIES = [
     description: "खासदारांच्या इचलकरंजी भेटीचे स्वागत, आणि रेल्वे मार्गासाठी जलद कार्यवाहीची विनंती — आधीच्या आश्वासनांवर ठोस कारवाई न झाल्याचे नमूद केले.",
     response: "अद्याप कोणतेही उत्तर मिळालेले नाही.",
     status: "no-response",
-    proofType: "pdf",
-    proofSrc: "letter-shrikant-shinde-29may2026.pdf",
     referenceNo: "",
     en: {
       title: "Letter — MP Shrikant Shinde (Shivsena)",
@@ -205,8 +199,6 @@ const ENTRIES = [
     description: "२१ जूनच्या इचलकरंजी भेटीचे स्वागत, आणि रेल्वे कनेक्टिव्हिटीच्या वर्षानुवर्षे प्रलंबित मागणीकडे वैयक्तिक लक्ष देण्याची विनंती.",
     response: "अद्याप कोणतेही उत्तर मिळालेले नाही.",
     status: "no-response",
-    proofType: "pdf",
-    proofSrc: "letter-amit-shah-09jun2026.pdf",
     referenceNo: "",
     en: {
       title: "Letter — Union Home Minister Amit Shah",
@@ -225,8 +217,6 @@ const ENTRIES = [
     description: "इचलकरंजीच्या वस्त्रोद्योगासाठी रेल्वे कनेक्टिव्हिटी किती महत्त्वाची आहे — DPR खर्च ₹१८०.७३ कोटी, ROR −१२.७३%, आणि मे २०२६ पर्यंत भौतिक प्रगती शून्य, हा अधिकृत तपशील नमूद करून वैयक्तिक हस्तक्षेपाची विनंती.",
     response: "अद्याप कोणतेही उत्तर मिळालेले नाही.",
     status: "no-response",
-    proofType: "pdf",
-    proofSrc: "letter-textile-minister-giriraj-09may2026.pdf",
     referenceNo: "",
     en: {
       title: "URGENT — Union Textile Minister Giriraj Singh",
@@ -245,7 +235,6 @@ const ENTRIES = [
     description: "नकारात्मक ROR मुळे प्रकल्पाला 'विशेष औद्योगिक प्रकल्प' म्हणून मान्यता द्यावी, ROR सुधारण्यासाठी राज्य सरकारचा ५०% खर्चवाटा, आणि तातडीने भूसंपादन सुरू करण्याची मागणी.",
     response: "अद्याप कोणतेही उत्तर मिळालेले नाही.",
     status: "no-response",
-    
     referenceNo: "",
     en: {
       title: "Letter — Maharashtra Textile Minister Sanjay Savkare",
@@ -264,8 +253,6 @@ const ENTRIES = [
     description: "८ किमी मार्ग आणि आधुनिक रेल्वे स्थानकासाठी सामूहिक, आग्रही अर्ज. जिल्हाधिकारी कार्यालयाने १५.०४.२०२६ रोजी पुढे पाठवला; महानगरपालिकेने जून २०२६ मध्ये मध्य रेल्वे DEN कडे पुढे पाठवला.",
     response: "अर्ज साखळीतून पुढे पाठवला गेला — प्रत्येक टप्प्यावर 'योग्य ती कार्यवाही करावी' असे निर्देश दिले गेले. अद्याप ठोस उत्तर नाही.",
     status: "pending",
-    proofType: "pdf",
-    proofSrc: "grievance-municipal-corp-forward-jun2026.pdf",
     referenceNo: "I-७१९५०८ / कार्या.११/नपा/आरआर/संक-१/७८/२६",
     en: {
       title: "Joint Application — Collector Kolhapur → Municipal Corporation → Central Railway DEN",
@@ -284,8 +271,6 @@ const ENTRIES = [
     description: "कराड येथे झालेल्या कार्यक्रमात, तत्कालीन रेल्वे मंत्री सुरेश प्रभू यांच्या हस्ते, हातकणंगले–इचलकरंजी नवीन मार्गाच्या अंतिम स्थान सर्वेक्षणाचे भूमिपूजन झाले — वैभववाडी–कोल्हापूर मार्ग व इतर प्रकल्पांसह. मध्य रेल्वेच्या अधिकृत ट्विटर खात्यावरही ही घोषणा झाली होती. हा दस्तऐवज २०२४-२५ च्या पिंक बुक अर्थसंकल्प तक्त्यासह एकाच फाईलमध्ये आहे, ज्यात क्रमांक १२ अंतर्गत हातकणंगले–इचलकरंजी ८ किमीसाठी २०२४-२५ करिता ₹१,६०,००,००० भांडवली तरतूद दाखवली आहे — 'योग्य प्रक्रिया/अनिवार्य मंजुऱ्यांनंतरच खर्च होईल' अशी त्यावर नोंद आहे.",
     response: "२०१७ साली सर्वेक्षणाचे भूमिपूजन झाले, पण अद्याप प्रकल्प मंजूर झालेला नाही.",
     status: "replied",
-    proofType: "pdf",
-    proofSrc: "pinkbook-and-2017-history.pdf",
     referenceNo: "",
     en: {
       title: "Historical: Foundation Stone Laid for Hatkanangale-Ichalkaranji Survey",
@@ -304,8 +289,6 @@ const ENTRIES = [
     description: "इचलकरंजी रेल्वे कृती समिती गेल्या १९-२० वर्षांपासून सातत्यपूर्ण प्रयत्न करत आहे यावर स्थानिक नागरिक, मागासवर्ग कार्यकर्ते, आणि व्यापारी संघटनांच्या प्रतिक्रिया असलेले विशेष वृत्तांकन.",
     response: "लागू नाही — मोहिमेच्या दीर्घकालीन प्रयत्नाचे प्रसारमाध्यम वृत्तांकन.",
     status: "replied",
-    proofType: "image",
-    proofSrc: "news-kesari-30nov2022.jpg",
     referenceNo: "",
     en: {
       title: "News — Dainik Kesari: \"Railway Action Committee Keeps Trying\"",
@@ -324,8 +307,6 @@ const ENTRIES = [
     description: "सर्वेक्षण पूर्ण झाले असतानाही हातकणंगले–इचलकरंजी रेल्वे मार्ग रखडलेला आहे यावर वृत्तांकन. माजी रेल्वे मंत्री सुरेश प्रभू यांच्या २०१७ च्या मंजुरीचा उल्लेख, आणि निधीची टोकन रक्कम राखीव ठेवली गेली आहे पण भूसंपादन सुरू झालेले नाही असे नमूद.",
     response: "लागू नाही — प्रसारमाध्यम वृत्तांकन.",
     status: "replied",
-    proofType: "image",
-    proofSrc: "news-pudhari-12may2026.jpg",
     referenceNo: "",
     en: {
       title: "News — Dainik Pudhari: \"Route Still Stalled Even After the Survey\"",
@@ -344,8 +325,6 @@ const ENTRIES = [
     description: "रेल्वे कृती समितीने २०११ साली नवीन पाठपुरावा मोहीम सुरू केली होती, त्या मोहिमेचा भाग म्हणून हातकणंगले–इचलकरंजीसाठी १०,००० पत्रे मुख्यमंत्री आणि पंतप्रधानांकडे पाठवण्यात आली — केसरी वृत्तपत्राचे वृत्तांकन.",
     response: "मास लेटर मोहिमेचे प्रसारमाध्यम वृत्तांकन.",
     status: "",
-    proofType: "image",
-    proofSrc: "news-10000-letters-campaign.jpg",
     referenceNo: ""
   },
 
@@ -358,8 +337,6 @@ const ENTRIES = [
     description: "इचलकरंजी रेल्वे कृती समितीने जिल्हाधिकारी कार्यालयासमोर एकदिवसीय धरणे आंदोलन केले. विविध सामाजिक, राजकीय, सहकारी संस्था आणि रेल्वेप्रेमी नागरिकांच्या उत्स्फूर्त प्रतिसादाने मोठ्या प्रमाणावर उपस्थिती लावली. लोकप्रतिनिधींकडून अपेक्षित प्रतिसाद न मिळाल्याने समितीने शासन पातळीवर सातत्याने पाठपुरावा करण्याचे जाहीर केले.",
     response: "आंदोलनानंतर राजकीय पुढाऱ्यांनी सक्रिय सहकार्याचे आश्वासन दिले, पण वर्षानुवर्षे राजकीय उदासीनता आणि निधीअभावी हातकणंगले–इचलकरंजी प्रकल्प प्रलंबित आहे.",
     status: "no-response",
-    proofType: "image",
-    proofSrc: "news-kesari-dharna-26feb2026.jpg",
     referenceNo: "",
     en: {
       title: "News — Dainik Kesari: Sit-in Protest Support",
@@ -378,8 +355,6 @@ const ENTRIES = [
     description: "रेल्वे कृती समितीने महापौरांना निवेदन दिले — खासदार, आमदार, आणि पालकमंत्री यांच्यासोबत विशेष बैठक बोलावण्याची, तसेच मालमत्ता/GST संबंधी प्रश्न सोडवण्याची मागणी. सुरेश प्रभू यांच्या २०१७ च्या मंजुरीचा उल्लेख केला.",
     response: "महापौरांनी निवेदन स्वीकारले, औपचारिक पाठपुरावा अद्याप प्रलंबित.",
     status: "pending",
-    proofType: "image",
-    proofSrc: "photo-mayor-meeting-01apr2026.jpg",
     referenceNo: "",
     en: {
       title: "Memorandum to Mayor — Ichalkaranji Municipal Corporation",
@@ -398,8 +373,6 @@ const ENTRIES = [
     description: "इचलकरंजी शहरातील ३०+ प्रतिष्ठित नागरिकांच्या (व्यापारी संघटना अध्यक्ष, डॉक्टर, वकील, शिक्षक, माजी नगरसेवक) रेल्वे मार्गाबाबतच्या वैयक्तिक प्रतिक्रिया असलेली विशेष पुरवणी — रोजगार, व्यापार, महिला सुरक्षा, उद्योग वाढ, अशा अनेक अंगांनी मते.",
     response: "लागू नाही — समुदायाचे मत नोंदवणारे प्रसारमाध्यम वृत्तांकन.",
     status: "replied",
-    proofType: "image",
-    proofSrc: "news-citizen-testimonials-apr2026.jpg",
     referenceNo: "",
     en: {
       title: "News — Citizen Testimonials Special Supplement",
@@ -418,8 +391,6 @@ const ENTRIES = [
     description: "खासदार धैर्यशील माने यांनी रेल्वे कृती समितीच्या बैठकीत आश्वासन दिले की दीड महिन्यात निधी उपलब्ध होईल — दिवाळीपूर्वी राज्य सरकारचे १०० कोटी व केंद्र सरकारचे १०० कोटी असे जवळपास २०० कोटी उपलब्ध करून देऊ, असे सांगितले. या आश्वासनानंतर समितीने धरणे आंदोलन तात्पुरते स्थगित केले.",
     response: "आश्वासन दिले गेले, पण अद्याप प्रत्यक्ष निधी वितरण झालेले नाही.",
     status: "pending",
-    proofType: "image",
-    proofSrc: "news-mp-funding-assurance-09may2026.jpg",
     referenceNo: "",
     en: {
       title: "News — Rashtragee: MP Mane's Funding Assurance",
@@ -438,8 +409,6 @@ const ENTRIES = [
     description: "हजारो पोस्टकार्ड्स बांधून प्रेस रूममध्ये काढलेले छायाचित्र — मास लेटर मोहिमेचा भौतिक पुरावा, केसरीच्या '१०,००० पत्रे' वृत्तांकनाशी संबंधित (१६ एप्रिल २०२६ ची नोंद).",
     response: "लागू नाही — मास मेलिंग मोहिमेचा भौतिक पुरावा.",
     status: "no-response",
-    proofType: "image",
-    proofSrc: "photo-postcards-bundle-apr2026.jpg",
     referenceNo: "",
     en: {
       title: "Mass Postcard Campaign — Photo Evidence",
@@ -458,8 +427,6 @@ const ENTRIES = [
     description: "भाजप महाराष्ट्र रेल्वे समितीचे प्रदेश प्रकोष्ठ संयोजक कैलास वर्मा यांनी इचलकरंजीला भेट देऊन कृती समितीला आश्वासन दिले की लोकसभा आचारसंहिता संपल्यानंतर केंद्रीय रेल्वे विभाग, नीती आयोग तसेच मुंबईत उपमुख्यमंत्री देवेंद्र फडणवीस यांच्यासोबत बैठक लावली जाईल.",
     response: "लागू नाही — २०२४ च्या लोकसभा निवडणुकीपूर्वी दिलेल्या राजकीय आश्वासनाचे वृत्तांकन.",
     status: "replied",
-    proofType: "image",
-    proofSrc: "news-kailash-verma-06may2024.jpg",
     referenceNo: "",
     en: {
       title: "News — Rashtragee: BJP Railway Cell Convener Kailash Verma's Delhi Meeting Promise",
@@ -478,8 +445,6 @@ const ENTRIES = [
     description: "लोकसभा निवडणुकीत इचलकरंजी रेल्वे प्रश्नावर उमेदवारांची दुटप्पी भूमिका उघड झाली — एकाने रेल्वेसाठी पत्र दिले होते, पण काही दिवसांनी १४ गावांच्या विरोधानंतर रेल्वे नकोच म्हणून सांगितले. कृती समितीने सर्व उमेदवारांना रेल्वे प्रश्नावर भूमिका स्पष्ट करण्याचे आवाहन केले.",
     response: "लागू नाही — २०२४ निवडणूक काळातील वृत्तांकन.",
     status: "replied",
-    proofType: "image",
-    proofSrc: "news-pudhari-election-04may2024.jpg",
     referenceNo: "",
     en: {
       title: "News — Pudhari: \"Railway Issue Takes Centre Stage\" (2024 Election Coverage)",
@@ -496,10 +461,8 @@ const ENTRIES = [
     title: "बातमी — राष्ट्रगीत: सुरेश प्रभूंची विलंबाबाबत नाराजी",
     to_whom: "सार्वजनिक वृत्तांकन — दैनिक राष्ट्रगीत",
     description: "माजी केंद्रीय रेल्वे मंत्री सुरेश प्रभू इचलकरंजीच्या आपटे वाचन मंदिरात व्याख्यानासाठी आले असता, कृती समितीने त्यांच्या हस्ते २०१७ साली मंजुरी दिल्याबद्दल जाहीर सत्कार केला. प्रभूंनी मार्ग मंजूर होऊन सर्वेक्षण पूर्ण झाल्यानंतरही ८ किमीचा मार्ग रखडल्याबद्दल नाराजी व्यक्त केली आणि वस्त्रनगरी रेल्वे मार्गावर येणे गरजेचे आहे असे आवर्जून सांगितले.",
-    response: "लागू नाही — माजी रेल्वे मंत्र्यांच्या सार्वजनिक विधानाचे वृत्तांकन.",
+    response: "माजी रेल्वे मंत्र्यांच्या सार्वजनिक विधानाचे वृत्तांकन.",
     status: "no-response",
-    proofType: "image",
-    proofSrc: "news-suresh-prabhu-naraji-12may2026.jpg",
     referenceNo: "",
     en: {
       title: "News — Rashtragee: Suresh Prabhu's Displeasure Over Delay",
@@ -563,7 +526,7 @@ const ENTRIES = [
     category: "letter",
     title: "निवडणूक प्रचारसभा — केंद्रीय गृहमंत्री अमित शाह यांना निवेदन सुपूर्द",
     to_whom: "केंद्रीय गृहमंत्री अमित शाह (महाराष्ट्र विधानसभा निवडणूक प्रचार दौऱ्यादरम्यान)",
-    description: "२०२४ च्या महाराष्ट्र विधानसभा निवडणुकीच्या प्रचारसभेत, रेल्वे कृती समितीच्या एका सदस्याने अमित शाह यांना रेल्वे मागणीचे निवेदन दिले.",
+    description: "२०२४ च्या महाराष्ट्र विधानसभा निवडणुकीच्या प्रचारसभेत, रेल्वे कृती समितीच्या वतीने श्री. बाळकृष्ण तोतला जी यांनी अमित शाह यांना रेल्वे मागणीचे निवेदन दिले.",
     response: "निवेदन स्वीकारले गेले; औपचारिक उत्तर आलेले नाही.",
     status: "no-response",
     proofType: "video",
@@ -580,8 +543,6 @@ const ENTRIES = [
     description: "हातकणंगले–इचलकरंजी (8 किमी) प्रकल्पासाठी 2017 पासून वर्षनिहाय किती निधी मंजूर झाला (प्रमाणित प्रतीसह), राज्य सरकारचा 50% वाटा रेल्वेकडे वर्ग झाला का, आणि DPR मंजूर झाला आहे का व भौतिक काम कोणत्या टप्प्यावर आहे — असे 3 प्रश्न विचारले.",
     response: "प्रकल्प 2017-18 च्या Pink Book मध्ये समाविष्ट; 2017 ते 2026 या काळात एकूण ₹12.2005 कोटी निधी मंजूर (आवश्यक प्रक्रिया/मंजुऱ्यांनंतरच प्रत्यक्ष खर्च होईल असे नमूद). प्रकल्प राज्य सरकार–रेल्वे यांच्यातील cost-sharing व्यवस्थेवर आधारित नाही. DPR 02.01.2020 रोजी ₹180.73 कोटी खर्चासह सादर, ROR (-12.73%), सध्या रेल्वे बोर्डाच्या छाननीत.",
     status: "replied",
-    proofType: "image",
-    proofSrc: "32-rti-reply-ol272.jpeg",
     referenceNo: "EW/106/RTI/2026/OL-272 (RTI Appl. No. CRAIL/R/P/26/00177)",
     en: {
       title: "RTI Reply — Fund Sanction & DPR Status (Ref. OL-272)",
@@ -600,8 +561,6 @@ const ENTRIES = [
     description: "ROR -12.73% कशी निश्चित झाली याचा Traffic Survey Report व Financial Appraisal Note, 2020-2026 दरम्यानच्या रेल्वे बोर्डाच्या फाईल नोटिंग्ज, प्रकल्प छाननीसाठीची कमाल वेळ-मर्यादा, राज्य सरकार–रेल्वे यांच्यातील cost-sharing पत्रव्यवहार, आणि 2017 पासूनच्या मंजूर/व्यपगत निधीचा वर्षनिहाय तपशील — असे 5 सविस्तर प्रश्न विचारले.",
     response: "DPR 02.01.2020 रोजी ₹180.73 कोटी व ROR (-12.73%) सह सादर; अद्याप मंजूर न झाल्याने Traffic Survey/Financial Appraisal तपशील देता येणार नाही. फाईल नोटिंग्ज 'या कार्यालयात उपलब्ध नाहीत' असे उत्तर. छाननीसाठी रेल्वे बोर्डाने कुठलीही कालमर्यादा ठरवलेली नाही. प्रकल्प cost-sharing व्यवस्थेवर आधारित नाही. 2017 ते 2026 या काळात एकूण ₹12.2005 कोटी निधी मंजूर, आवश्यक मंजुऱ्यांनंतरच खर्च होईल.",
     status: "replied",
-    proofType: "image",
-    proofSrc: "33-rti-reply-ol270.jpeg",
     referenceNo: "EW/106/RTI/2026/OL-270 (RTI Appl. No. CRAIL/R/P/26/00176)",
     en: {
       title: "RTI Reply — Traffic Survey, File Notings & Fund Details (Ref. OL-270)",
@@ -618,7 +577,7 @@ const ENTRIES = [
     title: "इचलकरंजी रेल्वे कृती समिती",
     to_whom: "Central Railway",
     description: "इचलकरंजी करांची रेल्वे मागणी लवकरात लवकर पूर्ण करावी.",
-    response: "नक्कीच आमचे प्रयत्न सुरू आहेत.",
+    response: "नक्कीच",
     status: "replied",
     proofType: "image",
     proofSrc: "34--5q6s48.jpg",
