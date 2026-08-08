@@ -1,12 +1,12 @@
 // Team / committee members — edited via admin.html "सदस्य" tab.
 const TEAM_MEMBERS = [
   {
-    "photo": "team-1786108355741-img-20260807-wa0095.jpg",
-    "name": "श्री. नंदकुमार बांगड"
-  },
-  {
     "photo": "team-1786177073058-img-20260808-wa0037.jpg",
     "name": "श्री. अजय जाधव (आबा)"
+  },
+  {
+    "photo": "team-1786108355741-img-20260807-wa0095.jpg",
+    "name": "श्री. नंदकुमार बांगड"
   },
   {
     "photo": "team-1786108094942-whatsapp-image-2026-08-07-at-6.35.24-pm.jpeg",
