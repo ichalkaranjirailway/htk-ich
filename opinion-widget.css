@@ -40,6 +40,7 @@
   position:relative;
   height:30px;
   margin:22px 0 26px;
+  overflow:hidden;
   background:
     repeating-linear-gradient(90deg,
       var(--ow-panel-line) 0 18px, transparent 18px 34px);
@@ -53,14 +54,16 @@
   transform:translateY(-50%);
 }
 #opinion-widget .train{
-  position:absolute; top:50%; font-size:24px; left:-30px;
-  transform:translateY(-60%);
+  position:absolute; top:50%; left:0; width:100%;
+  font-size:24px; text-align:left; pointer-events:none;
+  transform:translate3d(105%,-60%,0);
+  will-change:transform;
   animation:opw-chug 9s linear infinite;
   filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));
 }
 @keyframes opw-chug{
-  0%{left:calc(100% + 10px);}
-  100%{left:-30px;}
+  0%{transform:translate3d(105%,-60%,0);}
+  100%{transform:translate3d(-10%,-60%,0);}
 }
 @media (prefers-reduced-motion: reduce){ #opinion-widget .train{animation-duration:45s;} }
 
