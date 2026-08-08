@@ -38,7 +38,7 @@
 /* ---- Track divider signature element ---- */
 #opinion-widget .track{
   position:relative;
-  height:30px;
+  height:34px;
   margin:22px 0 26px;
   overflow:hidden;
   background:
@@ -46,16 +46,20 @@
       var(--ow-panel-line) 0 18px, transparent 18px 34px);
   background-position:center;
 }
+/* मधली रेल्वे रुळाची चमकदार सोनेरी रेघ — आधी opacity खूप कमी (.55) आणि
+   जाडी फक्त 3px होती, त्यामुळे मोबाईलवर जवळपास दिसतच नव्हती. आता जास्त
+   जाड, जास्त उजळ, आणि स्पष्ट चमक (glow) दिली आहे. */
 #opinion-widget .track::before{
   content:"";
   position:absolute; left:0; right:0; top:50%;
-  height:3px; background:var(--ow-amber); opacity:.55;
-  box-shadow:0 0 10px 1px rgba(232,169,59,.35);
+  height:4px; background:var(--ow-amber); opacity:.95;
+  box-shadow:0 0 14px 3px rgba(232,169,59,.7), 0 0 2px 0 rgba(255,255,255,.6);
   transform:translateY(-50%);
+  border-radius:2px;
 }
 #opinion-widget .train{
   position:absolute; top:50%; left:0; width:100%;
-  font-size:24px; text-align:left; pointer-events:none;
+  font-size:26px; text-align:left; pointer-events:none;
   transform:translate3d(105%,-60%,0);
   will-change:transform;
   animation:opw-chug 9s linear infinite;

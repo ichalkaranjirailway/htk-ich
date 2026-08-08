@@ -192,7 +192,7 @@ service cloud.firestore {
     }
   }
 }</pre>
-<li style="margin-top:8px;">खाली FIREBASE_CONFIG मध्ये तेच values भरा जे opinion.html मध्ये वापरले आहेत (script टॅगच्या सुरुवातीला दिसतील).</li>
+<li style="margin-top:8px;">FIREBASE_CONFIG आता इथे वेगळं भरायची गरज नाही — opinion.html प्रमाणेच हे पेजही firebase-config.js मधली values आपोआप वापरतं.</li>
 </ol>
 </details>
 </div>
@@ -267,6 +267,7 @@ service cloud.firestore {
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
 
 <script>
 const REPO = "ichalkaranjirailway/htk-ich";
@@ -767,16 +768,9 @@ document.getElementById('entryForm').addEventListener('submit', async (e) => {
 });
 
 // ---- Voting results tab (opinion.html data) ----
-// Paste the SAME firebaseConfig values used in opinion.html here.
-const FIREBASE_CONFIG = {
-  apiKey: "PASTE_YOUR_API_KEY",
-  authDomain: "PASTE_YOUR_PROJECT.firebaseapp.com",
-  projectId: "PASTE_YOUR_PROJECT_ID",
-  storageBucket: "PASTE_YOUR_PROJECT.appspot.com",
-  messagingSenderId: "PASTE_YOUR_SENDER_ID",
-  appId: "PASTE_YOUR_APP_ID"
-};
-
+// FIREBASE_CONFIG आता वेगळं इथे लिहिलेलं नाही — ते वरच्या firebase-config.js
+// मधून येतं (opinion.html आणि index.html सुद्धा तोच शेअर करतात), त्यामुळे
+// इथे placeholder राहून लॉगिन कधीच काम न करण्याची समस्या होणार नाही.
 let voteDb = null;
 if (FIREBASE_CONFIG.apiKey.indexOf('PASTE_YOUR') === -1) {
   const voteApp = firebase.initializeApp(FIREBASE_CONFIG, 'voteApp');

@@ -72,6 +72,11 @@
   }
 
   let chosenVote = null;
+  // Slow network वर युजर बटण पटापट 2-3 वेळा टॅप करतो (काहीच response न दिसल्याने),
+  // आणि ते सगळे टॅप बटण disable होण्याआधीच रजिस्टर होऊ शकतात. त्यामुळे फक्त
+  // btn.disabled वर अवलंबून न राहता, हा स्वतंत्र flag पहिल्याच ओळीत चेक करतो —
+  // यामुळे duplicate सबमिशन (एकाच व्यक्तीची नोंद 2-3 वेळा) पूर्णपणे थांबते.
+  let isSubmitting = false;
 
   window.owSelectVote = function(vote){
     chosenVote = vote;
@@ -94,14 +99,22 @@
   }
 
   window.owSubmitVote = async function(skipDetails){
+    // गार्ड — आधीच एक सबमिशन चालू असेल तर हा दुसरा/तिसरा टॅप इथेच थांबतो.
+    if (isSubmitting) return;
+    isSubmitting = true;
+
     const name   = skipDetails ? '' : document.getElementById('fname').value.trim();
     const mobile = skipDetails ? '' : document.getElementById('fmobile').value.trim();
     const area   = skipDetails ? '' : document.getElementById('farea').value.trim();
     const btn    = document.getElementById('submitBtn');
+    const skipBtn= document.getElementById('skipBtn');
     const errEl  = document.getElementById('submitErr');
+    const origBtnText  = btn ? btn.textContent : '';
+    const origSkipText = skipBtn ? skipBtn.textContent : '';
 
     errEl.classList.remove('show');
-    if (btn) { btn.disabled = true; }
+    if (btn) { btn.disabled = true; btn.textContent = 'पाठवत आहे...'; }
+    if (skipBtn) { skipBtn.disabled = true; }
 
     if (db) {
       try {
@@ -126,7 +139,9 @@
         // या ब्राऊझरवर मत नोंदवलं गेल्याची खूण साठवा — परत विचारू नये म्हणून
         localStorage.setItem('htk_ich_voted', 'true');
       } catch (e) {
-        if (btn) { btn.disabled = false; }
+        isSubmitting = false;
+        if (btn) { btn.disabled = false; btn.textContent = origBtnText; }
+        if (skipBtn) { skipBtn.disabled = false; skipBtn.textContent = origSkipText; }
         errEl.classList.add('show');
         return; // don't show thank-you if the write actually failed
       }
