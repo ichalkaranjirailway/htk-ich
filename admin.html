@@ -201,7 +201,13 @@ service cloud.firestore {
 <button type="button" id="loadVotesBtn">निकाल लोड करा</button>
 <div id="voteTally" style="margin:14px 0; display:flex; gap:12px; flex-wrap:wrap;"></div>
 <button type="button" id="exportCsvBtn" class="secondary" style="display:none;">⬇️ CSV म्हणून export करा</button>
+<p class="hint">प्रत्येक नोंदीसमोरचं 🗑️ बटण दाबून ती नोंद कायमची delete करता येईल (चुकीच्या/duplicate नोंदींसाठी).</p>
 <div id="voterDetailsList" style="max-height:400px; overflow-y:auto; background:#fff; border:1px solid var(--line); border-radius:10px; padding:6px 12px; margin-top:12px;"></div>
+
+<h3 style="margin-top:24px;">🌐 सार्वजनिक यादी (साईटवर सगळ्यांना दिसणारी "पाठिंबा देणारे नागरिक")</h3>
+<p class="hint">इथून हटवलेली नोंद साईटवरच्या यादीतून लगेच (live) नाहीशी होईल. Duplicate नावं इथूनच साफ करा.</p>
+<button type="button" id="loadPublicBtn">सार्वजनिक यादी लोड करा</button>
+<div id="publicVotersAdminList" style="max-height:400px; overflow-y:auto; background:#fff; border:1px solid var(--line); border-radius:10px; padding:6px 12px; margin-top:12px;"></div>
 </div>
 
 <h2>📚 अस्तित्वात असलेल्या Timeline नोंदी</h2>
@@ -811,7 +817,7 @@ document.getElementById('loadVotesBtn').addEventListener('click', async () => {
     detailsSnap.forEach(doc => {
       const d = doc.data();
       const ts = d.timestamp && d.timestamp.toDate ? d.timestamp.toDate().toLocaleString('en-IN') : '';
-      rows.push({ name: d.name || '', mobile: d.mobile || '', area: d.area || '', vote: d.vote || '', ts });
+      rows.push({ id: doc.id, name: d.name || '', mobile: d.mobile || '', area: d.area || '', vote: d.vote || '', ts });
     });
     _voterDetailsCache = rows;
 
@@ -820,12 +826,85 @@ document.getElementById('loadVotesBtn').addEventListener('click', async () => {
     rows.forEach(r => {
       const row = document.createElement('div');
       row.className = 'entry-row';
-      row.innerHTML = `<div class="meta"><b>${r.name || '(नाव नाही)'} — ${r.vote}</b><span>${r.mobile} · ${r.area} · ${r.ts}</span></div>`;
+      row.innerHTML = `<div class="meta"><b>${r.name || '(नाव नाही)'} — ${r.vote}</b><span>${r.mobile} · ${r.area} · ${r.ts}</span></div>
+        <div class="btns"><button type="button" class="danger delVoterDetail" data-id="${r.id}">🗑️</button></div>`;
       listEl.appendChild(row);
+    });
+    listEl.querySelectorAll('.delVoterDetail').forEach(btn => {
+      btn.addEventListener('click', () => confirmAndDeleteVoter(btn.dataset.id));
     });
 
     document.getElementById('exportCsvBtn').style.display = rows.length ? 'inline-block' : 'none';
     showStatus(`✅ निकाल लोड झाले. ${rows.length} जणांनी तपशील दिला आहे.`, 'ok');
+  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
+});
+
+// ---------------------------------------------------------------------
+// एक नोंद पूर्णपणे साफ करणारं मध्यवर्ती function.
+// नवीन (fix नंतरच्या) नोंदींना votes / voter_details / voter_public या
+// तिन्ही collections मध्ये EKACH ID असतो (opinion-widget.js मधला voterId).
+// त्यामुळे कुठूनही delete दाबलं तरी ही तिन्ही ठिकाणची नोंद साफ होते, आणि
+// मूळ मत (होय/नाही) सापडलं तर counter सुद्धा बरोबर 1 ने कमी होतो —
+// म्हणजे यादी साफ केल्यावर एकूण आकडाही खरा राहतो.
+// जुन्या (fix आधीच्या) duplicate नोंदींना collections मध्ये वेगवेगळे ID
+// असू शकतात — अशावेळी जी collection मधून delete दाबलं तेवढीच साफ होते,
+// बाकीच्या यादीतून त्या वेगळ्या delete कराव्या लागतील (हरकत नाही, एकदाच).
+// ---------------------------------------------------------------------
+async function deleteVoterEverywhere(id){
+  const voteRef = voteDb.collection('votes').doc(id);
+  const voteSnap = await voteRef.get().catch(() => null);
+  const hadVote = (voteSnap && voteSnap.exists) ? voteSnap.data().vote : null;
+
+  await Promise.all([
+    voteRef.delete().catch(()=>{}),
+    voteDb.collection('voter_details').doc(id).delete().catch(()=>{}),
+    voteDb.collection('voter_public').doc(id).delete().catch(()=>{})
+  ]);
+
+  if (hadVote) {
+    const field = hadVote === 'होय' ? 'yes' : 'no';
+    const countsRef = voteDb.collection('meta').doc('counts');
+    await voteDb.runTransaction(async (t) => {
+      const snap = await t.get(countsRef);
+      if (!snap.exists) return;
+      const cur = snap.data()[field] || 0;
+      t.update(countsRef, { [field]: Math.max(0, cur - 1) });
+    });
+  }
+}
+
+async function confirmAndDeleteVoter(id){
+  if(!confirm('ही नोंद कायमची delete करायची आहे का? (यादी + counter दोन्हीतून)')) return;
+  try {
+    showStatus('delete होत आहे...', 'busy');
+    await deleteVoterEverywhere(id);
+    showStatus('✅ नोंद पूर्णपणे delete झाली.', 'ok');
+    document.getElementById('loadVotesBtn').click();
+    if (document.getElementById('publicVotersAdminList').innerHTML.trim() !== '') {
+      document.getElementById('loadPublicBtn').click();
+    }
+  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
+}
+
+document.getElementById('loadPublicBtn').addEventListener('click', async () => {
+  try {
+    showStatus('सार्वजनिक यादी लोड होत आहे...', 'busy');
+    const snap = await voteDb.collection('voter_public').orderBy('timestamp', 'desc').limit(500).get();
+    const listEl = document.getElementById('publicVotersAdminList');
+    listEl.innerHTML = snap.empty ? '<p class="hint">अजून कुणीही नाव नोंदवलेलं नाही.</p>' : '';
+    snap.forEach(doc => {
+      const d = doc.data();
+      const ts = d.timestamp && d.timestamp.toDate ? d.timestamp.toDate().toLocaleString('en-IN') : '';
+      const row = document.createElement('div');
+      row.className = 'entry-row';
+      row.innerHTML = `<div class="meta"><b>${d.name || '(नाव नाही)'}</b><span>${d.area || ''} · ${ts}</span></div>
+        <div class="btns"><button type="button" class="danger delPublicVoter" data-id="${doc.id}">🗑️</button></div>`;
+      listEl.appendChild(row);
+    });
+    listEl.querySelectorAll('.delPublicVoter').forEach(btn => {
+      btn.addEventListener('click', () => confirmAndDeleteVoter(btn.dataset.id));
+    });
+    showStatus(`✅ सार्वजनिक यादी लोड झाली. ${snap.size} नोंदी.`, 'ok');
   } catch(err){ showStatus('❌ ' + err.message, 'err'); }
 });
 
