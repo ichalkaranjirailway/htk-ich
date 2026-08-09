@@ -105,16 +105,16 @@
   };
 
   async function bumpCounter(vote){
+    // आधी इथे 'transaction' (आधी वाच, मग +1 करून लिही) वापरलं होतं — पण साईटवर
+    // एकाच वेळी अनेक लोक मत नोंदवत असताना (आणि नेटवर्क स्लो असताना) transaction
+    // वारंवार अडायची, त्यामुळे error यायचा आणि counter गोठून राहायचा.
+    // FieldValue.increment() ही एकाच पावलात होणारी, अणुक (atomic) पद्धत आहे —
+    // वाचायची गरजच नाही, त्यामुळे गर्दीतही न अडता नेहमी यशस्वी होते.
     const ref = db.collection('meta').doc('counts');
     const field = vote === 'होय' ? 'yes' : 'no';
-    await db.runTransaction(async (t) => {
-      const snap = await t.get(ref);
-      if (!snap.exists) {
-        t.set(ref, { yes: field === 'yes' ? 1 : 0, no: field === 'no' ? 1 : 0 });
-      } else {
-        t.update(ref, { [field]: (snap.data()[field] || 0) + 1 });
-      }
-    });
+    await ref.set({
+      [field]: firebase.firestore.FieldValue.increment(1)
+    }, { merge: true });
   }
 
   window.owSubmitVote = async function(skipDetails){

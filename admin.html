@@ -200,6 +200,8 @@ service cloud.firestore {
 <div id="voteResultsBox" style="display:none; margin-top:14px;">
 <button type="button" id="loadVotesBtn">निकाल लोड करा</button>
 <div id="voteTally" style="margin:14px 0; display:flex; gap:12px; flex-wrap:wrap;"></div>
+<button type="button" id="recalcBtn" class="secondary">🔄 Counter दुरुस्त करा (सगळी खरी मतं मोजून)</button>
+<p class="hint">जुन्या bug मुळे counter मध्ये काही मतं मोजली गेली नव्हती त्यासाठी — हे दाबल्यावर <code>votes</code> मधल्या सगळ्या खऱ्या नोंदी मोजून होय/नाही आकडा बरोबर केला जाईल. सुरक्षित आहे, कितीही वेळा चालवू शकता.</p>
 <button type="button" id="exportCsvBtn" class="secondary" style="display:none;">⬇️ CSV म्हणून export करा</button>
 <p class="hint">प्रत्येक नोंदीसमोरचं 🗑️ बटण दाबून ती नोंद कायमची delete करता येईल (चुकीच्या/duplicate नोंदींसाठी).</p>
 <div id="voterDetailsList" style="max-height:400px; overflow-y:auto; background:#fff; border:1px solid var(--line); border-radius:10px; padding:6px 12px; margin-top:12px;"></div>
@@ -850,6 +852,30 @@ document.getElementById('loadVotesBtn').addEventListener('click', async () => {
 // असू शकतात — अशावेळी जी collection मधून delete दाबलं तेवढीच साफ होते,
 // बाकीच्या यादीतून त्या वेगळ्या delete कराव्या लागतील (हरकत नाही, एकदाच).
 // ---------------------------------------------------------------------
+// ---------------------------------------------------------------------
+// Counter Recalculate — जुन्या (transaction-वाल्या) bug मुळे counter मध्ये
+// काही खरी मतं मोजलीच गेली नव्हती. हे function `votes` collection मधल्या
+// सगळ्या नोंदी प्रत्यक्ष मोजून meta/counts मध्ये खरा आकडा भरतं — त्यामुळे
+// counter आणि प्रत्यक्ष votes नेहमी जुळतील. मतं जास्त असतील (हजारो) तरी
+// चालेल, फक्त वाचायला थोडा वेळ लागू शकतो.
+// ---------------------------------------------------------------------
+document.getElementById('recalcBtn').addEventListener('click', async () => {
+  if(!confirm('votes मधल्या सगळ्या नोंदी वाचून होय/नाही counter चा खरा आकडा भरायचा का? (सध्याचा आकडा बदलला जाईल)')) return;
+  try {
+    showStatus('सगळी मतं मोजत आहे... मतं जास्त असतील तर थोडा वेळ लागू शकतो.', 'busy');
+    const snap = await voteDb.collection('votes').get();
+    let yes = 0, no = 0;
+    snap.forEach(doc => {
+      const v = doc.data().vote;
+      if (v === 'होय') yes++;
+      else if (v === 'नाही') no++;
+    });
+    await voteDb.collection('meta').doc('counts').set({ yes, no });
+    showStatus(`✅ Counter दुरुस्त झाला — होय: ${yes}, नाही: ${no}, एकूण: ${yes + no} (एकूण ${snap.size} votes नोंदी सापडल्या).`, 'ok');
+    document.getElementById('loadVotesBtn').click();
+  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
+});
+
 async function deleteVoterEverywhere(id){
   const voteRef = voteDb.collection('votes').doc(id);
   const voteSnap = await voteRef.get().catch(() => null);
