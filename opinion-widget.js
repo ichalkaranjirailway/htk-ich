@@ -71,6 +71,25 @@
     document.getElementById('thanksPanel').classList.add('show');
   }
 
+  // ---------------------------------------------------------------------
+  // DUPLICATE-SUBMISSION FIX
+  // प्रत्येक ब्राऊझर/फोनला एकच कायमचा ID दिला जातो (localStorage मध्ये साठवून).
+  // तोच ID Firestore document ID म्हणून वापरला जातो (.add() ऐवजी .doc(id).set()).
+  // यामुळे स्लो नेटवर्कवर युजरने page reload करून किंवा error आल्यावर परत
+  // "मत नोंदवा" दाबलं, तरी तीच entry पुन्हा update होते — नवीन duplicate entry
+  // तयार होत नाही, आणि होय/नाही counter सुद्धा फक्त एकदाच वाढतो.
+  // ---------------------------------------------------------------------
+  function getVoterId(){
+    let id = localStorage.getItem('htk_ich_voter_id');
+    if (!id) {
+      id = (window.crypto && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : 'v-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+      localStorage.setItem('htk_ich_voter_id', id);
+    }
+    return id;
+  }
+
   let chosenVote = null;
   // Slow network वर युजर बटण पटापट 2-3 वेळा टॅप करतो (काहीच response न दिसल्याने),
   // आणि ते सगळे टॅप बटण disable होण्याआधीच रजिस्टर होऊ शकतात. त्यामुळे फक्त
@@ -103,6 +122,7 @@
     if (isSubmitting) return;
     isSubmitting = true;
 
+    const voterId = getVoterId();
     const name   = skipDetails ? '' : document.getElementById('fname').value.trim();
     const mobile = skipDetails ? '' : document.getElementById('fmobile').value.trim();
     const area   = skipDetails ? '' : document.getElementById('farea').value.trim();
@@ -118,24 +138,36 @@
 
     if (db) {
       try {
-        await db.collection('votes').add({
+        const voteRef = db.collection('votes').doc(voterId);
+        // हा voterId आधीच एकदा यशस्वीपणे मत नोंदवून गेला आहे का, ते आधी बघतो —
+        // असेल तर counter परत वाढवायचा नाही (नाहीतर retry केल्यावर counter
+        // चुकीचा फुगत राहील).
+        const existingSnap = await voteRef.get();
+        const alreadyCounted = existingSnap.exists;
+
+        // .add() ऐवजी .doc(voterId).set(..., {merge:true}) — त्यामुळे retry/
+        // reload झाल्यावर नवीन entry न बनता तीच entry अद्ययावत होते.
+        await voteRef.set({
           vote: chosenVote,
           timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        });
+        }, { merge: true });
+
         if (name || mobile || area) {
-          await db.collection('voter_details').add({
+          await db.collection('voter_details').doc(voterId).set({
             vote: chosenVote, name, mobile, area,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
-          });
+          }, { merge: true });
         }
         // सार्वजनिक यादीसाठी — फक्त नाव + परिसर (मोबाईल नंबर कधीच नाही)
         if (name || area) {
-          await db.collection('voter_public').add({
+          await db.collection('voter_public').doc(voterId).set({
             name, area,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
-          });
+          }, { merge: true });
         }
-        await bumpCounter(chosenVote);
+        if (!alreadyCounted) {
+          await bumpCounter(chosenVote);
+        }
         // या ब्राऊझरवर मत नोंदवलं गेल्याची खूण साठवा — परत विचारू नये म्हणून
         localStorage.setItem('htk_ich_voted', 'true');
       } catch (e) {
@@ -233,4 +265,3 @@
   startPublicVotersLiveFeed();
 
 })();
-   
