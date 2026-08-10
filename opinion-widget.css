@@ -52,6 +52,9 @@
 #opinion-widget .track::before{
   content:"";
   position:absolute; left:0; right:0; top:50%;
+  width:auto; bottom:auto; /* साईटच्या मुख्य styles.css मधल्या वेगळ्या .track class शी
+                               नाव जुळल्याने width:2px/bottom:6px "गळून" येत होते —
+                               तेच इथे परत रीसेट करून पूर्ण रुंदीची सोनेरी रेघ परत आणली. */
   height:4px; background:var(--ow-amber); opacity:.95;
   box-shadow:0 0 14px 3px rgba(232,169,59,.7), 0 0 2px 0 rgba(255,255,255,.6);
   transform:translateY(-50%);
