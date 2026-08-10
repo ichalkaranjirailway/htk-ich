@@ -264,4 +264,75 @@
   }
   startPublicVotersLiveFeed();
 
+  // ---------------------------------------------------------------------
+  // LIVE SHARE MESSAGE (नवीन, addition-only) — WhatsApp/Twitter शेअर मेसेजमध्ये
+  // सध्याचा एकूण वोट काउंट + "किती दिवस बाकी" आपोआप, live दिसतं.
+  // वरच्या कोणत्याही ओळीला हात लावलेला नाही — हे फक्त शेवटी जोडलेलं आहे.
+  // कुठेही चूक झाली तरी (try/catch मुळे) बाकीचं पान/वोटिंग अजिबात थांबणार नाही.
+  // ---------------------------------------------------------------------
+  try {
+    const VOTING_END = new Date("2026-08-19T00:00:00+05:30"); // 18 ऑगस्ट रात्री १२ (IST)
+    let lastKnownTotal = 0;
+
+    function daysLeftLabel(){
+      const diff = VOTING_END - new Date();
+      if (diff <= 0) return "मुदत संपली — तरीही मत द्या!";
+      const d = Math.ceil(diff / (1000*60*60*24));
+      if (d <= 1) return "आजचा शेवटचा दिवस!";
+      return "फक्त " + d + " दिवस बाकी";
+    }
+
+    // पानावर दिसणारा banner — पूर्णपणे JS मधून तयार केला जातो, त्यामुळे
+    // कोणत्याही HTML/CSS फाईलला हात लावायची गरज नाही. वोट बटणांच्या अगदी वर दिसेल.
+    let countdownEl = null;
+    try {
+      const trackEl = document.querySelector('#opinion-widget .track');
+      if (trackEl && trackEl.parentNode) {
+        countdownEl = document.createElement('div');
+        countdownEl.id = 'liveCountdownBanner';
+        countdownEl.style.cssText =
+          'max-width:520px;margin:0 auto 18px;padding:12px 18px;' +
+          'background:#12283A;border:1px solid #D4AF37;border-radius:12px;' +
+          'text-align:center;font-family:"IBM Plex Sans",sans-serif;' +
+          'font-size:15px;font-weight:600;color:#F3D27A;';
+        trackEl.parentNode.insertBefore(countdownEl, trackEl);
+      }
+    } catch (e) { /* बॅनर न दिसल्यास फक्त तेवढंच वगळलं जाईल, बाकी पान सुरळीत राहील */ }
+
+    function updateShareLinksWithLiveCount(total){
+      try {
+        const countPart = (typeof total === 'number' && total > 0)
+          ? "आतापर्यंत " + total.toLocaleString('en-IN') + " जणांनी मत दिलं — "
+          : "";
+        const urgency = daysLeftLabel();
+
+        // 1) शेअर मेसेज (WhatsApp/Twitter)
+        const liveText = OC.shareMessage + "\n" + countPart + urgency;
+        const waEl = document.getElementById('waShare');
+        const twEl = document.getElementById('twShare');
+        if (waEl) waEl.href = "https://wa.me/?text=" + encodeURIComponent(liveText + "\n" + shareUrl);
+        if (twEl) twEl.href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(liveText) + "&url=" + encodeURIComponent(shareUrl);
+        // Facebook जाणूनबुजून बदललं नाही — तो og:description वापरतो, custom text वाचत नाही.
+
+        // 2) पानावर दिसणारा live banner
+        if (countdownEl) {
+          countdownEl.textContent = "🚂 " + countPart + urgency;
+        }
+      } catch (e) { /* अपडेट फेल झालं तरी वोटिंगवर काहीही परिणाम नाही */ }
+    }
+
+    if (db) {
+      db.collection('meta').doc('counts').onSnapshot(doc => {
+        const { yes = 0, no = 0 } = doc.exists ? doc.data() : {};
+        lastKnownTotal = yes + no;
+        updateShareLinksWithLiveCount(lastKnownTotal);
+      }, () => { updateShareLinksWithLiveCount(lastKnownTotal); });
+    } else {
+      updateShareLinksWithLiveCount(0);
+    }
+
+    // दर मिनिटाला "किती दिवस बाकी" चा मजकूर ताजा ठेवण्यासाठी (काउंट live ऐकलाच जातो)
+    setInterval(() => updateShareLinksWithLiveCount(lastKnownTotal), 60000);
+  } catch (e) { /* हा संपूर्ण नवीन भाग फेल झाला तरी वरचं सगळं वोटिंग लॉजिक सुरक्षित राहतं */ }
+
 })();
