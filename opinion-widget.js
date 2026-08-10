@@ -284,20 +284,69 @@
 
     // पानावर दिसणारा banner — पूर्णपणे JS मधून तयार केला जातो, त्यामुळे
     // कोणत्याही HTML/CSS फाईलला हात लावायची गरज नाही. वोट बटणांच्या अगदी वर दिसेल.
-    let countdownEl = null;
+    let countdownEl = null, countTextEl = null, ccD = null, ccH = null, ccM = null, ccS = null, ccBoxesWrap = null;
     try {
       const trackEl = document.querySelector('#opinion-widget .track');
       if (trackEl && trackEl.parentNode) {
         countdownEl = document.createElement('div');
         countdownEl.id = 'liveCountdownBanner';
         countdownEl.style.cssText =
-          'max-width:520px;margin:0 auto 18px;padding:12px 18px;' +
-          'background:#12283A;border:1px solid #D4AF37;border-radius:12px;' +
-          'text-align:center;font-family:"IBM Plex Sans",sans-serif;' +
-          'font-size:15px;font-weight:600;color:#F3D27A;';
+          'max-width:520px;margin:0 auto 18px;padding:16px 18px;' +
+          'background:linear-gradient(180deg,#12283A,#0E2130);border:1px solid #D4AF37;' +
+          'border-radius:16px;text-align:center;font-family:"IBM Plex Sans",sans-serif;' +
+          'box-shadow:0 6px 20px rgba(0,0,0,.35);';
+
+        countTextEl = document.createElement('div');
+        countTextEl.style.cssText = 'font-size:14px;font-weight:600;color:#F3D27A;margin-bottom:10px;';
+        countdownEl.appendChild(countTextEl);
+
+        ccBoxesWrap = document.createElement('div');
+        ccBoxesWrap.style.cssText = 'display:flex;justify-content:center;gap:8px;';
+
+        function makeBox(label){
+          const box = document.createElement('div');
+          box.style.cssText = 'min-width:54px;background:#0B1F2E;border:1px solid rgba(212,175,55,.4);' +
+            'border-radius:10px;padding:8px 4px;';
+          const num = document.createElement('div');
+          num.style.cssText = 'font-size:22px;font-weight:800;color:#FFFFFF;font-variant-numeric:tabular-nums;line-height:1;';
+          num.textContent = '--';
+          const lbl = document.createElement('div');
+          lbl.style.cssText = 'font-size:10.5px;color:#9FB0BA;margin-top:4px;letter-spacing:.3px;';
+          lbl.textContent = label;
+          box.appendChild(num); box.appendChild(lbl);
+          ccBoxesWrap.appendChild(box);
+          return num;
+        }
+        ccD = makeBox('दिवस');
+        ccH = makeBox('तास');
+        ccM = makeBox('मिनिटं');
+        ccS = makeBox('सेकंद');
+        countdownEl.appendChild(ccBoxesWrap);
+
         trackEl.parentNode.insertBefore(countdownEl, trackEl);
       }
     } catch (e) { /* बॅनर न दिसल्यास फक्त तेवढंच वगळलं जाईल, बाकी पान सुरळीत राहील */ }
+
+    function pad2(n){ return String(n).padStart(2, '0'); }
+
+    // दर सेकंदाला टिकणारा live countdown — फक्त हा भाग वेगळा, हलका इंटरव्हल आहे
+    function tickCountdown(){
+      if (!ccD) return;
+      const diff = VOTING_END - new Date();
+      if (diff <= 0) {
+        if (ccBoxesWrap) ccBoxesWrap.style.display = 'none';
+        if (countTextEl) countTextEl.style.marginBottom = '0';
+        return;
+      }
+      const d = Math.floor(diff / (1000*60*60*24));
+      const h = Math.floor((diff / (1000*60*60)) % 24);
+      const m = Math.floor((diff / (1000*60)) % 60);
+      const s = Math.floor((diff / 1000) % 60);
+      ccD.textContent = pad2(d);
+      ccH.textContent = pad2(h);
+      ccM.textContent = pad2(m);
+      ccS.textContent = pad2(s);
+    }
 
     function updateShareLinksWithLiveCount(total){
       try {
@@ -314,9 +363,9 @@
         if (twEl) twEl.href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(liveText) + "&url=" + encodeURIComponent(shareUrl);
         // Facebook जाणूनबुजून बदललं नाही — तो og:description वापरतो, custom text वाचत नाही.
 
-        // 2) पानावर दिसणारा live banner
-        if (countdownEl) {
-          countdownEl.textContent = "🚂 " + countPart + urgency;
+        // 2) पानावरच्या banner चा वरचा मजकूर (काउंट + "आजचा शेवटचा दिवस" इ.)
+        if (countTextEl) {
+          countTextEl.textContent = "🚂 " + countPart + urgency;
         }
       } catch (e) { /* अपडेट फेल झालं तरी वोटिंगवर काहीही परिणाम नाही */ }
     }
@@ -333,6 +382,10 @@
 
     // दर मिनिटाला "किती दिवस बाकी" चा मजकूर ताजा ठेवण्यासाठी (काउंट live ऐकलाच जातो)
     setInterval(() => updateShareLinksWithLiveCount(lastKnownTotal), 60000);
+
+    // दर सेकंदाला ticking timer अपडेट
+    tickCountdown();
+    setInterval(tickCountdown, 1000);
   } catch (e) { /* हा संपूर्ण नवीन भाग फेल झाला तरी वरचं सगळं वोटिंग लॉजिक सुरक्षित राहतं */ }
 
 })();
