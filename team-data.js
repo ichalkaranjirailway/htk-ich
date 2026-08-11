@@ -1,7 +1,7 @@
 // Team / committee members — edited via admin.html "सदस्य" tab.
 const TEAM_MEMBERS = [
   {
-    "photo": "team-1786466168973-img-20260811-181321.jpg",
+    "photo": "team-1786467563551-team-shrinivas-nandlal-sharma.jpg",
     "name": "कै. श्रीनिवास नंदलाल शर्मा"
   },
   {
