@@ -1,12 +1,19 @@
 // Team / committee members — edited via admin.html "सदस्य" tab.
 const TEAM_MEMBERS = [
   {
+    "photo": "team-shrinivas-nandlal-sharma.jpg",
+    "name": "कै. श्रीनिवास नंदलाल शर्मा",
+    "role": "रेल्वे कृती समिती सदस्य तसेच मध्य रेल्वे, पुणे विभागाच्या रेल्वे सल्लागार समितीचे सदस्य",
+    "memorial": true
+  },
+  {
     "photo": "team-1786177073058-img-20260808-wa0037.jpg",
     "name": "श्री. अजय जाधव (आबा)"
   },
   {
     "photo": "team-1786185976770-img-20260808-161513.jpg",
-    "name": "श्री. गुरुनाथ म्हातुकडे"
+    "name": "श्री. गुरुनाथ म्हातुकडे",
+    "role": "कार्याध्यक्ष"
   },
   {
     "photo": "team-1786108355741-img-20260807-wa0095.jpg",

@@ -15,3 +15,9 @@
 .team-item .avatar{width:88px;height:88px;border-radius:50%;object-fit:cover;background:#ddd;border:2px solid var(--line,#ddd);}
 .team-item .avatar.placeholder{display:flex;align-items:center;justify-content:center;font-size:1.6rem;color:#888;background:#eee;}
 .team-item span{margin-top:8px;font-size:.85rem;line-height:1.2;}
+.team-item.memorial{width:220px;padding:8px 12px 12px;border:1px solid #d8b46a;border-radius:8px;background:#fbf6ea;}
+.team-item.memorial .avatar-bw{filter:grayscale(1) contrast(1.05);border-color:#b08d3f;}
+.team-item.memorial .memorial-tag{font-size:.68rem;color:#8a6a1f;font-weight:600;margin-bottom:6px;white-space:nowrap;}
+.team-item.memorial span{font-weight:600;}
+.member-role{display:block;margin-top:4px;font-size:.72rem;line-height:1.3;color:#666;font-weight:400;white-space:normal;}
+.member-bio{margin:8px 0 0;font-size:.76rem;line-height:1.4;color:#555;text-align:left;white-space:normal;}

@@ -323,10 +323,16 @@ var teamGrid = document.getElementById('team-grid');
 if (typeof TEAM_MEMBERS !== 'undefined' && teamGrid) {
   TEAM_MEMBERS.forEach(function(member){
     var item = document.createElement('div');
-    item.className = 'team-item';
+    item.className = member.memorial ? 'team-item memorial' : 'team-item';
+    if (member.memorial) {
+      var tribute = document.createElement('div');
+      tribute.className = 'memorial-tag';
+      tribute.textContent = '॥ स्मृतिस मानवंदना ॥';
+      item.appendChild(tribute);
+    }
     if (member.photo) {
       var img = document.createElement('img');
-      img.className = 'avatar'; img.loading = 'lazy'; img.alt = member.name; img.src = member.photo;
+      img.className = member.memorial ? 'avatar avatar-bw' : 'avatar'; img.loading = 'lazy'; img.alt = member.name; img.src = member.photo;
       item.appendChild(img);
     } else {
       var ph = document.createElement('div');
@@ -337,6 +343,18 @@ if (typeof TEAM_MEMBERS !== 'undefined' && teamGrid) {
     var span = document.createElement('span');
     span.textContent = member.name;
     item.appendChild(span);
+    if (member.role) {
+      var roleEl = document.createElement('small');
+      roleEl.className = 'member-role';
+      roleEl.textContent = member.role;
+      item.appendChild(roleEl);
+    }
+    if (member.bio) {
+      var bioEl = document.createElement('p');
+      bioEl.className = 'member-bio';
+      bioEl.textContent = member.bio;
+      item.appendChild(bioEl);
+    }
     teamGrid.appendChild(item);
   });
 }
