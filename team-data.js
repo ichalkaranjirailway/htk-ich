@@ -1,10 +1,8 @@
 // Team / committee members — edited via admin.html "सदस्य" tab.
 const TEAM_MEMBERS = [
   {
-    "photo": "team-shrinivas-nandlal-sharma.jpg",
-    "name": "कै. श्रीनिवास नंदलाल शर्मा",
-    "role": "माजी सदस्य, रेल्वे कृती समिती तथा माजी सदस्य, विभागीय रेल्वे सल्लागार समिती (पुणे विभाग, मध्य रेल्वे)",
-    "memorial": true
+    "photo": "team-1786466168973-img-20260811-181321.jpg",
+    "name": "कै. श्रीनिवास नंदलाल शर्मा"
   },
   {
     "photo": "team-1786185976770-img-20260808-161513.jpg",
