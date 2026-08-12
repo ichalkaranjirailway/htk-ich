@@ -90,6 +90,85 @@
     return id;
   }
 
+  // ---------------------------------------------------------------------
+  // DEVICE FINGERPRINT (addition-only) — incognito उघडून किंवा cache/
+  // localStorage साफ करून परत मत दिलं जाऊ नये म्हणून, याच ब्राऊझर+डिव्हाइसची
+  // एक स्थिर "खूण" (fingerprint) तयार करतो — ही खूण localStorage वर अवलंबून
+  // नाही, त्यामुळे incognito मध्ये किंवा cache/history साफ केल्यावरही तीच राहते.
+  // canvas/WebGL रेंडरिंग + स्क्रीन/भाषा/टाईमझोन इ. वैशिष्ट्यांवरून एक hash
+  // बनवला जातो — कोणताही बाहेरचा library/CDN लागत नाही, त्यामुळे नेटवर्क
+  // फेल झालं तरी बाकी वोटिंग लॉजिकवर काहीही परिणाम होत नाही (try/catch).
+  // टीप: हे 100% पक्कं (foolproof) नाही — वेगळा ब्राऊझर/डिव्हाइस/VPN वापरून
+  // अजूनही मत देता येऊ शकतं, पण "तेच browser/फोन, फक्त incognito किंवा
+  // cache clear" ही सगळ्यात सोपी/सामान्य पद्धत यामुळे थांबते.
+  // ---------------------------------------------------------------------
+  function getDeviceFingerprint(){
+    try {
+      var parts = [];
+      parts.push(navigator.userAgent || '');
+      parts.push(navigator.language || '');
+      parts.push(String(screen.width) + 'x' + String(screen.height) + 'x' + String(screen.colorDepth));
+      parts.push(String(new Date().getTimezoneOffset()));
+      parts.push(String(navigator.hardwareConcurrency || ''));
+      parts.push(String(navigator.deviceMemory || ''));
+      parts.push(String(navigator.maxTouchPoints || ''));
+      try {
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.textBaseline = 'top';
+          ctx.font = "14px 'Arial'";
+          ctx.fillText('htk-ich-fp-' + screen.width, 2, 2);
+          parts.push(canvas.toDataURL());
+        }
+      } catch (e) {}
+      try {
+        var gl = document.createElement('canvas').getContext('webgl') || document.createElement('canvas').getContext('experimental-webgl');
+        if (gl) {
+          var dbgInfo = gl.getExtension('WEBGL_debug_renderer_info');
+          if (dbgInfo) {
+            parts.push(gl.getParameter(dbgInfo.UNMASKED_VENDOR_WEBGL) + '|' + gl.getParameter(dbgInfo.UNMASKED_RENDERER_WEBGL));
+          }
+        }
+      } catch (e) {}
+      var str = parts.join('###');
+      // साधा, वेगवान string hash (FNV-1a) — क्रिप्टोसाठी नाही, फक्त फरक ओळखण्यासाठी
+      var hash = 0x811c9dc5;
+      for (var i = 0; i < str.length; i++) {
+        hash ^= str.charCodeAt(i);
+        hash = Math.imul(hash, 0x01000193);
+      }
+      return 'fp_' + (hash >>> 0).toString(36);
+    } catch (e) {
+      return null;
+    }
+  }
+  var deviceFp = getDeviceFingerprint();
+
+  async function alreadyVotedByFingerprint(){
+    if (!db || !deviceFp) return false;
+    try {
+      var snap = await db.collection('votes').where('fingerprint', '==', deviceFp).limit(1).get();
+      return !snap.empty;
+    } catch (e) { return false; }
+  }
+
+  // पान उघडताच (localStorage मध्ये खूण नसली तरी) fingerprint आधीच वापरलं गेलं
+  // आहे का ते तपासतो — असल्यास लगेच "धन्यवाद" पॅनल दाखवतो, वोट फॉर्म नाही.
+  (async function checkFingerprintOnLoad(){
+    if (localStorage.getItem('htk_ich_voted') === 'true') return; // आधीच dakhavलं आहे
+    try {
+      var dup = await alreadyVotedByFingerprint();
+      if (dup) {
+        localStorage.setItem('htk_ich_voted', 'true');
+        var vs = document.getElementById('voteStep');
+        var tp = document.getElementById('thanksPanel');
+        if (vs) vs.style.display = 'none';
+        if (tp) tp.classList.add('show');
+      }
+    } catch (e) { /* तपासणी फेल झाली तरी नेहमीचा फॉर्म दिसत राहील */ }
+  })();
+
   let chosenVote = null;
   // Slow network वर युजर बटण पटापट 2-3 वेळा टॅप करतो (काहीच response न दिसल्याने),
   // आणि ते सगळे टॅप बटण disable होण्याआधीच रजिस्टर होऊ शकतात. त्यामुळे फक्त
@@ -143,12 +222,18 @@
         // असेल तर counter परत वाढवायचा नाही (नाहीतर retry केल्यावर counter
         // चुकीचा फुगत राहील).
         const existingSnap = await voteRef.get();
-        const alreadyCounted = existingSnap.exists;
+        let alreadyCounted = existingSnap.exists;
+        // fingerprint आधीच वापरलं गेलं आहे का (वेगळा voterId असला तरी) — असेल
+        // तर counter परत वाढवायचा नाही (incognito/cache-clear डुप्लिकेट रोखण्यासाठी)
+        if (!alreadyCounted) {
+          alreadyCounted = await alreadyVotedByFingerprint();
+        }
 
         // .add() ऐवजी .doc(voterId).set(..., {merge:true}) — त्यामुळे retry/
         // reload झाल्यावर नवीन entry न बनता तीच entry अद्ययावत होते.
         await voteRef.set({
           vote: chosenVote,
+          fingerprint: deviceFp || null,
           timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }, { merge: true });
 
