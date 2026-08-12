@@ -44,6 +44,13 @@
   .entry-row .thumb.ph{display:flex;align-items:center;justify-content:center;color:#999;font-size:.75rem;}
   .entry-row .meta-with-thumb{display:flex;align-items:center;gap:10px;flex:1;min-width:0;}
   .btns button.moveBtn{padding:6px 9px;}
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin:14px 0;}
+  .stat-card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 12px;text-align:center;}
+  .stat-card b{display:block;font-size:1.1rem;}
+  .stat-card span{font-size:.7rem;color:#888;}
+  .voter-filters{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;}
+  .voter-filters input,.voter-filters select{flex:1;min-width:120px;padding:8px;border:1px solid var(--line);border-radius:6px;font-size:.85rem;font-family:inherit;}
+  .dup-badge{display:inline-block;margin-left:6px;padding:1px 7px;font-size:.68rem;font-weight:600;border-radius:10px;background:#fff3e0;color:#a05a00;border:1px solid #ffcc80;}
 </style>
 </head>
 <body>
@@ -205,10 +212,22 @@ service cloud.firestore {
 <div id="voteResultsBox" style="display:none; margin-top:14px;">
 <button type="button" id="loadVotesBtn">निकाल लोड करा</button>
 <div id="voteTally" style="margin:14px 0; display:flex; gap:12px; flex-wrap:wrap;"></div>
+<div id="voterStats" class="stat-grid" style="display:none;"></div>
 <button type="button" id="recalcBtn" class="secondary">🔄 Counter दुरुस्त करा (सगळी खरी मतं मोजून)</button>
 <p class="hint">जुन्या bug मुळे counter मध्ये काही मतं मोजली गेली नव्हती त्यासाठी — हे दाबल्यावर <code>votes</code> मधल्या सगळ्या खऱ्या नोंदी मोजून होय/नाही आकडा बरोबर केला जाईल. सुरक्षित आहे, कितीही वेळा चालवू शकता.</p>
-<button type="button" id="exportCsvBtn" class="secondary" style="display:none;">⬇️ CSV म्हणून export करा</button>
+<button type="button" id="exportCsvBtn" class="secondary" style="display:none;">⬇️ सर्व Voter Data Export करा (CSV)</button>
 <p class="hint">प्रत्येक नोंदीसमोरचं 🗑️ बटण दाबून ती नोंद कायमची delete करता येईल (चुकीच्या/duplicate नोंदींसाठी).</p>
+<div id="voterFilters" class="voter-filters" style="display:none;">
+<input type="text" id="voterSearch" placeholder="नाव / मोबाईल / क्षेत्र शोधा...">
+<select id="voterVoteFilter"><option value="">सर्व मतं</option><option value="होय">फक्त होय</option><option value="नाही">फक्त नाही</option></select>
+<select id="voterAreaFilter"><option value="">सर्व क्षेत्र</option></select>
+<select id="voterSortBy">
+<option value="new">नवीनतम आधी</option>
+<option value="old">जुनी आधी</option>
+<option value="name">नाव (A-Z)</option>
+<option value="area">क्षेत्र (A-Z)</option>
+</select>
+</div>
 <div id="voterDetailsList" style="max-height:400px; overflow-y:auto; background:#fff; border:1px solid var(--line); border-radius:10px; padding:6px 12px; margin-top:12px;"></div>
 
 <h3 style="margin-top:24px;">🌐 सार्वजनिक यादी (साईटवर सगळ्यांना दिसणारी "पाठिंबा देणारे नागरिक")</h3>
@@ -836,31 +855,100 @@ document.getElementById('loadVotesBtn').addEventListener('click', async () => {
       <div class="entry-row" style="flex:1;min-width:120px;"><div class="meta"><b style="font-size:1.3rem;">${yes+no}</b><span>एकूण</span></div></div>
     `;
 
-    const detailsSnap = await voteDb.collection('voter_details').orderBy('timestamp', 'desc').limit(500).get();
+    const detailsSnap = await voteDb.collection('voter_details').orderBy('timestamp', 'desc').limit(5000).get();
     const rows = [];
     detailsSnap.forEach(doc => {
       const d = doc.data();
-      const ts = d.timestamp && d.timestamp.toDate ? d.timestamp.toDate().toLocaleString('en-IN') : '';
-      rows.push({ id: doc.id, name: d.name || '', mobile: d.mobile || '', area: d.area || '', vote: d.vote || '', ts });
+      const rawDate = d.timestamp && d.timestamp.toDate ? d.timestamp.toDate() : null;
+      const ts = rawDate ? rawDate.toLocaleString('en-IN') : '';
+      rows.push({ id: doc.id, name: d.name || '', mobile: d.mobile || '', area: d.area || '', vote: d.vote || '', ts, rawDate });
     });
+
+    // मोबाईल नंबरवरून duplicate नोंदी ओळखणं (रिकामे मोबाईल duplicate मोजत नाही)
+    const mobileCounts = {};
+    rows.forEach(r => { if (r.mobile) mobileCounts[r.mobile] = (mobileCounts[r.mobile] || 0) + 1; });
+    rows.forEach(r => { r.dupCount = r.mobile ? mobileCounts[r.mobile] : 1; });
+
     _voterDetailsCache = rows;
+    populateVoterAreaFilter(rows);
+    renderVoterStats(rows);
+    renderVoterList();
 
-    const listEl = document.getElementById('voterDetailsList');
-    listEl.innerHTML = rows.length ? '' : '<p class="hint">अजून कुणीही तपशील दिलेला नाही.</p>';
-    rows.forEach(r => {
-      const row = document.createElement('div');
-      row.className = 'entry-row';
-      row.innerHTML = `<div class="meta"><b>${r.name || '(नाव नाही)'} — ${r.vote}</b><span>${r.mobile} · ${r.area} · ${r.ts}</span></div>
-        <div class="btns"><button type="button" class="danger delVoterDetail" data-id="${r.id}">🗑️</button></div>`;
-      listEl.appendChild(row);
-    });
-    listEl.querySelectorAll('.delVoterDetail').forEach(btn => {
-      btn.addEventListener('click', () => confirmAndDeleteVoter(btn.dataset.id));
-    });
-
+    document.getElementById('voterFilters').style.display = rows.length ? 'flex' : 'none';
     document.getElementById('exportCsvBtn').style.display = rows.length ? 'inline-block' : 'none';
     showStatus(`✅ निकाल लोड झाले. ${rows.length} जणांनी तपशील दिला आहे.`, 'ok');
   } catch(err){ showStatus('❌ ' + err.message, 'err'); }
+});
+
+// ---- Voter data: stats dashboard, search/filter/sort (view-only, read-only) ----
+function renderVoterStats(rows){
+  const total = rows.length;
+  const yes = rows.filter(r => r.vote === 'होय').length;
+  const no = rows.filter(r => r.vote === 'नाही').length;
+  const uniqueMobiles = new Set(rows.filter(r => r.mobile).map(r => r.mobile)).size;
+  const dupRecords = rows.filter(r => r.dupCount > 1).length;
+  const missingMobile = rows.filter(r => !r.mobile).length;
+  const missingName = rows.filter(r => !r.name).length;
+  const missingArea = rows.filter(r => !r.area).length;
+  const yesPct = total ? ((yes/total)*100).toFixed(1) : '0.0';
+  const noPct = total ? ((no/total)*100).toFixed(1) : '0.0';
+  const statsEl = document.getElementById('voterStats');
+  statsEl.style.display = total ? 'grid' : 'none';
+  statsEl.innerHTML = `
+    <div class="stat-card"><b>${total}</b><span>एकूण नोंदी</span></div>
+    <div class="stat-card"><b>${yes} (${yesPct}%)</b><span>होय</span></div>
+    <div class="stat-card"><b>${no} (${noPct}%)</b><span>नाही</span></div>
+    <div class="stat-card"><b>${uniqueMobiles}</b><span>वेगळे मोबाईल</span></div>
+    <div class="stat-card"><b>${dupRecords}</b><span>Duplicate नोंदी</span></div>
+    <div class="stat-card"><b>${missingMobile}</b><span>मोबाईल नाही</span></div>
+    <div class="stat-card"><b>${missingName}</b><span>नाव नाही</span></div>
+    <div class="stat-card"><b>${missingArea}</b><span>क्षेत्र नाही</span></div>`;
+}
+
+function populateVoterAreaFilter(rows){
+  const sel = document.getElementById('voterAreaFilter');
+  const cur = sel.value;
+  const areas = Array.from(new Set(rows.filter(r => r.area).map(r => r.area))).sort();
+  sel.innerHTML = '<option value="">सर्व क्षेत्र</option>' + areas.map(a => `<option value="${a}">${a}</option>`).join('');
+  if (areas.includes(cur)) sel.value = cur;
+}
+
+function renderVoterList(){
+  const q = (document.getElementById('voterSearch').value || '').trim().toLowerCase();
+  const voteF = document.getElementById('voterVoteFilter').value;
+  const areaF = document.getElementById('voterAreaFilter').value;
+  const sortBy = document.getElementById('voterSortBy').value;
+
+  let rows = _voterDetailsCache.filter(r => {
+    if (voteF && r.vote !== voteF) return false;
+    if (areaF && r.area !== areaF) return false;
+    if (q && !(`${r.name} ${r.mobile} ${r.area}`.toLowerCase().includes(q))) return false;
+    return true;
+  });
+
+  if (sortBy === 'old') rows = rows.slice().sort((a,b) => (a.rawDate||0) - (b.rawDate||0));
+  else if (sortBy === 'name') rows = rows.slice().sort((a,b) => (a.name||'').localeCompare(b.name||'', 'mr'));
+  else if (sortBy === 'area') rows = rows.slice().sort((a,b) => (a.area||'').localeCompare(b.area||'', 'mr'));
+  else rows = rows.slice().sort((a,b) => (b.rawDate||0) - (a.rawDate||0));
+
+  const listEl = document.getElementById('voterDetailsList');
+  listEl.innerHTML = rows.length ? '' : '<p class="hint">जुळणारी नोंद सापडली नाही.</p>';
+  rows.forEach(r => {
+    const dupBadge = r.dupCount > 1 ? `<span class="dup-badge">Duplicate ×${r.dupCount}</span>` : '';
+    const row = document.createElement('div');
+    row.className = 'entry-row';
+    row.innerHTML = `<div class="meta"><b>${r.name || 'उपलब्ध नाही'} — ${r.vote}${dupBadge}</b><span>${r.mobile || 'उपलब्ध नाही'} · ${r.area || 'उपलब्ध नाही'} · ${r.ts}</span></div>
+      <div class="btns"><button type="button" class="danger delVoterDetail" data-id="${r.id}">🗑️</button></div>`;
+    listEl.appendChild(row);
+  });
+  listEl.querySelectorAll('.delVoterDetail').forEach(btn => {
+    btn.addEventListener('click', () => confirmAndDeleteVoter(btn.dataset.id));
+  });
+}
+
+['voterSearch','voterVoteFilter','voterAreaFilter','voterSortBy'].forEach(id => {
+  document.getElementById(id).addEventListener('input', renderVoterList);
+  document.getElementById(id).addEventListener('change', renderVoterList);
 });
 
 // ---------------------------------------------------------------------
@@ -957,14 +1045,25 @@ document.getElementById('loadPublicBtn').addEventListener('click', async () => {
 });
 
 document.getElementById('exportCsvBtn').addEventListener('click', () => {
-  const header = 'Name,Mobile,Area,Vote,Timestamp\n';
-  const csv = header + _voterDetailsCache.map(r =>
-    [r.name, r.mobile, r.area, r.vote, r.ts].map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')
+  const esc = v => `"${String(v == null ? '' : v).replace(/"/g,'""')}"`;
+  // मोबाईल नंबर Excel मध्ये scientific notation (उदा. 9.27E+09) होऊ नये म्हणून
+  // ="..." फॉर्म्युला-स्टाईल वापरतो — Excel तो कायम TEXT म्हणून उघडतो.
+  const mobileCell = m => m ? `="${String(m).replace(/"/g,'""')}"` : '""';
+  const header = 'Sr No,Name,Mobile,Area,Vote,Timestamp,Duplicate\n';
+  const rows = _voterDetailsCache.slice().sort((a,b) => (b.rawDate||0) - (a.rawDate||0));
+  const csvBody = rows.map((r, i) =>
+    [i + 1, esc(r.name), mobileCell(r.mobile), esc(r.area), esc(r.vote), esc(r.ts),
+     esc(r.dupCount > 1 ? `Duplicate ×${r.dupCount}` : '')].join(',')
   ).join('\n');
+  // UTF-8 BOM टाकतो जेणेकरून Excel मध्ये मराठी अक्षरं व्यवस्थित (garbled न होता) दिसतील.
+  const csv = '\uFEFF' + header + csvBody;
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
+  const pad = n => String(n).padStart(2,'0');
+  const now = new Date();
+  const stamp = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}-${pad(now.getHours())}-${pad(now.getMinutes())}`;
   const a = document.createElement('a');
-  a.href = url; a.download = 'voter-details.csv';
+  a.href = url; a.download = `voter-data-${stamp}.csv`;
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   URL.revokeObjectURL(url);
 });
