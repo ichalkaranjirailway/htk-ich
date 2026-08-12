@@ -104,7 +104,7 @@
 </div>
 
 <h2>👥 सदस्य</h2>
-<p class="sub" style="margin-top:-4px;">▲▼ ने क्रम (sequence) बदला, Edit ने नाव/फोटो बदला.</p>
+<p class="sub" style="margin-top:-4px;">▲▼ ने क्रम (sequence) बदला, Edit ने नाव/फोटो/पद/परिचय बदला.</p>
 <button id="loadTeamBtn">सदस्य लोड करा</button>
 <div id="teamList" style="display:none; margin-top:10px;"></div>
 <div id="teamEditBanner">✏️ सदस्य edit करत आहात. <button type="button" class="secondary" onclick="cancelTeamEdit()" style="padding:4px 10px;font-size:.78rem;">रद्द करा</button></div>
@@ -114,8 +114,13 @@
 <p class="hint" id="teamCurrentPhotoHint"></p>
 <label>नाव</label>
 <input type="text" id="teamName" placeholder="उदा. विकी लोकरे">
+<label>पद (ऐच्छिक — उदा. कार्याध्यक्ष, सचिव)</label>
+<input type="text" id="teamRole" placeholder="उदा. कार्याध्यक्ष">
+<label>योगदानाबद्दल थोडक्यात (ऐच्छिक)</label>
+<textarea id="teamBio" rows="3" placeholder="उदा. यांनी रेल्वे मागणीसाठी सुरुवातीपासून केलेले कार्य..."></textarea>
 <button type="button" id="addTeamBtn" class="wide">➕ सदस्य जोडा</button>
 </div>
+
 
 <h2>✏️ मतदान पानाचा मजकूर (opinion.html)</h2>
 <p class="sub" style="margin-top:-4px;">वरचाच GitHub Token वापरून opinion.html वरचं सगळं वाक्य/मजकूर इथून बदलता येईल.</p>
@@ -590,7 +595,9 @@ function renderTeamList(){
     const thumbHtml = m.photo
       ? `<img class="thumb" src="${m.photo}" alt="${m.name}">`
       : `<div class="thumb ph">${(m.name || '?').trim().charAt(0)}</div>`;
-    row.innerHTML = `<div class="meta-with-thumb">${thumbHtml}<div class="meta"><b>${m.name}</b><span>${m.photo || 'फोटो नाही'} · क्रम #${idx + 1}</span></div></div>
+    const roleTxt = m.role ? ' · ' + m.role : '';
+    const memTxt = m.memorial ? ' · 🖤 स्मृती' : '';
+    row.innerHTML = `<div class="meta-with-thumb">${thumbHtml}<div class="meta"><b>${m.name}</b><span>${m.photo || 'फोटो नाही'} · क्रम #${idx + 1}${roleTxt}${memTxt}</span></div></div>
       <div class="btns">
         <button type="button" class="secondary moveBtn" ${idx === 0 ? 'disabled' : ''} onclick="moveTeamMember(${idx}, -1)">▲</button>
         <button type="button" class="secondary moveBtn" ${idx === members.length - 1 ? 'disabled' : ''} onclick="moveTeamMember(${idx}, 1)">▼</button>
@@ -629,6 +636,8 @@ function editTeamMember(idx){
   document.getElementById('teamEditBanner').style.display = 'block';
   document.getElementById('teamFormLabel').textContent = 'नवीन फोटो निवडा (बदलायचा नसेल तर रिकामं ठेवा)';
   document.getElementById('teamName').value = m.name;
+  document.getElementById('teamRole').value = m.role || '';
+  document.getElementById('teamBio').value = m.bio || '';
   document.getElementById('teamCurrentPhotoHint').textContent = m.photo ? `सध्याचा फोटो: ${m.photo}` : 'सध्या फोटो नाही (placeholder दाखवला जातो)';
   document.getElementById('teamFile').value = '';
   document.getElementById('addTeamBtn').textContent = '💾 सदस्य अपडेट करा';
@@ -641,6 +650,8 @@ function cancelTeamEdit(){
   document.getElementById('teamCurrentPhotoHint').textContent = '';
   document.getElementById('teamFile').value = '';
   document.getElementById('teamName').value = '';
+  document.getElementById('teamRole').value = '';
+  document.getElementById('teamBio').value = '';
   document.getElementById('addTeamBtn').textContent = '➕ सदस्य जोडा';
 }
 
@@ -663,6 +674,8 @@ document.getElementById('addTeamBtn').addEventListener('click', async () => {
     requireToken();
     const file = document.getElementById('teamFile').files[0];
     const name = document.getElementById('teamName').value.trim();
+    const role = document.getElementById('teamRole').value.trim();
+    const bio = document.getElementById('teamBio').value.trim();
     if(!name){ throw new Error('नाव द्या.'); }
     if(!window._teamMembers) await loadTeam();
 
@@ -678,7 +691,11 @@ document.getElementById('addTeamBtn').addEventListener('click', async () => {
         await ghPut(photo, b64, 'Update team photo: ' + name);
       }
       const members = window._teamMembers.slice();
-      members[idx] = { photo, name };
+      const updated = { photo, name };
+      if(role) updated.role = role;
+      if(existing.memorial) updated.memorial = true;
+      if(bio) updated.bio = bio;
+      members[idx] = updated;
       showStatus('सदस्य यादी अपडेट होतेय...', 'busy');
       await saveTeamMembers(members, 'Update team member: ' + name);
       showStatus('✅ सदस्य अपडेट झाला!', 'ok');
@@ -693,12 +710,17 @@ document.getElementById('addTeamBtn').addEventListener('click', async () => {
         const b64 = await fileToBase64(file);
         await ghPut(photo, b64, 'Add team photo: ' + name);
       }
-      const members = window._teamMembers.concat([{ photo, name }]);
+      const newMember = { photo, name };
+      if(role) newMember.role = role;
+      if(bio) newMember.bio = bio;
+      const members = window._teamMembers.concat([newMember]);
       showStatus('सदस्य यादी अपडेट होतेय...', 'busy');
       await saveTeamMembers(members, 'Add team member: ' + name);
       showStatus('✅ सदस्य जोडला!', 'ok');
       document.getElementById('teamFile').value = '';
       document.getElementById('teamName').value = '';
+      document.getElementById('teamRole').value = '';
+      document.getElementById('teamBio').value = '';
       renderTeamList();
     }
   } catch(err){ showStatus('❌ ' + err.message, 'err'); }

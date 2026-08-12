@@ -332,7 +332,7 @@ if (typeof TEAM_MEMBERS !== 'undefined' && teamGrid) {
     }
     if (member.photo) {
       var img = document.createElement('img');
-      img.className = member.memorial ? 'avatar avatar-bw' : 'avatar'; img.loading = 'lazy'; img.alt = member.name; img.src = member.photo;
+      img.className = member.memorial ? 'avatar avatar-memorial' : 'avatar'; img.loading = 'lazy'; img.alt = member.name; img.src = member.photo;
       item.appendChild(img);
     } else {
       var ph = document.createElement('div');
