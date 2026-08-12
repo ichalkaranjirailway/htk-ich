@@ -21,3 +21,10 @@
 .team-item.memorial span{font-weight:600;}
 .member-role{display:block;margin-top:4px;font-size:.72rem;line-height:1.3;color:#666;font-weight:400;white-space:normal;}
 .member-bio{margin:8px 0 0;font-size:.76rem;line-height:1.4;color:#555;text-align:left;white-space:normal;}
+
+/* Members section informational note — isolated, does not affect team-grid or any other rule */
+.members-info-note{margin:16px 0 4px;padding:14px 18px;border:1px solid #e6ded0;border-left:3px solid #b08d3f;border-radius:8px;background:#fbf9f4;max-width:720px;}
+.members-info-note-title{margin:0 0 8px;font-size:.85rem;font-weight:600;color:#6b5423;}
+.members-info-note p{margin:0 0 8px;font-size:.78rem;line-height:1.5;color:#5a5a5a;}
+.members-info-note p:last-child{margin-bottom:0;}
+@media (max-width:480px){.members-info-note{padding:12px 14px;margin:12px 0 4px;}.members-info-note p{font-size:.75rem;}}
