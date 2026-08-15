@@ -82,6 +82,33 @@
 <body>
 
 <!-- ============================================================
+     स्वातंत्र्यदिन विशेष पट्टी — फक्त १५ ऑगस्ट २०२६ रोजीच दिसते,
+     त्यानंतर स्वतःहून (JS ने) कायमची लपते. काढायला परत यावं लागू नये
+     म्हणून तारीख हार्डकोड आहे — पुढल्या वर्षीसाठी वापरायची असल्यास ती
+     तारीख बदलावी लागेल. उरलेल्या साईटच्या कोणत्याही भागाला हात लावलेला
+     नाही — पूर्णपणे वेगळा, स्वयंपूर्ण block.
+     ============================================================ -->
+<div id="independenceDayBanner" style="display:none;background:linear-gradient(90deg,#FF9933,#FF9933 32%,#FFFFFF 32%,#FFFFFF 68%,#138808 68%);padding:3px 0;">
+  <div style="background:#0B1F2E;margin:0 3px;padding:12px 16px;text-align:center;font-family:'IBM Plex Sans',sans-serif;">
+    <span style="font-size:15px;">☸️</span>
+    <span style="color:#F3D27A;font-weight:700;font-size:14.5px;letter-spacing:.3px;">&nbsp;स्वातंत्र्याचा ८०वा वर्धापन दिन&nbsp;</span>
+    <span style="font-size:15px;">☸️</span>
+    <div style="color:#E6ECEF;font-size:13px;margin-top:5px;line-height:1.5;max-width:560px;margin-left:auto;margin-right:auto;">
+      स्वातंत्र्याच्या ८० वर्षांनंतरही हातकणंगले–इचलकरंजी रेल्वे मार्ग प्रलंबित आहे — आजच्याच दिवशी आपला आवाज नोंदवा.
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var d = new Date();
+  if (d.getFullYear() === 2026 && d.getMonth() === 7 && d.getDate() === 15) {
+    var b = document.getElementById('independenceDayBanner');
+    if (b) b.style.display = 'block';
+  }
+})();
+</script>
+
+<!-- ============================================================
      सोशल मीडिया मोहीम — मतदान विजेट (सर्वात वर, पहिलं दिसणारं)
      मजकूर व लॉजिक opinion-content.js / opinion-widget.js मध्ये —
      हीच विजेट opinion.html वरही (शेअर करण्यासाठी) वापरली आहे.
@@ -186,10 +213,10 @@
 <header class="masthead">
 <div class="wrap masthead-top">
 <span>इचलकरंजी रेल्वे कृती समिती</span>
-<span>Est. Demand — 1965 Onward</span>
+<span>मागणीची सुरुवात — १९६५ पासून</span>
 </div>
 <div class="wrap masthead-body">
-<p class="eyebrow">Citizen Evidence Archive — Ichalkaranji Railway</p>
+<p class="eyebrow">नागरिक पुरावा संग्रह — इचलकरंजी रेल्वे</p>
 <h1 id="c-heroTitle">Ichalkaranji Railway Demand</h1>
 <p class="lede" id="c-heroLede">Evidence archive for the Hatkanangale-Ichalkaranji Railway demand.</p>
 <span class="status-chip"><span class="dot"></span> <span id="c-statusChip"></span></span>
@@ -206,7 +233,7 @@
 <a href="#facts">तथ्ये</a>
 <a href="#gallery">गॅलरी</a>
 <a href="#team">सदस्य</a>
-<a href="#timeline">Timeline</a>
+<a href="#timeline">कालपटल</a>
 <a href="#footer">संपर्क</a>
 </div>
 </nav>
@@ -300,7 +327,7 @@
 <div class="wrap">
 <div class="section-head">
 <span class="section-num">06</span>
-<h2>Evidence Timeline</h2>
+<h2>पुरावा कालपटल</h2>
 <p>श्रेणीनुसार फिल्टर करा — RTI, तक्रार पोर्टल्स, याचिका, अधिकाऱ्यांना पत्रे, सोशल मीडिया आणि प्रसारमाध्यमे.</p>
 </div>
 <div class="tabs" id="tabs"></div>
@@ -324,6 +351,7 @@
 <script src="firebase-config.js"></script>
 <script src="opinion-content.js" onerror="console.log('opinion-content.js not published yet — using default text')"></script>
 <script src="opinion-widget.js"></script>
+<script src="mail-config.js" onerror="console.log('mail-config.js not published yet — using default mail text')"></script>
 <script src="campaign-extras.js"></script>
 
 <script src="content.js"></script>

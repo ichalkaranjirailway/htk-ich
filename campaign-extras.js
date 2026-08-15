@@ -80,9 +80,32 @@
     }
 
     // --------------------------------------------------------------------
-    // २) "अधिकाऱ्यांना थेट कळवा" mailto बटण — share विभागाखाली
+    // २) "अधिकाऱ्यांना थेट कळवा" mailto बटण — share विभागाखाली.
+    //    मजकूर (to/cc/subject/body) आणि सक्रिय-होण्याची वेळ आता
+    //    mail-config.js (MAIL_CONFIG) मधून येते — admin.html च्या नवीन
+    //    "📧 अधिकाऱ्यांना कळवणारा Email" टॅबमधून बदलता येते. mail-config.js
+    //    काही कारणाने लोड झालं नाही, तरी खालचे defaults वापरले जातात —
+    //    बटण कधीही पूर्ण तुटणार नाही.
     // --------------------------------------------------------------------
-    var officialsBtn = null;
+    var MC = (typeof MAIL_CONFIG !== 'undefined') ? MAIL_CONFIG : {
+      to: 'mr@rb.railnet.gov.in',
+      cc: 'crb@rb.railnet.gov.in,secyrb@rb.railnet.gov.in,gm@cr.railnet.gov.in,drm@pa.railnet.gov.in',
+      subject: 'हातकणंगले–इचलकरंजी रेल्वे मार्ग त्वरित मंजूर करावा — नागरिक मत सर्वेक्षण (इचलकरंजी रेल्वे कृती समिती)',
+      bodyTemplate: 'मा. महोदय,\n\nमी इचलकरंजी रेल्वे कृती समितीच्या "इचलकरंजीला रेल्वे हवी का?" या नागरिक मत सर्वेक्षणाच्या माध्यमातून आपणास कळवत आहे.\n\n{{STAT_LINE}}\n\nहातकणंगले–इचलकरंजी या केवळ ८ किमी अंतराच्या ब्रॉडगेज रेल्वे मार्गाचा सुधारित DPR दिनांक ०२.०१.२०२० रोजी ₹१८०.७३ कोटी खर्चासह सादर करण्यात आला आहे, परंतु अद्याप रेल्वे बोर्डाकडून मंजुरी मिळालेली नाही. इचलकरंजी — "महाराष्ट्राचे मँचेस्टर" — येथे ५०,०००+ पॉवरलूम्स असून दैनंदिन अंदाजे ₹१३६ कोटींचे कापड उत्पादन होते, तरीही शहराला थेट रेल्वे कनेक्टिव्हिटी नाही.\n\nकृपया हा प्रकल्प तातडीने मंजूर करून पुढील कार्यवाही करावी, ही नम्र विनंती.\n\nसंपूर्ण पुरावा व तपशीलांसाठी: {{SITE_URL}}\n\nकळावे,\n[तुमचं नाव]\n[तुमचं शहर/परिसर]\n\n— इचलकरंजी रेल्वे कृती समिती',
+      unlockAt: '2026-08-19T00:00:00+05:30',
+      buttonLabel: '📧 अधिकाऱ्यांना थेट कळवा (ईमेल)',
+      unlockedHint: 'तुमचं स्वतःचं ईमेल अॅप उघडेल — तयार मसुदा तुम्ही बघून, नाव टाकून थेट पाठवू शकता.',
+      lockedHint: '🔒 हे बटण सर्वेक्षण संपल्यावर, १९ ऑगस्टच्या पहाटेपासून सक्रिय होईल.'
+    };
+
+    var unlockTime = new Date(MC.unlockAt);
+    var unlockTimeValid = !isNaN(unlockTime.getTime());
+
+    function isUnlocked(){
+      return !unlockTimeValid || new Date() >= unlockTime;
+    }
+
+    var officialsBtn = null, officialsHint = null;
     try {
       var shareDiv = widget.querySelector('.share');
       if (shareDiv) {
@@ -91,31 +114,50 @@
         officialsBtn.id = 'mailOfficialsBtn';
         officialsBtn.className = 'share-btn';
         officialsBtn.style.cssText =
-          'margin-top:10px;background:#7A1F1F;color:#fff;width:100%;justify-content:center;';
-        officialsBtn.textContent = '📧 अधिकाऱ्यांना थेट कळवा (ईमेल)';
+          'margin-top:10px;background:#7A1F1F;color:#fff;width:100%;justify-content:center;transition:opacity .3s ease;';
         shareDiv.appendChild(officialsBtn);
 
-        var hint = document.createElement('p');
-        hint.style.cssText = 'font-size:11px;color:#9FB0BA;text-align:center;margin:6px 0 0;';
-        hint.textContent = 'तुमचं स्वतःचं ईमेल अॅप उघडेल — तयार मसुदा तुम्ही बघून, नाव टाकून थेट पाठवू शकता.';
-        shareDiv.appendChild(hint);
+        officialsHint = document.createElement('p');
+        officialsHint.style.cssText = 'font-size:11px;color:#9FB0BA;text-align:center;margin:6px 0 0;';
+        shareDiv.appendChild(officialsHint);
 
-        officialsBtn.addEventListener('click', function(){ sendToOfficials(); });
+        function refreshButtonState(){
+          if (isUnlocked()) {
+            officialsBtn.disabled = false;
+            officialsBtn.style.opacity = '1';
+            officialsBtn.style.cursor = 'pointer';
+            officialsBtn.textContent = MC.buttonLabel;
+            officialsHint.textContent = MC.unlockedHint;
+          } else {
+            officialsBtn.disabled = true;
+            officialsBtn.style.opacity = '.55';
+            officialsBtn.style.cursor = 'not-allowed';
+            officialsBtn.textContent = MC.buttonLabel;
+            officialsHint.textContent = MC.lockedHint;
+          }
+        }
+        refreshButtonState();
+        // वेळ उलटल्यावर बटण आपोआप सक्रिय व्हावं म्हणून दर मिनिटाला तपासतो —
+        // पान रिफ्रेश न करताही बटण योग्य वेळी चालू होईल.
+        if (!isUnlocked()) {
+          var unlockCheckId = setInterval(function(){
+            if (isUnlocked()) { refreshButtonState(); clearInterval(unlockCheckId); }
+          }, 60000);
+        }
+
+        officialsBtn.addEventListener('click', function(){
+          if (!isUnlocked()) return; // disabled असूनही क्लिक झाला तर सुरक्षा-कवच
+          sendToOfficials();
+        });
       }
     } catch (e) {}
 
     var lastKnownTotal = 0;
 
     function buildMailto(total){
-      var to = 'mr@rb.railnet.gov.in'; // केंद्रीय रेल्वे मंत्री कार्यालय
-      var cc = [
-        'crb@rb.railnet.gov.in',   // अध्यक्ष, रेल्वे बोर्ड
-        'secyrb@rb.railnet.gov.in',// सचिव, रेल्वे बोर्ड
-        'gm@cr.railnet.gov.in',    // महाव्यवस्थापक, मध्य रेल्वे
-        'drm@pa.railnet.gov.in'    // विभागीय रेल्वे व्यवस्थापक, पुणे
-      ].join(',');
-
-      var subject = 'हातकणंगले–इचलकरंजी रेल्वे मार्ग त्वरित मंजूर करावा — नागरिक मत सर्वेक्षण (इचलकरंजी रेल्वे कृती समिती)';
+      var to = MC.to;
+      var cc = MC.cc;
+      var subject = MC.subject;
 
       var statLine = '';
       if (total > 0) {
@@ -128,19 +170,12 @@
         statLine = 'इचलकरंजी रेल्वे कृती समितीच्या नागरिक मत सर्वेक्षणाला सातत्याने नागरिकांचा प्रतिसाद मिळत आहे.';
       }
 
-      var body =
-        'मा. महोदय,\n\n' +
-        'मी इचलकरंजी रेल्वे कृती समितीच्या "इचलकरंजीला रेल्वे हवी का?" या नागरिक मत सर्वेक्षणाच्या माध्यमातून आपणास कळवत आहे.\n\n' +
-        statLine + '\n\n' +
-        'हातकणंगले–इचलकरंजी या केवळ ८ किमी अंतराच्या ब्रॉडगेज रेल्वे मार्गाचा सुधारित DPR दिनांक ०२.०१.२०२० रोजी ₹१८०.७३ कोटी खर्चासह सादर करण्यात आला आहे, परंतु अद्याप रेल्वे बोर्डाकडून मंजुरी मिळालेली नाही. इचलकरंजी — "महाराष्ट्राचे मँचेस्टर" — येथे ५०,०००+ पॉवरलूम्स असून दैनंदिन अंदाजे ₹१३६ कोटींचे कापड उत्पादन होते, तरीही शहराला थेट रेल्वे कनेक्टिव्हिटी नाही.\n\n' +
-        'कृपया हा प्रकल्प तातडीने मंजूर करून पुढील कार्यवाही करावी, ही नम्र विनंती.\n\n' +
-        'संपूर्ण पुरावा व तपशीलांसाठी: ' + SITE_URL + '\n\n' +
-        'कळावे,\n' +
-        '[तुमचं नाव]\n' +
-        '[तुमचं शहर/परिसर]\n\n' +
-        '— इचलकरंजी रेल्वे कृती समिती';
+      var body = MC.bodyTemplate
+        .split('{{STAT_LINE}}').join(statLine)
+        .split('{{SITE_URL}}').join(SITE_URL);
 
-      return 'mailto:' + to + '?cc=' + encodeURIComponent(cc) +
+      return 'mailto:' + encodeURIComponent(to).replace(/%40/g, '@') +
+             '?cc=' + encodeURIComponent(cc) +
              '&subject=' + encodeURIComponent(subject) +
              '&body=' + encodeURIComponent(body);
     }
