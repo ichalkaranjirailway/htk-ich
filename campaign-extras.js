@@ -1,9 +1,14 @@
 /* ============================================================================
-   CAMPAIGN EXTRAS — जोडण्यात आलेल्या ३ नवीन गोष्टी, एका वेगळ्या फाईलमध्ये:
-     1) "अधिकाऱ्यांना थेट कळवा" mailto बटण (खरी मतसंख्या वापरून, कोणताही
-        वैयक्तिक तपशील — नाव/मोबाईल — मेलमध्ये कधीही जात नाही)
-     2) ४ लाख लोकसंख्येच्या तुलनेत अंदाजित कुटुंब-पोहोच दाखवणारा progress gauge
-     3) "तुम्ही आतापर्यंत किती जणांना पाठवलं" share counter (फक्त तुमच्याच
+   CAMPAIGN EXTRAS — जोडण्यात आलेल्या गोष्टी, एका वेगळ्या फाईलमध्ये:
+     1) ४ लाख लोकसंख्येच्या तुलनेत अंदाजित कुटुंब-पोहोच दाखवणारा progress gauge
+     2) निकालाच्या तारखेपर्यंत (१९ ऑगस्ट) उलटगणती — वेळ उलटल्यावर स्वतःहून
+        कायमची लपते, त्यामुळे मोहीम संपल्यावर पानावर शिळी उलटगणती उरत नाही
+     3) "अधिकाऱ्यांना थेट कळवा" mailto बटण (खरी मतसंख्या वापरून, कोणताही
+        वैयक्तिक तपशील — नाव/मोबाईल — मेलमध्ये कधीही जात नाही) — तेच निकाल-
+        तारखेपर्यंत disabled राहतं, नंतर आपोआप सक्रिय होतं
+     4) १५ ऑगस्ट २०२६ रोजी gauge ला हलकासा तिरंगा accent — फक्त त्याच
+        दिवशी, आपोआप — पुढे कायमस्वरूपी राहणार नाही
+     5) "तुम्ही आतापर्यंत किती जणांना पाठवलं" share counter (फक्त तुमच्याच
         ब्राऊझरमध्ये localStorage मध्ये मोजलं जातं)
 
    हे फाईल opinion-widget.js नंतर लोड होते आणि त्याच्या कोडला अजिबात हात
@@ -26,8 +31,40 @@
     var TOTAL_POPULATION = 400000; // ४ लाख
     var FAMILY_SIZE = 4;
 
+    // आजची तारीख १५ ऑगस्ट २०२६ आहे का — हे फक्त एकदाच ठरवून पुढे वापरतो,
+    // जेणेकरून बॅनर आणि gauge चा तिरंगा accent दोन्ही एकाच नियमाने चालतील.
+    var _today = new Date();
+    var IS_AUG15 = (_today.getFullYear() === 2026 && _today.getMonth() === 7 && _today.getDate() === 15);
+
     // --------------------------------------------------------------------
-    // १) लोकसंख्या-पोहोच Progress Gauge — track (🚂) च्या खालीच बसवतो
+    // Mail बटणाचं व निकाल-तारखेचं config — mail-config.js (MAIL_CONFIG)
+    // मधून येतं, admin.html च्या "📧 अधिकाऱ्यांना कळवणारा Email" टॅबमधून
+    // बदलता येतं. फाईल लोड नाही झाली तरी खालचे defaults वापरले जातात.
+    // हीच unlockAt तारीख निकालाच्या उलटगणतीसाठीही वापरली जाते (दोन्ही एकच
+    // तारीख आहे — १९ ऑगस्ट, त्यामुळे एकाच जागी बदलली की दोन्हीकडे लागू होते).
+    // --------------------------------------------------------------------
+    var MC = (typeof MAIL_CONFIG !== 'undefined') ? MAIL_CONFIG : {
+      to: 'mr@rb.railnet.gov.in',
+      cc: 'crb@rb.railnet.gov.in,secyrb@rb.railnet.gov.in,gm@cr.railnet.gov.in,drm@pa.railnet.gov.in',
+      subject: 'हातकणंगले–इचलकरंजी रेल्वे मार्ग त्वरित मंजूर करावा — नागरिक मत सर्वेक्षण (इचलकरंजी रेल्वे कृती समिती)',
+      bodyTemplate: 'मा. महोदय,\n\nमी इचलकरंजी रेल्वे कृती समितीच्या "इचलकरंजीला रेल्वे हवी का?" या नागरिक मत सर्वेक्षणाच्या माध्यमातून आपणास कळवत आहे.\n\n{{STAT_LINE}}\n\nहातकणंगले–इचलकरंजी या केवळ ८ किमी अंतराच्या ब्रॉडगेज रेल्वे मार्गाचा सुधारित DPR दिनांक ०२.०१.२०२० रोजी ₹१८०.७३ कोटी खर्चासह सादर करण्यात आला आहे, परंतु अद्याप रेल्वे बोर्डाकडून मंजुरी मिळालेली नाही. इचलकरंजी — "महाराष्ट्राचे मँचेस्टर" — येथे ५०,०००+ पॉवरलूम्स असून दैनंदिन अंदाजे ₹१३६ कोटींचे कापड उत्पादन होते, तरीही शहराला थेट रेल्वे कनेक्टिव्हिटी नाही.\n\nकृपया हा प्रकल्प तातडीने मंजूर करून पुढील कार्यवाही करावी, ही नम्र विनंती.\n\nसंपूर्ण पुरावा व तपशीलांसाठी: {{SITE_URL}}\n\nकळावे,\n[तुमचं नाव]\n[तुमचं शहर/परिसर]\n\n— इचलकरंजी रेल्वे कृती समिती',
+      unlockAt: '2026-08-19T00:00:00+05:30',
+      buttonLabel: '📧 अधिकाऱ्यांना थेट कळवा (ईमेल)',
+      unlockedHint: 'तुमचं स्वतःचं ईमेल अॅप उघडेल — तयार मसुदा तुम्ही बघून, नाव टाकून थेट पाठवू शकता.',
+      lockedHint: '🔒 हे बटण सर्वेक्षण संपल्यावर, १९ ऑगस्टच्या पहाटेपासून सक्रिय होईल.'
+    };
+
+    var unlockTime = new Date(MC.unlockAt);
+    var unlockTimeValid = !isNaN(unlockTime.getTime());
+
+    function isUnlocked(){
+      return !unlockTimeValid || new Date() >= unlockTime;
+    }
+
+    // --------------------------------------------------------------------
+    // १) लोकसंख्या-पोहोच Progress Gauge — track (🚂) च्या खालीच बसवतो.
+    //    फक्त १५ ऑगस्ट रोजी वरती एक हलकीशी तिरंगा पट्टी दिसते — बाकी
+    //    दिवशी gauge नेहमीचाच सोनेरी/नेव्ही रंगात दिसतो.
     // --------------------------------------------------------------------
     var gaugeWrap = null, gaugeFill = null, gaugeText = null;
     try {
@@ -39,10 +76,18 @@
           'max-width:520px;margin:0 auto 18px;padding:14px 18px;' +
           'background:linear-gradient(180deg,#12283A,#0E2130);border:1px solid #D4AF37;' +
           'border-radius:16px;font-family:"IBM Plex Sans",sans-serif;' +
-          'box-shadow:0 6px 20px rgba(0,0,0,.35);';
+          'box-shadow:0 6px 20px rgba(0,0,0,.35);position:relative;overflow:hidden;';
+
+        if (IS_AUG15) {
+          var tricolorStrip = document.createElement('div');
+          tricolorStrip.style.cssText =
+            'position:absolute;top:0;left:0;right:0;height:4px;' +
+            'background:linear-gradient(90deg,#FF9933 0 33%,#FFFFFF 33% 67%,#138808 67% 100%);';
+          gaugeWrap.appendChild(tricolorStrip);
+        }
 
         gaugeText = document.createElement('div');
-        gaugeText.style.cssText = 'font-size:13px;color:#F3D27A;margin-bottom:8px;text-align:center;line-height:1.6;';
+        gaugeText.style.cssText = 'font-size:13px;color:#F3D27A;margin-bottom:8px;text-align:center;line-height:1.6;' + (IS_AUG15 ? 'margin-top:6px;' : '');
         gaugeText.textContent = 'मतमोजणी सुरू आहे...';
         gaugeWrap.appendChild(gaugeText);
 
@@ -80,31 +125,43 @@
     }
 
     // --------------------------------------------------------------------
-    // २) "अधिकाऱ्यांना थेट कळवा" mailto बटण — share विभागाखाली.
-    //    मजकूर (to/cc/subject/body) आणि सक्रिय-होण्याची वेळ आता
-    //    mail-config.js (MAIL_CONFIG) मधून येते — admin.html च्या नवीन
-    //    "📧 अधिकाऱ्यांना कळवणारा Email" टॅबमधून बदलता येते. mail-config.js
-    //    काही कारणाने लोड झालं नाही, तरी खालचे defaults वापरले जातात —
-    //    बटण कधीही पूर्ण तुटणार नाही.
+    // २) निकाल-उलटगणती — gauge च्या अगदी वरती बसते. निकालाची वेळ
+    //    (MC.unlockAt, सध्या १९ ऑगस्ट पहाट) उलटली की स्वतःहून पानातून
+    //    कायमची निघून जाते — पुढे कधीही परत येऊन काढायची गरज नाही.
     // --------------------------------------------------------------------
-    var MC = (typeof MAIL_CONFIG !== 'undefined') ? MAIL_CONFIG : {
-      to: 'mr@rb.railnet.gov.in',
-      cc: 'crb@rb.railnet.gov.in,secyrb@rb.railnet.gov.in,gm@cr.railnet.gov.in,drm@pa.railnet.gov.in',
-      subject: 'हातकणंगले–इचलकरंजी रेल्वे मार्ग त्वरित मंजूर करावा — नागरिक मत सर्वेक्षण (इचलकरंजी रेल्वे कृती समिती)',
-      bodyTemplate: 'मा. महोदय,\n\nमी इचलकरंजी रेल्वे कृती समितीच्या "इचलकरंजीला रेल्वे हवी का?" या नागरिक मत सर्वेक्षणाच्या माध्यमातून आपणास कळवत आहे.\n\n{{STAT_LINE}}\n\nहातकणंगले–इचलकरंजी या केवळ ८ किमी अंतराच्या ब्रॉडगेज रेल्वे मार्गाचा सुधारित DPR दिनांक ०२.०१.२०२० रोजी ₹१८०.७३ कोटी खर्चासह सादर करण्यात आला आहे, परंतु अद्याप रेल्वे बोर्डाकडून मंजुरी मिळालेली नाही. इचलकरंजी — "महाराष्ट्राचे मँचेस्टर" — येथे ५०,०००+ पॉवरलूम्स असून दैनंदिन अंदाजे ₹१३६ कोटींचे कापड उत्पादन होते, तरीही शहराला थेट रेल्वे कनेक्टिव्हिटी नाही.\n\nकृपया हा प्रकल्प तातडीने मंजूर करून पुढील कार्यवाही करावी, ही नम्र विनंती.\n\nसंपूर्ण पुरावा व तपशीलांसाठी: {{SITE_URL}}\n\nकळावे,\n[तुमचं नाव]\n[तुमचं शहर/परिसर]\n\n— इचलकरंजी रेल्वे कृती समिती',
-      unlockAt: '2026-08-19T00:00:00+05:30',
-      buttonLabel: '📧 अधिकाऱ्यांना थेट कळवा (ईमेल)',
-      unlockedHint: 'तुमचं स्वतःचं ईमेल अॅप उघडेल — तयार मसुदा तुम्ही बघून, नाव टाकून थेट पाठवू शकता.',
-      lockedHint: '🔒 हे बटण सर्वेक्षण संपल्यावर, १९ ऑगस्टच्या पहाटेपासून सक्रिय होईल.'
-    };
+    try {
+      if (unlockTimeValid && !isUnlocked() && gaugeWrap && gaugeWrap.parentNode) {
+        var countdownWrap = document.createElement('div');
+        countdownWrap.id = 'resultCountdown';
+        countdownWrap.style.cssText =
+          'max-width:520px;margin:0 auto 12px;padding:10px 16px;text-align:center;' +
+          'font-family:"IBM Plex Sans",sans-serif;font-size:13px;font-weight:600;color:#F3D27A;' +
+          'background:#0E2130;border:1px solid rgba(212,175,55,.35);border-radius:12px;';
+        gaugeWrap.parentNode.insertBefore(countdownWrap, gaugeWrap);
 
-    var unlockTime = new Date(MC.unlockAt);
-    var unlockTimeValid = !isNaN(unlockTime.getTime());
+        var countdownIntervalId = null;
+        function renderCountdown(){
+          var diff = unlockTime - new Date();
+          if (diff <= 0) {
+            if (countdownWrap && countdownWrap.parentNode) countdownWrap.parentNode.removeChild(countdownWrap);
+            if (countdownIntervalId) clearInterval(countdownIntervalId);
+            return;
+          }
+          var days = Math.floor(diff / 86400000);
+          var hours = Math.floor((diff % 86400000) / 3600000);
+          var mins = Math.floor((diff % 3600000) / 60000);
+          countdownWrap.textContent =
+            '⏳ निकाल जाहीर होण्यास बाकी: ' + days + ' दिवस ' + hours + ' तास ' + mins + ' मिनिटे';
+        }
+        renderCountdown();
+        countdownIntervalId = setInterval(renderCountdown, 60000);
+      }
+    } catch (e) {}
 
-    function isUnlocked(){
-      return !unlockTimeValid || new Date() >= unlockTime;
-    }
-
+    // --------------------------------------------------------------------
+    // ३) "अधिकाऱ्यांना थेट कळवा" mailto बटण — share विभागाखाली.
+    //    MC.unlockAt पर्यंत disabled/राखाडी, नंतर आपोआप सक्रिय.
+    // --------------------------------------------------------------------
     var officialsBtn = null, officialsHint = null;
     try {
       var shareDiv = widget.querySelector('.share');
@@ -200,7 +257,7 @@
     }
 
     // --------------------------------------------------------------------
-    // ३) Share counter — "तुम्ही आतापर्यंत किती जणांना पाठवलं" (फक्त
+    // ४) Share counter — "तुम्ही आतापर्यंत किती जणांना पाठवलं" (फक्त
     //    तुमच्याच ब्राऊझरमध्ये localStorage मध्ये मोजलं जातं)
     // --------------------------------------------------------------------
     try {
