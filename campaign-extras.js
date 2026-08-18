@@ -3,13 +3,14 @@
      1) ४ लाख लोकसंख्येच्या तुलनेत अंदाजित कुटुंब-पोहोच दाखवणारा progress gauge
      2) निकालाच्या तारखेपर्यंत (१९ ऑगस्ट) उलटगणती — वेळ उलटल्यावर स्वतःहून
         कायमची लपते, त्यामुळे मोहीम संपल्यावर पानावर शिळी उलटगणती उरत नाही
-     3) "अधिकाऱ्यांना थेट कळवा" mailto बटण (खरी मतसंख्या वापरून, कोणताही
-        वैयक्तिक तपशील — नाव/मोबाईल — मेलमध्ये कधीही जात नाही) — तेच निकाल-
-        तारखेपर्यंत disabled राहतं, नंतर आपोआप सक्रिय होतं
-     4) १५ ऑगस्ट २०२६ रोजी gauge ला हलकासा तिरंगा accent — फक्त त्याच
+     3) १५ ऑगस्ट २०२६ रोजी gauge ला हलकासा तिरंगा accent — फक्त त्याच
         दिवशी, आपोआप — पुढे कायमस्वरूपी राहणार नाही
-     5) "तुम्ही आतापर्यंत किती जणांना पाठवलं" share counter (फक्त तुमच्याच
+     4) "तुम्ही आतापर्यंत किती जणांना पाठवलं" share counter (फक्त तुमच्याच
         ब्राऊझरमध्ये localStorage मध्ये मोजलं जातं)
+
+   टीप: "अधिकाऱ्यांना थेट कळवा" ईमेल बटण इथून (सार्वजनिक पानावरून) पूर्णपणे
+   काढलं आहे — १,५००+ लोकांना परत साईटवर येऊन मेल पाठवायला सांगणं शक्य नाही,
+   त्यामुळे ते फक्त admin.html मध्ये (फक्त तुमच्यासाठी) हलवलं आहे.
 
    हे फाईल opinion-widget.js नंतर लोड होते आणि त्याच्या कोडला अजिबात हात
    लावत नाही — फक्त तयार असलेला Firebase app (आधीच initialize झालेला)
@@ -27,7 +28,6 @@
     var widget = document.getElementById('opinion-widget');
     if (!widget) return;
 
-    var SITE_URL = "https://ichalkaranjirailway.github.io/htk-ich/";
     var TOTAL_POPULATION = 400000; // ४ लाख
     var FAMILY_SIZE = 4;
 
@@ -37,24 +37,12 @@
     var IS_AUG15 = (_today.getFullYear() === 2026 && _today.getMonth() === 7 && _today.getDate() === 15);
 
     // --------------------------------------------------------------------
-    // Mail बटणाचं व निकाल-तारखेचं config — mail-config.js (MAIL_CONFIG)
-    // मधून येतं, admin.html च्या "📧 अधिकाऱ्यांना कळवणारा Email" टॅबमधून
-    // बदलता येतं. फाईल लोड नाही झाली तरी खालचे defaults वापरले जातात.
-    // हीच unlockAt तारीख निकालाच्या उलटगणतीसाठीही वापरली जाते (दोन्ही एकच
-    // तारीख आहे — १९ ऑगस्ट, त्यामुळे एकाच जागी बदलली की दोन्हीकडे लागू होते).
+    // निकाल-तारीख — फक्त वरच्या उलटगणतीसाठी वापरली जाते (मेल बटण आता इथे
+    // नाहीच, ते admin.html मध्ये गेलं आहे — त्यामुळे mail-config.js वर
+    // अवलंबून राहायची गरज उरली नाही). opinion-widget.js मधल्या VOTING_END
+    // शी जुळणारीच तारीख — दोन्हीकडे बदलायची झाल्यास दोन्ही जागी बदलावी.
     // --------------------------------------------------------------------
-    var MC = (typeof MAIL_CONFIG !== 'undefined') ? MAIL_CONFIG : {
-      to: 'mr@rb.railnet.gov.in',
-      cc: 'crb@rb.railnet.gov.in,secyrb@rb.railnet.gov.in,gm@cr.railnet.gov.in,drm@pa.railnet.gov.in',
-      subject: 'हातकणंगले–इचलकरंजी रेल्वे मार्ग त्वरित मंजूर करावा — नागरिक मत सर्वेक्षण (इचलकरंजी रेल्वे कृती समिती)',
-      bodyTemplate: 'मा. महोदय,\n\nमी इचलकरंजी रेल्वे कृती समितीच्या "इचलकरंजीला रेल्वे हवी का?" या नागरिक मत सर्वेक्षणाच्या माध्यमातून आपणास कळवत आहे.\n\n{{STAT_LINE}}\n\nहातकणंगले–इचलकरंजी या केवळ ८ किमी अंतराच्या ब्रॉडगेज रेल्वे मार्गाचा सुधारित DPR दिनांक ०२.०१.२०२० रोजी ₹१८०.७३ कोटी खर्चासह सादर करण्यात आला आहे, परंतु अद्याप रेल्वे बोर्डाकडून मंजुरी मिळालेली नाही. इचलकरंजी — "महाराष्ट्राचे मँचेस्टर" — येथे ५०,०००+ पॉवरलूम्स असून दैनंदिन अंदाजे ₹१३६ कोटींचे कापड उत्पादन होते, तरीही शहराला थेट रेल्वे कनेक्टिव्हिटी नाही.\n\nकृपया हा प्रकल्प तातडीने मंजूर करून पुढील कार्यवाही करावी, ही नम्र विनंती.\n\nसंपूर्ण पुरावा व तपशीलांसाठी: {{SITE_URL}}\n\nकळावे,\n[तुमचं नाव]\n[तुमचं शहर/परिसर]\n\n— इचलकरंजी रेल्वे कृती समिती',
-      unlockAt: '2026-08-19T00:00:00+05:30',
-      buttonLabel: '📧 अधिकाऱ्यांना थेट कळवा (ईमेल)',
-      unlockedHint: 'तुमचं स्वतःचं ईमेल अॅप उघडेल — तयार मसुदा तुम्ही बघून, नाव टाकून थेट पाठवू शकता.',
-      lockedHint: '🔒 हे बटण सर्वेक्षण संपल्यावर, १९ ऑगस्टच्या पहाटेपासून सक्रिय होईल.'
-    };
-
-    var unlockTime = new Date(MC.unlockAt);
+    var unlockTime = new Date('2026-08-19T00:00:00+05:30');
     var unlockTimeValid = !isNaN(unlockTime.getTime());
 
     function isUnlocked(){
@@ -126,7 +114,7 @@
 
     // --------------------------------------------------------------------
     // २) निकाल-उलटगणती — gauge च्या अगदी वरती बसते. निकालाची वेळ
-    //    (MC.unlockAt, सध्या १९ ऑगस्ट पहाट) उलटली की स्वतःहून पानातून
+    //    (unlockTime, सध्या १९ ऑगस्ट पहाट) उलटली की स्वतःहून पानातून
     //    कायमची निघून जाते — पुढे कधीही परत येऊन काढायची गरज नाही.
     // --------------------------------------------------------------------
     try {
@@ -158,92 +146,7 @@
       }
     } catch (e) {}
 
-    // --------------------------------------------------------------------
-    // ३) "अधिकाऱ्यांना थेट कळवा" mailto बटण — share विभागाखाली.
-    //    MC.unlockAt पर्यंत disabled/राखाडी, नंतर आपोआप सक्रिय.
-    // --------------------------------------------------------------------
-    var officialsBtn = null, officialsHint = null;
-    try {
-      var shareDiv = widget.querySelector('.share');
-      if (shareDiv) {
-        officialsBtn = document.createElement('button');
-        officialsBtn.type = 'button';
-        officialsBtn.id = 'mailOfficialsBtn';
-        officialsBtn.className = 'share-btn';
-        officialsBtn.style.cssText =
-          'margin-top:10px;background:#7A1F1F;color:#fff;width:100%;justify-content:center;transition:opacity .3s ease;';
-        shareDiv.appendChild(officialsBtn);
-
-        officialsHint = document.createElement('p');
-        officialsHint.style.cssText = 'font-size:11px;color:#9FB0BA;text-align:center;margin:6px 0 0;';
-        shareDiv.appendChild(officialsHint);
-
-        function refreshButtonState(){
-          if (isUnlocked()) {
-            officialsBtn.disabled = false;
-            officialsBtn.style.opacity = '1';
-            officialsBtn.style.cursor = 'pointer';
-            officialsBtn.textContent = MC.buttonLabel;
-            officialsHint.textContent = MC.unlockedHint;
-          } else {
-            officialsBtn.disabled = true;
-            officialsBtn.style.opacity = '.55';
-            officialsBtn.style.cursor = 'not-allowed';
-            officialsBtn.textContent = MC.buttonLabel;
-            officialsHint.textContent = MC.lockedHint;
-          }
-        }
-        refreshButtonState();
-        // वेळ उलटल्यावर बटण आपोआप सक्रिय व्हावं म्हणून दर मिनिटाला तपासतो —
-        // पान रिफ्रेश न करताही बटण योग्य वेळी चालू होईल.
-        if (!isUnlocked()) {
-          var unlockCheckId = setInterval(function(){
-            if (isUnlocked()) { refreshButtonState(); clearInterval(unlockCheckId); }
-          }, 60000);
-        }
-
-        officialsBtn.addEventListener('click', function(){
-          if (!isUnlocked()) return; // disabled असूनही क्लिक झाला तर सुरक्षा-कवच
-          sendToOfficials();
-        });
-      }
-    } catch (e) {}
-
     var lastKnownTotal = 0;
-
-    function buildMailto(total){
-      var to = MC.to;
-      var cc = MC.cc;
-      var subject = MC.subject;
-
-      var statLine = '';
-      if (total > 0) {
-        var reach = total * FAMILY_SIZE;
-        statLine =
-          'आतापर्यंत या सर्वेक्षणात ' + total.toLocaleString('en-IN') + ' नागरिकांनी थेट, पडताळणीयोग्य मत नोंदवले आहे. ' +
-          '(सरासरी कुटुंब आकार सुमारे ४ धरल्यास, अंदाजे ' + reach.toLocaleString('en-IN') + ' नागरिकांपर्यंत थेट पोहोच — ' +
-          'हा एक अंदाज आहे, प्रत्यक्ष पडताळणीयोग्य संख्या ' + total.toLocaleString('en-IN') + ' आहे.)';
-      } else {
-        statLine = 'इचलकरंजी रेल्वे कृती समितीच्या नागरिक मत सर्वेक्षणाला सातत्याने नागरिकांचा प्रतिसाद मिळत आहे.';
-      }
-
-      var body = MC.bodyTemplate
-        .split('{{STAT_LINE}}').join(statLine)
-        .split('{{SITE_URL}}').join(SITE_URL);
-
-      return 'mailto:' + encodeURIComponent(to).replace(/%40/g, '@') +
-             '?cc=' + encodeURIComponent(cc) +
-             '&subject=' + encodeURIComponent(subject) +
-             '&body=' + encodeURIComponent(body);
-    }
-
-    function sendToOfficials(){
-      try {
-        window.location.href = buildMailto(lastKnownTotal);
-      } catch (e) {
-        alert('ईमेल उघडताना अडचण आली. कृपया पुन्हा प्रयत्न करा.');
-      }
-    }
 
     if (db) {
       db.collection('meta').doc('counts').onSnapshot(function(doc){
