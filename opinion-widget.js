@@ -289,16 +289,41 @@
     });
   }
 
+  // ---------------------------------------------------------------------
+  // PUBLIC COUNT PROTECTION (addition-only) — एकदा स्क्रीनवर दाखवलेला count
+  // कधीही कमी दिसू नये (network glitch, permission error, तात्पुरता bug
+  // यामुळेही नाही). या ब्राऊझरने आतापर्यंत पाहिलेला सर्वात मोठा yes/no/total
+  // localStorage मध्ये साठवला जातो. नवीन fetch मधला आकडा त्यापेक्षा कमी असेल
+  // तर तो screen वर दाखवला जात नाही (Firestore मधला खरा डेटा अजिबात बदलला
+  // जात नाही — फक्त काय दाखवायचं तेवढंच ठरवलं जातं); जास्त किंवा बरोबरीचा
+  // असेल तरच अपडेट होतो व नवीन baseline साठवला जातो.
+  // ---------------------------------------------------------------------
+  function getStoredMax(key){
+    const v = parseInt(localStorage.getItem(key) || '0', 10);
+    return isNaN(v) ? 0 : v;
+  }
+  function protectedCount(key, incoming){
+    const stored = getStoredMax(key);
+    const safe = Math.max(stored, incoming || 0);
+    if (safe !== stored) {
+      try { localStorage.setItem(key, String(safe)); } catch(e){}
+    }
+    return safe;
+  }
+
   // Live counter — reads a single small doc, so it stays cheap at any scale
   function loadCounts(){
     if (!db) return;
     db.collection('meta').doc('counts').get().then(doc => {
       if (!doc.exists) return;
-      const { yes = 0, no = 0 } = doc.data();
-      if (yes + no === 0) return;
+      const raw = doc.data();
+      const yes = protectedCount('htk_ich_max_yes', raw.yes || 0);
+      const no  = protectedCount('htk_ich_max_no', raw.no || 0);
+      const total = protectedCount('htk_ich_max_total', (raw.yes || 0) + (raw.no || 0));
+      if (total === 0) return;
       document.getElementById('yesNum').textContent = yes;
       document.getElementById('noNum').textContent = no;
-      document.getElementById('totalNum').textContent = yes + no;
+      document.getElementById('totalNum').textContent = total;
       document.getElementById('board').classList.remove('hidden');
     }).catch(()=>{});
   }
@@ -458,7 +483,7 @@
     if (db) {
       db.collection('meta').doc('counts').onSnapshot(doc => {
         const { yes = 0, no = 0 } = doc.exists ? doc.data() : {};
-        lastKnownTotal = yes + no;
+        lastKnownTotal = protectedCount('htk_ich_max_total', yes + no);
         updateShareLinksWithLiveCount(lastKnownTotal);
       }, () => { updateShareLinksWithLiveCount(lastKnownTotal); });
     } else {
