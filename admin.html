@@ -217,6 +217,8 @@ service cloud.firestore {
 <p class="hint">जुन्या bug मुळे counter मध्ये काही मतं मोजली गेली नव्हती त्यासाठी — हे दाबल्यावर <code>votes</code> मधल्या सगळ्या खऱ्या नोंदी मोजून होय/नाही आकडा बरोबर केला जाईल. सुरक्षित आहे, कितीही वेळा चालवू शकता.</p>
 <button type="button" id="exportCsvBtn" class="secondary" style="display:none;">⬇️ सर्व Voter Data Export करा (CSV)</button>
 <p class="hint">प्रत्येक नोंदीसमोरचं 🗑️ बटण दाबून ती नोंद कायमची delete करता येईल (चुकीच्या/duplicate नोंदींसाठी).</p>
+<button type="button" id="exportFullCsvBtn" class="secondary">⬇️ अंतिम संपूर्ण यादी Export करा (सर्व मतं — नाव न दिलेली मतंही धरून)</button>
+<p class="hint">वरचं CSV बटण फक्त ज्यांनी नाव/मोबाईल/क्षेत्र दिलं त्यांचीच यादी देतं. हे बटण <code>votes</code> मधल्या <b>सगळ्या</b> नोंदी (कोणी नाव न देता फक्त मत दिलं असेल तरी) एकत्र करून एकच अंतिम यादी देतं — रेल्वे अधिकाऱ्यांना पाठवण्यासाठी वापरा. एकूण संख्या live counter शी जुळते का हेही दाखवेल.</p>
 <div id="voterFilters" class="voter-filters" style="display:none;">
 <input type="text" id="voterSearch" placeholder="नाव / मोबाईल / क्षेत्र शोधा...">
 <select id="voterVoteFilter"><option value="">सर्व मतं</option><option value="होय">फक्त होय</option><option value="नाही">फक्त नाही</option></select>
@@ -1055,10 +1057,20 @@ function renderVoterList(){
 // counter आणि प्रत्यक्ष votes नेहमी जुळतील. मतं जास्त असतील (हजारो) तरी
 // चालेल, फक्त वाचायला थोडा वेळ लागू शकतो.
 // ---------------------------------------------------------------------
+// ---------------------------------------------------------------------
+// Counter Recalculate — आधी फक्त मोजून (preview) दाखवतो, meta/counts ला
+// अजिबात हात लावत नाही. लाईव्ह साईटवर सध्या दिसणारा आकडा (जो आत्ता आहे तोच)
+// आणि खरा मोजलेला आकडा — दोन्ही एकत्र दाखवून, आकडा वाढणार आहे की कमी होणार
+// आहे हे स्पष्ट सांगतो. आकडा कमी होणार असेल तरच वेगळा, जास्त ठाम इशारा देऊन
+// परत विचारतो — चुकून क्लिकने live count कधीही खाली येऊ नये म्हणून.
+// ---------------------------------------------------------------------
 document.getElementById('recalcBtn').addEventListener('click', async () => {
-  if(!confirm('votes मधल्या सगळ्या नोंदी वाचून होय/नाही counter चा खरा आकडा भरायचा का? (सध्याचा आकडा बदलला जाईल)')) return;
   try {
-    showStatus('सगळी मतं मोजत आहे... मतं जास्त असतील तर थोडा वेळ लागू शकतो.', 'busy');
+    showStatus('सध्याचा आकडा व खरी मतं तपासत आहे...', 'busy');
+    const countsSnap = await voteDb.collection('meta').doc('counts').get();
+    const cur = countsSnap.exists ? countsSnap.data() : { yes: 0, no: 0 };
+    const curYes = cur.yes || 0, curNo = cur.no || 0, curTotal = curYes + curNo;
+
     const snap = await voteDb.collection('votes').get();
     let yes = 0, no = 0;
     snap.forEach(doc => {
@@ -1066,8 +1078,31 @@ document.getElementById('recalcBtn').addEventListener('click', async () => {
       if (v === 'होय') yes++;
       else if (v === 'नाही') no++;
     });
+    const newTotal = yes + no;
+
+    let msg = `सध्या live counter दाखवतोय — होय: ${curYes}, नाही: ${curNo}, एकूण: ${curTotal}.\n\n`
+             + `votes मधल्या सगळ्या नोंदी मोजल्यावर खरा आकडा — होय: ${yes}, नाही: ${no}, एकूण: ${newTotal}.\n\n`;
+
+    if (newTotal < curTotal) {
+      msg += `⚠️ इशारा: नवीन आकडा (${newTotal}) हा सध्या दिसणाऱ्या आकड्यापेक्षा (${curTotal}) कमी आहे!\n`
+           + `असं झाल्यास साईटवर आधीच जास्त आकडा पाहिलेल्या लोकांना अजूनही जुनाच (जास्त) आकडा दिसत राहील, `
+           + `आणि नवीन visitors ना मात्र लगेच कमी आकडा दिसेल — दोन्ही वेगळे दिसतील.\n`
+           + `खरंच पुढे जायचं आहे का? (OK दाबल्यास पुढचा एक confirm अजून येईल)`;
+      if (!confirm(msg)) { showStatus('रद्द केलं — counter बदलला नाही.', 'ok'); return; }
+      if (!confirm(`अंतिम खात्री — counter ${curTotal} वरून ${newTotal} वर (कमी) बदलायचा आहे का?`)) {
+        showStatus('रद्द केलं — counter बदलला नाही.', 'ok'); return;
+      }
+    } else if (newTotal === curTotal) {
+      msg += 'आकडा तोच राहील (फरक नाही). तरीही पुढे जायचं का?';
+      if (!confirm(msg)) { showStatus('रद्द केलं — counter बदलला नाही.', 'ok'); return; }
+    } else {
+      msg += `आकडा वाढेल (${curTotal} → ${newTotal}) — आधी न मोजलेली खरी मतं यात धरली जातील. पुढे जायचं का?`;
+      if (!confirm(msg)) { showStatus('रद्द केलं — counter बदलला नाही.', 'ok'); return; }
+    }
+
+    showStatus('Counter अपडेट करत आहे...', 'busy');
     await voteDb.collection('meta').doc('counts').set({ yes, no });
-    showStatus(`✅ Counter दुरुस्त झाला — होय: ${yes}, नाही: ${no}, एकूण: ${yes + no} (एकूण ${snap.size} votes नोंदी सापडल्या).`, 'ok');
+    showStatus(`✅ Counter दुरुस्त झाला — होय: ${yes}, नाही: ${no}, एकूण: ${newTotal} (एकूण ${snap.size} votes नोंदी सापडल्या).`, 'ok');
     document.getElementById('loadVotesBtn').click();
   } catch(err){ showStatus('❌ ' + err.message, 'err'); }
 });
@@ -1152,6 +1187,74 @@ document.getElementById('exportCsvBtn').addEventListener('click', () => {
   a.href = url; a.download = `voter-data-${stamp}.csv`;
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   URL.revokeObjectURL(url);
+});
+
+// ---------------------------------------------------------------------
+// अंतिम संपूर्ण यादी Export — `votes` collection मधल्या सगळ्या नोंदी
+// (नाव/मोबाईल/क्षेत्र न दिलेल्या नोंदींसहित) + जिथे उपलब्ध असेल तिथे
+// voter_details मधून नाव/मोबाईल/क्षेत्र जोडून एकच पूर्ण यादी बनवतो.
+// रेल्वे अधिकाऱ्यांना पाठवण्यासाठी हीच "अंतिम" यादी वापरायची — यात कोणतीही
+// खरी मत-नोंद वगळली जात नाही.
+// ---------------------------------------------------------------------
+document.getElementById('exportFullCsvBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('exportFullCsvBtn');
+  btn.disabled = true;
+  const origText = btn.textContent;
+  btn.textContent = 'यादी तयार होत आहे...';
+  try {
+    showStatus('सगळ्या मतांची अंतिम यादी तयार होत आहे... थोडा वेळ लागू शकतो.', 'busy');
+
+    const [votesSnap, detailsSnap, countsSnap] = await Promise.all([
+      voteDb.collection('votes').get(),
+      voteDb.collection('voter_details').get(),
+      voteDb.collection('meta').doc('counts').get()
+    ]);
+
+    const detailsMap = {};
+    detailsSnap.forEach(doc => { detailsMap[doc.id] = doc.data(); });
+
+    const rows = [];
+    votesSnap.forEach(doc => {
+      const v = doc.data();
+      const d = detailsMap[doc.id] || {};
+      const rawDate = v.timestamp && v.timestamp.toDate ? v.timestamp.toDate() : null;
+      rows.push({
+        name: d.name || '', mobile: d.mobile || '', area: d.area || '',
+        vote: v.vote || '', ts: rawDate ? rawDate.toLocaleString('en-IN') : '', rawDate
+      });
+    });
+    rows.sort((a,b) => (b.rawDate||0) - (a.rawDate||0));
+
+    const cur = countsSnap.exists ? countsSnap.data() : { yes: 0, no: 0 };
+    const liveTotal = (cur.yes || 0) + (cur.no || 0);
+
+    const esc = v => `"${String(v == null ? '' : v).replace(/"/g,'""')}"`;
+    const mobileCell = m => m ? `="${String(m).replace(/"/g,'""')}"` : '""';
+    const header = 'Sr No,Name,Mobile,Area,Vote,Timestamp\n';
+    const csvBody = rows.map((r, i) =>
+      [i + 1, esc(r.name), mobileCell(r.mobile), esc(r.area), esc(r.vote), esc(r.ts)].join(',')
+    ).join('\n');
+    const csv = '\uFEFF' + header + csvBody;
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const pad = n => String(n).padStart(2,'0');
+    const now = new Date();
+    const stamp = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}-${pad(now.getHours())}-${pad(now.getMinutes())}`;
+    const a = document.createElement('a');
+    a.href = url; a.download = `antim-yadi-sarv-mate-${stamp}.csv`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    const matchNote = rows.length === liveTotal
+      ? `✅ जुळतंय — live counter (${liveTotal}) आणि यादीतल्या नोंदी (${rows.length}) सारख्याच आहेत.`
+      : `⚠️ फरक आहे — live counter: ${liveTotal}, यादीत सापडलेल्या नोंदी: ${rows.length}. जुळत नसल्यास आधी "Counter दुरुस्त करा" वापरून बघा.`;
+    showStatus(`✅ अंतिम यादी डाऊनलोड झाली — एकूण ${rows.length} नोंदी. ${matchNote}`, 'ok');
+  } catch(err){
+    showStatus('❌ ' + err.message, 'err');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = origText;
+  }
 });
 </script>
 </body>
