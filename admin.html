@@ -51,6 +51,10 @@
   .voter-filters{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;}
   .voter-filters input,.voter-filters select{flex:1;min-width:120px;padding:8px;border:1px solid var(--line);border-radius:6px;font-size:.85rem;font-family:inherit;}
   .dup-badge{display:inline-block;margin-left:6px;padding:1px 7px;font-size:.68rem;font-weight:600;border-radius:10px;background:#fff3e0;color:#a05a00;border:1px solid #ffcc80;}
+  #quickNav{position:sticky;top:0;z-index:50;background:var(--paper);padding:10px 0 8px;margin:0 -16px 18px;border-bottom:1px solid var(--line);}
+  #quickNav .inner{display:flex;gap:8px;overflow-x:auto;padding:0 16px;-webkit-overflow-scrolling:touch;}
+  #quickNav a{flex-shrink:0;background:#fff;border:1px solid var(--line);color:var(--ink);text-decoration:none;font-size:.78rem;font-weight:600;padding:7px 12px;border-radius:20px;white-space:nowrap;}
+  #quickNav a:hover, #quickNav a:active{background:var(--accent);color:#fff;border-color:var(--accent);}
 </style>
 </head>
 <body>
@@ -74,7 +78,21 @@
 </details>
 </fieldset>
 
-<h2>📝 पानावरचा मजकूर</h2>
+<nav id="quickNav">
+<div class="inner">
+<a href="#sec-text">📝 मजकूर</a>
+<a href="#sec-gallery">🖼️ Gallery</a>
+<a href="#sec-team">👥 सदस्य</a>
+<a href="#sec-optext">✏️ मतदान मजकूर</a>
+<a href="#sec-results">🗳️ निकाल</a>
+<a href="#sec-publiclist">📋 सार्वजनिक यादी</a>
+<a href="#sec-mail">📧 Email</a>
+<a href="#sec-timeline">📚 Timeline यादी</a>
+<a href="#formHeading">➕ नवीन नोंद</a>
+</div>
+</nav>
+
+<h2 id="sec-text">📝 पानावरचा मजकूर</h2>
 <button id="loadTextBtn">मजकूर लोड करा</button>
 <div id="textFields" style="display:none; margin-top:10px;">
 <label>मुख्य शीर्षक (Hero Title)</label><textarea id="t-heroTitle"></textarea>
@@ -99,7 +117,7 @@
 <button type="button" id="saveTextBtn" class="wide">💾 मजकूर सेव्ह करा</button>
 </div>
 
-<h2>🖼️ Gallery फोटो</h2>
+<h2 id="sec-gallery">🖼️ Gallery फोटो</h2>
 <button id="loadGalleryBtn">Gallery लोड करा</button>
 <div id="galleryList" style="display:none; margin-top:10px;"></div>
 <div style="margin-top:14px;">
@@ -110,7 +128,7 @@
 <button type="button" id="addGalleryBtn" class="wide">➕ Gallery मध्ये जोडा</button>
 </div>
 
-<h2>👥 सदस्य</h2>
+<h2 id="sec-team">👥 सदस्य</h2>
 <p class="sub" style="margin-top:-4px;">▲▼ ने क्रम (sequence) बदला, Edit ने नाव/फोटो/पद/परिचय बदला.</p>
 <button id="loadTeamBtn">सदस्य लोड करा</button>
 <div id="teamList" style="display:none; margin-top:10px;"></div>
@@ -129,7 +147,7 @@
 </div>
 
 
-<h2>✏️ मतदान पानाचा मजकूर (opinion.html)</h2>
+<h2 id="sec-optext">✏️ मतदान पानाचा मजकूर (opinion.html)</h2>
 <p class="sub" style="margin-top:-4px;">वरचाच GitHub Token वापरून opinion.html वरचं सगळं वाक्य/मजकूर इथून बदलता येईल.</p>
 <button id="loadOpTextBtn">मजकूर लोड करा</button>
 <div id="opTextFields" style="display:none; margin-top:10px;">
@@ -159,7 +177,7 @@
 <button type="button" id="saveOpTextBtn" class="wide">💾 मतदान पानाचा मजकूर सेव्ह करा</button>
 </div>
 
-<h2>🗳️ मतदान निकाल (opinion.html)</h2>
+<h2 id="sec-results">🗳️ मतदान निकाल (opinion.html)</h2>
 <p class="sub" style="margin-top:-4px;">हे GitHub token पेक्षा वेगळं लॉगिन आहे — एकदाच सेटअप, खाली सूचना.</p>
 
 <div id="voteLoginBox">
@@ -219,6 +237,12 @@ service cloud.firestore {
 <p class="hint">प्रत्येक नोंदीसमोरचं 🗑️ बटण दाबून ती नोंद कायमची delete करता येईल (चुकीच्या/duplicate नोंदींसाठी).</p>
 <button type="button" id="exportFullCsvBtn" class="secondary">⬇️ अंतिम संपूर्ण यादी Export करा (सर्व मतं — नाव न दिलेली मतंही धरून)</button>
 <p class="hint">वरचं CSV बटण फक्त ज्यांनी नाव/मोबाईल/क्षेत्र दिलं त्यांचीच यादी देतं. हे बटण <code>votes</code> मधल्या <b>सगळ्या</b> नोंदी (कोणी नाव न देता फक्त मत दिलं असेल तरी) एकत्र करून एकच अंतिम यादी देतं — रेल्वे अधिकाऱ्यांना पाठवण्यासाठी वापरा. एकूण संख्या live counter शी जुळते का हेही दाखवेल.</p>
+
+<h2 id="sec-publiclist" style="margin-top:26px;">📋 संपूर्ण सार्वजनिक यादी (voters-list.html)</h2>
+<p class="sub" style="margin-top:-4px;">साईटवरचं नवीन पान — फक्त <b>नाव + मत (होय/नाही)</b> सगळ्यांना दाखवतं, पत्ता/मोबाईल कधीच नाही.</p>
+<button type="button" id="backfillVoteBtn" class="secondary">🔁 जुन्या नोंदींना Vote जोडा (Backfill — एकदाच चालवा)</button>
+<p class="hint">नवीन मतांना आपोआप हे जोडलं जातं. फक्त <b>आधीच्या (backfill च्या आधीच्या)</b> जुन्या नोंदींसाठी हे एकदा दाबा — <code>voter_public</code> मधल्या ज्या नोंदींना अजून "मत" (होय/नाही) जोडलेलं नाही, त्यांना <code>voter_details</code> मधून मत घेऊन जोडतं. सुरक्षित आहे, कितीही वेळा चालवू शकता — आधीच जोडलेल्या नोंदींना काहीही होत नाही.</p>
+
 <div id="voterFilters" class="voter-filters" style="display:none;">
 <input type="text" id="voterSearch" placeholder="नाव / मोबाईल / क्षेत्र शोधा...">
 <select id="voterVoteFilter"><option value="">सर्व मतं</option><option value="होय">फक्त होय</option><option value="नाही">फक्त नाही</option></select>
@@ -238,7 +262,7 @@ service cloud.firestore {
 <div id="publicVotersAdminList" style="max-height:400px; overflow-y:auto; background:#fff; border:1px solid var(--line); border-radius:10px; padding:6px 12px; margin-top:12px;"></div>
 </div>
 
-<h2>📧 अधिकाऱ्यांना कळवणारा Email</h2>
+<h2 id="sec-mail">📧 अधिकाऱ्यांना कळवणारा Email</h2>
 <p class="sub" style="margin-top:-4px;">वरचाच GitHub Token वापरून, "अधिकाऱ्यांना थेट कळवा" बटणाचा मजकूर, ईमेल आयडी आणि तो बटण कधी सक्रिय होईल ती वेळ इथून बदलता येईल.</p>
 <button id="loadMailBtn">Email सेटिंग लोड करा</button>
 <div id="mailFields" style="display:none; margin-top:10px;">
@@ -263,7 +287,7 @@ service cloud.firestore {
 <button type="button" id="saveMailBtn" class="wide">💾 Email सेटिंग सेव्ह करा</button>
 </div>
 
-<h2>📚 अस्तित्वात असलेल्या Timeline नोंदी</h2>
+<h2 id="sec-timeline">📚 अस्तित्वात असलेल्या Timeline नोंदी</h2>
 <button id="loadBtn">नोंदी लोड करा</button>
 <div id="entriesList" style="display:none; margin-top:10px;"></div>
 
@@ -1249,6 +1273,72 @@ document.getElementById('exportFullCsvBtn').addEventListener('click', async () =
       ? `✅ जुळतंय — live counter (${liveTotal}) आणि यादीतल्या नोंदी (${rows.length}) सारख्याच आहेत.`
       : `⚠️ फरक आहे — live counter: ${liveTotal}, यादीत सापडलेल्या नोंदी: ${rows.length}. जुळत नसल्यास आधी "Counter दुरुस्त करा" वापरून बघा.`;
     showStatus(`✅ अंतिम यादी डाऊनलोड झाली — एकूण ${rows.length} नोंदी. ${matchNote}`, 'ok');
+  } catch(err){
+    showStatus('❌ ' + err.message, 'err');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = origText;
+  }
+});
+
+// ---------------------------------------------------------------------
+// Backfill — voters-list.html साठी. सार्वजनिक "voter_public" collection
+// मध्ये आधी फक्त नाव+परिसर होतं, "मत" (होय/नाही) नव्हतं (नवीन मतांना ते
+// आपोआप जोडलं जातं — opinion-widget.js मध्ये fix झालेलं आहे). जुन्या
+// नोंदींसाठी हे बटण एकदा चालवावं लागेल: voter_public मधल्या ज्या
+// नोंदींना अजून vote फिल्ड नाही, त्यांना voter_details मधून (तोच ID
+// असल्यामुळे) मत घेऊन जोडतं. batch लिहिण्यामुळे हजारो नोंदी असल्या तरी
+// चालेल. आधीच vote असलेल्या नोंदींना हात लावला जात नाही — त्यामुळे परत
+// परत चालवणं पूर्णपणे सुरक्षित आहे.
+// ---------------------------------------------------------------------
+document.getElementById('backfillVoteBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('backfillVoteBtn');
+  btn.disabled = true;
+  const origText = btn.textContent;
+  try {
+    showStatus('जुन्या नोंदी तपासत आहे...', 'busy');
+
+    const [publicSnap, detailsSnap] = await Promise.all([
+      voteDb.collection('voter_public').get(),
+      voteDb.collection('voter_details').get()
+    ]);
+
+    const detailsMap = {};
+    detailsSnap.forEach(doc => { detailsMap[doc.id] = doc.data(); });
+
+    // votes collection मधूनही मत मिळेल — voter_details मध्ये नोंद नसेल
+    // (उदा. जुनी duplicate-fix आधीची नोंद) तरी backup म्हणून वापरतो.
+    const votesMap = {};
+    const votesSnap = await voteDb.collection('votes').get();
+    votesSnap.forEach(doc => { votesMap[doc.id] = doc.data().vote; });
+
+    const toFix = [];
+    publicSnap.forEach(doc => {
+      const d = doc.data();
+      if (d.vote === 'होय' || d.vote === 'नाही') return; // आधीच आहे
+      const vote = (detailsMap[doc.id] && detailsMap[doc.id].vote) || votesMap[doc.id];
+      if (vote === 'होय' || vote === 'नाही') toFix.push({ id: doc.id, vote });
+    });
+
+    if (!toFix.length) {
+      showStatus('✅ सगळ्या नोंदींना आधीच मत जोडलेलं आहे — काही बदलायची गरज नाही.', 'ok');
+      return;
+    }
+
+    showStatus(`${toFix.length} जुन्या नोंदींना मत जोडत आहे...`, 'busy');
+
+    // Firestore batch ला जास्तीत जास्त 500 writes ची मर्यादा असते,
+    // त्यामुळे 400-400 च्या गटात लिहितो.
+    const CHUNK = 400;
+    for (let i = 0; i < toFix.length; i += CHUNK) {
+      const batch = voteDb.batch();
+      toFix.slice(i, i + CHUNK).forEach(item => {
+        batch.set(voteDb.collection('voter_public').doc(item.id), { vote: item.vote }, { merge: true });
+      });
+      await batch.commit();
+    }
+
+    showStatus(`✅ पूर्ण झालं — ${toFix.length} जुन्या नोंदींना मत जोडलं. आता voters-list.html वर त्याही दिसतील.`, 'ok');
   } catch(err){
     showStatus('❌ ' + err.message, 'err');
   } finally {

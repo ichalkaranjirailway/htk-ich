@@ -243,10 +243,13 @@
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
           }, { merge: true });
         }
-        // सार्वजनिक यादीसाठी — फक्त नाव + परिसर (मोबाईल नंबर कधीच नाही)
+        // सार्वजनिक यादीसाठी — फक्त नाव + परिसर + मत (मोबाईल नंबर कधीच नाही).
+        // "मत" (होय/नाही) इथे साठवलं जातं जेणेकरून पूर्ण सार्वजनिक यादी
+        // (voters-list.html) प्रत्येकाचं नाव + मत दाखवू शकेल, वेगळं
+        // authenticated 'votes' collection वाचायची गरज न पडता.
         if (name || area) {
           await db.collection('voter_public').doc(voterId).set({
-            name, area,
+            name, area, vote: chosenVote,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
           }, { merge: true });
         }

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>संपूर्ण सार्वजनिक मतदार यादी — इचलकरंजी रेल्वे कृती समिती</title>
+<meta name="description" content="इचलकरंजी रेल्वे मागणीला पाठिंबा देणाऱ्या सर्व नागरिकांची सार्वजनिक यादी — फक्त नाव व मत (होय/नाही). पत्ता व मोबाईल क्रमांक गोपनीयतेसाठी कधीही दाखवला जात नाही.">
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://ichalkaranjirailway.github.io/htk-ich/voters-list.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .vl-page{ max-width:640px; margin:0 auto; padding:44px 20px 70px; font-family:'IBM Plex Sans',sans-serif; }
+  .vl-back{ display:inline-block; margin-bottom:22px; font-size:13px; color:var(--ink-soft); text-decoration:none; }
+  .vl-back:hover{ color:var(--navy); }
+  .vl-eyebrow{ font-size:13px; letter-spacing:1px; color:var(--brass); font-weight:700; margin:0 0 8px; text-align:center; }
+  .vl-page h1{ font-family:var(--display); font-size:24px; line-height:1.35; text-align:center; margin:0 0 10px; color:var(--navy); }
+  .vl-sub{ font-size:14px; line-height:1.75; text-align:center; color:var(--ink-soft); margin:0 0 8px; }
+  .vl-privacy{ font-size:12.5px; text-align:center; color:var(--ink-soft); background:var(--paper-raised); border:1px solid var(--line); border-radius:10px; padding:10px 14px; margin:16px 0 28px; }
+  .vl-privacy b{ color:var(--signal-red); }
+
+  .vl-stats{ display:flex; gap:10px; justify-content:center; margin-bottom:24px; flex-wrap:wrap; }
+  .vl-stat{ background:var(--paper-raised); border:1px solid var(--line); border-radius:10px; padding:10px 18px; text-align:center; min-width:90px; }
+  .vl-stat b{ display:block; font-size:20px; color:var(--navy); font-variant-numeric:tabular-nums; }
+  .vl-stat span{ font-size:11px; color:var(--ink-soft); }
+
+  .vl-search{ width:100%; padding:11px 14px; border:1px solid var(--line); border-radius:8px; font-size:14.5px; font-family:inherit; margin-bottom:16px; background:var(--paper-raised); color:var(--ink); }
+
+  .vl-list{ border:1px solid var(--line); border-radius:12px; overflow:hidden; background:var(--paper-raised); }
+  .vl-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:11px 16px; border-bottom:1px solid var(--line); font-size:14.5px; }
+  .vl-row:last-child{ border-bottom:none; }
+  .vl-row .num{ color:var(--ink-soft); font-size:12px; width:34px; flex-shrink:0; }
+  .vl-row .name{ flex:1; min-width:0; color:var(--ink); font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .vl-badge{ flex-shrink:0; font-size:12px; font-weight:700; padding:4px 11px; border-radius:20px; letter-spacing:.2px; }
+  .vl-badge.yes{ background:#1e6b34; color:#eafbf0; }
+  .vl-badge.no{ background:var(--signal-red); color:#fff; }
+
+  .vl-empty{ text-align:center; color:var(--ink-soft); padding:30px 10px; font-size:14px; }
+  .vl-loadmore{ display:block; width:100%; margin-top:16px; padding:13px; border:1px solid var(--navy); background:transparent; color:var(--navy); border-radius:10px; font-weight:600; font-size:14.5px; cursor:pointer; font-family:inherit; }
+  .vl-loadmore:hover{ background:var(--navy); color:var(--paper-raised); }
+  .vl-loadmore:disabled{ opacity:.5; cursor:not-allowed; }
+  .vl-loadmore.hidden{ display:none; }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+<div class="wrap masthead-top">
+<span>इचलकरंजी रेल्वे कृती समिती</span>
+<span>Est. Demand — 1965 Onward</span>
+</div>
+</header>
+
+<div class="vl-page">
+  <a class="vl-back" href="index.html#stats">← इचलकरंजी रेल्वे पुरावा संग्रह (संपूर्ण साईट) कडे परत</a>
+
+  <p class="vl-eyebrow">पारदर्शक नागरिक सहभाग</p>
+  <h1>🚂 संपूर्ण सार्वजनिक मतदार यादी</h1>
+  <p class="vl-sub">इचलकरंजीला रेल्वे हवी का, यावर मत नोंदवलेल्या सर्व नागरिकांची यादी — कोणी काय मत दिलं ते इथे पाहता येईल.</p>
+
+  <div class="vl-privacy">🔒 <b>पत्ता व मोबाईल क्रमांक कधीही सार्वजनिक दाखवला जात नाही</b> — फक्त नाव आणि मत (होय/नाही) दाखवले जाते, नागरिकांच्या Privacy साठी.</div>
+
+  <div class="vl-stats" id="vlStats"></div>
+
+  <input type="text" class="vl-search" id="vlSearch" placeholder="नाव शोधा...">
+
+  <div class="vl-list" id="vlList">
+    <div class="vl-empty">यादी लोड होत आहे...</div>
+  </div>
+
+  <button type="button" class="vl-loadmore hidden" id="vlLoadMore">आणखी नावं दाखवा ⌄</button>
+
+  <p style="text-align:center;margin-top:30px;"><a class="vl-back" href="opinion.html">← मत द्या / निकाल पहा</a></p>
+</div>
+
+<footer id="footer">
+<div class="wrap">
+<div><strong>इचलकरंजी रेल्वे कृती समिती</strong></div>
+<div>Citizen-maintained evidence archive · अद्ययावत केले जात आहे</div>
+</div>
+</footer>
+
+<!-- Firebase (compat SDK — no build step needed) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+
+<script>
+(function(){
+  var db = null;
+  if (typeof FIREBASE_CONFIG !== 'undefined' && FIREBASE_CONFIG.apiKey.indexOf('PASTE_YOUR') === -1) {
+    if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.firestore();
+  }
+
+  var PAGE_SIZE = 100;
+  var lastDoc = null;
+  var allRows = [];      // सगळ्या लोड झालेल्या नोंदी (नाव + मत), शोधासाठी वापरतात
+  var yesCount = 0, noCount = 0;
+  var listEl = document.getElementById('vlList');
+  var loadMoreBtn = document.getElementById('vlLoadMore');
+  var statsEl = document.getElementById('vlStats');
+  var searchEl = document.getElementById('vlSearch');
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function renderStats(){
+    statsEl.innerHTML =
+      '<div class="vl-stat"><b>' + (yesCount + noCount) + '</b><span>यादीत नावं</span></div>' +
+      '<div class="vl-stat"><b>' + yesCount + '</b><span>होय</span></div>' +
+      '<div class="vl-stat"><b>' + noCount + '</b><span>नाही</span></div>';
+  }
+
+  function renderList(){
+    var q = (searchEl.value || '').trim().toLowerCase();
+    var rows = q ? allRows.filter(function(r){ return r.name.toLowerCase().indexOf(q) !== -1; }) : allRows;
+    if (!rows.length) {
+      listEl.innerHTML = '<div class="vl-empty">' + (q ? 'हे नाव यादीत सापडलं नाही.' : 'अजून कोणी नाव नोंदवलेलं नाही.') + '</div>';
+      return;
+    }
+    var html = '';
+    rows.forEach(function(r, i){
+      var badge = r.vote === 'होय' ? '<span class="vl-badge yes">होय</span>' : '<span class="vl-badge no">नाही</span>';
+      html += '<div class="vl-row"><span class="num">' + (i + 1) + '</span><span class="name">' + escapeHtml(r.name) + '</span>' + badge + '</div>';
+    });
+    listEl.innerHTML = html;
+  }
+
+  function loadPage(){
+    if (!db) {
+      listEl.innerHTML = '<div class="vl-empty">यादी सध्या उपलब्ध नाही.</div>';
+      return;
+    }
+    loadMoreBtn.disabled = true;
+    loadMoreBtn.textContent = 'लोड होत आहे...';
+    var q = db.collection('voter_public').orderBy('timestamp', 'desc').limit(PAGE_SIZE);
+    if (lastDoc) q = q.startAfter(lastDoc);
+    q.get().then(function(snap){
+      if (snap.empty && !lastDoc) {
+        listEl.innerHTML = '<div class="vl-empty">अजून कोणी नाव नोंदवलेलं नाही.</div>';
+        loadMoreBtn.classList.add('hidden');
+        return;
+      }
+      snap.forEach(function(doc){
+        var d = doc.data();
+        var name = (d.name || '').toString().trim();
+        // "मत" फिल्ड नसलेल्या (backfill आधीच्या) जुन्या नोंदी इथे वगळल्या
+        // जातात — जुन्या नोंदींना मत जोडण्यासाठी admin.html मधलं
+        // "जुन्या नोंदींना मत जोडा" बटण एकदा चालवा.
+        if (!name || (d.vote !== 'होय' && d.vote !== 'नाही')) return;
+        allRows.push({ name: name, vote: d.vote });
+        if (d.vote === 'होय') yesCount++; else noCount++;
+      });
+      lastDoc = snap.docs.length ? snap.docs[snap.docs.length - 1] : lastDoc;
+      renderStats();
+      renderList();
+      if (snap.docs.length < PAGE_SIZE) {
+        loadMoreBtn.classList.add('hidden');
+      } else {
+        loadMoreBtn.classList.remove('hidden');
+        loadMoreBtn.disabled = false;
+        loadMoreBtn.textContent = 'आणखी नावं दाखवा ⌄';
+      }
+    }).catch(function(){
+      listEl.innerHTML = '<div class="vl-empty">यादी लोड करताना अडचण आली. पान परत लोड करून पहा.</div>';
+      loadMoreBtn.classList.add('hidden');
+    });
+  }
+
+  loadMoreBtn.addEventListener('click', loadPage);
+  searchEl.addEventListener('input', renderList);
+  loadPage();
+})();
+</script>
+
+</body>
+</html>
