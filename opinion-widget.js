@@ -386,7 +386,7 @@
 
     function daysLeftLabel(){
       const diff = VOTING_END - new Date();
-      if (diff <= 0) return "मुदत संपली — तरीही मत द्या!";
+      if (diff <= 0) return "तुमचं मत आणि पाठिंबा महत्त्वाचा आहे";
       const d = Math.ceil(diff / (1000*60*60*24));
       if (d <= 1) return "आजचा शेवटचा दिवस!";
       return "फक्त " + d + " दिवस बाकी";
