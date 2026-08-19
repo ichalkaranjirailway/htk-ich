@@ -375,6 +375,10 @@ refreshProofFields();
 function showStatus(msg, cls){
   const el = document.getElementById('status');
   el.className = cls; el.textContent = msg; el.style.display = 'block';
+  // मेसेज बॉक्स पानाच्या खाली आहे — पण बटणं वेगवेगळ्या sections मध्ये
+  // (वर/मध्ये) असतात, त्यामुळे मेसेज दिसतच नाही असं वाटायचं. आता तो
+  // आपोआप स्क्रीनवर स्क्रोल होऊन दिसेल.
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 function b64EncodeUnicode(str){ return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (m,p1)=>String.fromCharCode('0x'+p1))); }
 function b64DecodeUnicode(str){ return decodeURIComponent(atob(str).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')); }
