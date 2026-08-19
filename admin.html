@@ -309,7 +309,7 @@ service cloud.firestore {
 <div class="row">
 <div><label>तारीख</label><input type="date" id="date" required></div>
 <div><label>स्थिती</label>
-<select id="status">
+<select id="entryStatus">
 <option value="replied">उत्तर आलं</option>
 <option value="pending">प्रलंबित</option>
 <option value="no-response" selected>उत्तर आलं नाही</option>
@@ -482,7 +482,7 @@ function loadForEdit(e){
   document.getElementById('formHeading').textContent = '✏️ नोंद बदला';
   document.getElementById('category').value = e.category;
   document.getElementById('date').value = e.date;
-  document.getElementById('status').value = e.status;
+  document.getElementById('entryStatus').value = e.status;
   document.getElementById('title').value = e.title;
   document.getElementById('toWhom').value = e.to_whom || '';
   document.getElementById('description').value = e.description || '';
@@ -907,7 +907,7 @@ document.getElementById('entryForm').addEventListener('submit', async (e) => {
       title: document.getElementById('title').value.trim(), to_whom: document.getElementById('toWhom').value.trim(),
       description: document.getElementById('description').value.trim(),
       response: document.getElementById('response').value.trim() || 'No response received yet.',
-      status: document.getElementById('status').value, proofType: pType, proofSrc,
+      status: document.getElementById('entryStatus').value, proofType: pType, proofSrc,
       referenceNo: document.getElementById('referenceNo').value.trim()
     };
     const entryText = entryToText(entry);
