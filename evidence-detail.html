@@ -41,23 +41,6 @@
 <script>
 function esc(s){ return (s || '').toString().replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
 
-function renderQaItem(qa){
-  return `
-    <div class="ev-qa-item">
-      <div class="ev-q-label">प्रश्न <span class="ev-reviewed-tag">Admin-Reviewed</span></div>
-      <p>${esc(qa.questionMarathi) || '<em>या कागदपत्रात याबाबत माहिती उपलब्ध नाही.</em>'}</p>
-      <div class="ev-original-toggle" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'block' ? 'none' : 'block';">मूळ प्रश्न (इंग्रजी/मूळ भाषेत) पाहा ▾</div>
-      <div class="ev-original-text">${esc(qa.questionOriginal)}</div>
-
-      <div class="ev-q-label" style="margin-top:14px;">अधिकृत उत्तर <span class="ev-reviewed-tag">Admin-Reviewed</span></div>
-      <p>${esc(qa.answerMarathi) || '<em>या कागदपत्रात याबाबत माहिती उपलब्ध नाही.</em>'}</p>
-      <div class="ev-original-toggle" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'block' ? 'none' : 'block';">मूळ उत्तर (इंग्रजी/मूळ भाषेत) पाहा ▾</div>
-      <div class="ev-original-text">${esc(qa.answerOriginal)}</div>
-
-      ${qa.sourcePage ? `<div class="ev-source-page">📄 स्रोत: पान ${esc(qa.sourcePage)}</div>` : ''}
-    </div>`;
-}
-
 function renderFilePreview(d){
   if (!d.originalFile) return '<div class="ev-file-box">मूळ फाईल उपलब्ध नाही.</div>';
   const url = d.originalFile;
@@ -95,7 +78,7 @@ function render(){
       </div>
       <div class="ev-content-col">
         ${d.summary ? `<div class="ev-summary-box"><span class="ev-reviewed-tag">Admin-Reviewed</span><br>${esc(d.summary)}</div>` : ''}
-        ${(d.qa || []).length ? (d.qa || []).map(renderQaItem).join('') : (!d.summary ? '<p class="ev-empty">या कागदपत्रात याबाबत माहिती उपलब्ध नाही.</p>' : '')}
+        ${d.extractedText ? `<div class="ev-original-toggle" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'block' ? 'none' : 'block';">कागदपत्रातील संपूर्ण मजकूर (OCR) पाहा ▾</div><div class="ev-original-text">${esc(d.extractedText)}</div>` : ''}
         ${d.tags && d.tags.length ? `<div class="ev-tags" style="margin-top:6px;">🏷️ ${d.tags.map(esc).join(', ')}</div>` : ''}
       </div>
     </div>

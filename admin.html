@@ -306,7 +306,7 @@ service cloud.firestore {
 </div>
 
 <h2 id="sec-evidence">📁 सरकारी कागदपत्रे व पुरावे</h2>
-<p class="hint">RTI, CPGRAMS, आपले सरकार, पत्रे, PDF/फोटो अपलोड करा. मजकूर वाचणे (OCR) आणि प्रश्न-उत्तर शोधणे हे सगळं तुमच्याच ब्राऊझरमध्ये फुकट चालतं — कुठलाही API-key, बिलिंग किंवा सर्व्हर लागत नाही. मराठी मजकूर तुम्हीच लिहिता/तपासता — तो नेहमी "Admin-Reviewed" म्हणून दाखवला जातो.</p>
+<p class="hint">RTI, CPGRAMS, आपले सरकार, पत्रे, PDF/फोटो अपलोड करा. मजकूर वाचणे (OCR) तुमच्याच ब्राऊझरमध्ये फुकट चालतं — कुठलाही API-key, बिलिंग किंवा सर्व्हर लागत नाही. OCR मजकूर पूर्ण-मजकूर शोधासाठी (search) वापरला जातो. सारांश तुम्ही स्वतः लिहिता, आणि तो नेहमी "Admin-Reviewed" म्हणून दाखवला जातो.</p>
 <button id="loadEvidenceBtn">कागदपत्रे लोड करा</button>
 <div id="evidenceList" style="display:none; margin-top:10px;"></div>
 
@@ -365,15 +365,9 @@ service cloud.firestore {
 </div>
 <label>Tags (स्वल्पविरामाने वेगळे करा)</label>
 <input type="text" id="ev-tags" placeholder="HTK-ICH, Railway, DPR, ROR">
-<label>सारांश / मुख्य मुद्दे (Marathi) — पत्रांसाठी उपयुक्त, पर्यायी</label>
-<textarea id="ev-summary" placeholder="मूळ कागदपत्रात नसलेली माहिती लिहू नका. जर काही उपलब्ध नसेल तर रिकामे ठेवा."></textarea>
-
-<h3 style="margin-top:18px; font-size:1rem;">प्रश्न-उत्तर (RTI / CPGRAMS / आपले सरकार साठी)</h3>
-<div class="row">
-  <button type="button" id="ev-autoSplitBtn" class="secondary">🪄 OCR मधून प्रश्न-उत्तर आपोआप शोधा</button>
-  <button type="button" id="ev-addQaBtn" class="secondary">➕ रिकामा प्रश्न-उत्तर जोडा</button>
-</div>
-<div id="ev-qaList"></div>
+<label>सारांश (Marathi) — पर्यायी, स्वतःच्या शब्दांत</label>
+<textarea id="ev-summary" placeholder="मूळ कागदपत्रात नसलेली माहिती लिहू नका. जर काही लिहायचं नसेल तर रिकामे ठेवा — कागदपत्र नुसतं फाईल+माहितीसह दिसेल."></textarea>
+<p class="hint">📌 पूर्ण मजकूर शोधासाठी (search) आधीच वरच्या OCR मजकुरातून वापरला जातो — त्यामुळे वेगळं प्रश्न-उत्तर भरायची गरज नाही.</p>
 
 <div class="row" style="margin-top:18px;">
   <button type="button" id="ev-saveDraftBtn" class="secondary wide">💾 Draft म्हणून सेव्ह करा</button>
@@ -541,7 +535,6 @@ function entryToText(entry){
 // ---- Evidence (सरकारी कागदपत्रे) tab ----
 let evidenceSha = null;
 let evidenceEditingId = null;
-let evQaBlocks = []; // in-memory Q&A blocks for the form currently open
 let evCurrentFileName = null; // filename already stored in repo (when editing, no new file picked)
 let evPendingFile = null; // a newly picked File object, not yet uploaded
 
@@ -553,7 +546,9 @@ async function loadEvidence(){
   const f = await ghGet('evidence-data.js');
   evidenceSha = f.sha;
   const content = b64DecodeUnicode(f.content);
-  const arrText = content.slice(content.indexOf('['), content.lastIndexOf(']') + 1);
+  const marker = content.indexOf('EVIDENCE_DOCS');
+  const arrStart = content.indexOf('[', marker);
+  const arrText = content.slice(arrStart, content.lastIndexOf(']') + 1);
   const docs = new Function('return ' + arrText)();
   window._evidenceDocs = docs;
   renderEvidenceList();
@@ -580,59 +575,6 @@ function renderEvidenceList(){
   el.querySelectorAll('.evEditBtn').forEach(b => b.addEventListener('click', () => openEvidenceForEdit(b.dataset.id)));
   el.querySelectorAll('.evDeleteBtn').forEach(b => b.addEventListener('click', () => deleteEvidence(b.dataset.id)));
 }
-
-function evRenderQaBlocks(){
-  const wrap = document.getElementById('ev-qaList');
-  wrap.innerHTML = '';
-  evQaBlocks.forEach((qa, idx) => {
-    const block = document.createElement('div');
-    block.className = 'ev-qa-block';
-    block.innerHTML = `
-      <label>Original Question <span class="ev-copy-row"></span></label>
-      <textarea data-field="questionOriginal" data-idx="${idx}">${qa.questionOriginal || ''}</textarea>
-      <label>मराठी प्रश्न <span class="ev-reviewed-tag">Admin-Reviewed</span></label>
-      <textarea data-field="questionMarathi" data-idx="${idx}" placeholder="मूळ प्रश्नाचा मराठी मजकूर इथे लिहा/तपासा">${qa.questionMarathi || ''}</textarea>
-
-      <label style="margin-top:12px;">Original Answer</label>
-      <textarea data-field="answerOriginal" data-idx="${idx}">${qa.answerOriginal || ''}</textarea>
-      <label>मराठी अधिकृत उत्तर <span class="ev-reviewed-tag">Admin-Reviewed</span></label>
-      <textarea data-field="answerMarathi" data-idx="${idx}" placeholder="माहिती उपलब्ध नसल्यास: या कागदपत्रात याबाबत माहिती उपलब्ध नाही.">${qa.answerMarathi || ''}</textarea>
-
-      <div class="ev-page-row">
-        <label style="margin:0;">पान क्र. (Source page)</label>
-        <input type="text" data-field="sourcePage" data-idx="${idx}" value="${qa.sourcePage || ''}">
-        <button type="button" class="secondary" data-copy="original" data-idx="${idx}" style="padding:5px 10px;font-size:.75rem;">📋 Copy मूळ</button>
-        <button type="button" class="secondary" data-copy="marathi" data-idx="${idx}" style="padding:5px 10px;font-size:.75rem;">📋 Copy मराठी</button>
-        <button type="button" class="ev-removeQaBtn" data-idx="${idx}">🗑️ काढा</button>
-      </div>
-    `;
-    wrap.appendChild(block);
-  });
-  wrap.querySelectorAll('textarea, input').forEach(inp => {
-    inp.addEventListener('input', () => {
-      const idx = +inp.dataset.idx;
-      evQaBlocks[idx][inp.dataset.field] = inp.value;
-    });
-  });
-  wrap.querySelectorAll('.ev-removeQaBtn').forEach(btn => {
-    btn.addEventListener('click', () => { evQaBlocks.splice(+btn.dataset.idx, 1); evRenderQaBlocks(); });
-  });
-  wrap.querySelectorAll('[data-copy]').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const idx = +btn.dataset.idx;
-      const qa = evQaBlocks[idx];
-      const text = btn.dataset.copy === 'original'
-        ? `प्रश्न: ${qa.questionOriginal || ''}\n\nउत्तर: ${qa.answerOriginal || ''}`
-        : `प्रश्न: ${qa.questionMarathi || ''}\n\nउत्तर: ${qa.answerMarathi || ''}`;
-      try { await navigator.clipboard.writeText(text); showStatus('✅ Copy झालं.', 'ok'); }
-      catch { showStatus('❌ Copy करता आलं नाही (browser परवानगी तपासा).', 'err'); }
-    });
-  });
-}
-document.getElementById('ev-addQaBtn').addEventListener('click', () => {
-  evQaBlocks.push({ questionOriginal:'', questionMarathi:'', answerOriginal:'', answerMarathi:'', sourcePage:'' });
-  evRenderQaBlocks();
-});
 
 function evUpdatePreview(file, existingFileName){
   const box = document.getElementById('ev-preview');
@@ -694,22 +636,10 @@ document.getElementById('ev-autoDetectBtn').addEventListener('click', () => {
   showStatus(cat ? `🪄 सुचवलेली category: ${cat} (कीवर्ड-आधारित सूचना — खात्री करा)` : 'कुठलीही category ओळखता आली नाही — स्वतः निवडा.', 'ok');
 });
 
-document.getElementById('ev-autoSplitBtn').addEventListener('click', () => {
-  if (!window._evLastPages) { showStatus('आधी OCR चालवा.', 'err'); return; }
-  const found = EvidenceOCR.splitQA(window._evLastPages);
-  if (!found.length) { showStatus('कुठलेही प्रश्न-उत्तर सापडले नाहीत — मॅन्युअली जोडा.', 'err'); return; }
-  evQaBlocks = evQaBlocks.concat(found.map(f => ({
-    questionOriginal: f.question, questionMarathi: '', answerOriginal: f.answer, answerMarathi: '', sourcePage: f.sourcePage,
-  })));
-  evRenderQaBlocks();
-  showStatus(`🪄 ${found.length} प्रश्न-उत्तर सुचवले — प्रत्येक तपासून मराठी लिहा/भरा.`, 'ok');
-});
-
 function evClearForm(){
   evidenceEditingId = null;
   evCurrentFileName = null;
   evPendingFile = null;
-  evQaBlocks = [];
   document.getElementById('evidenceEditBanner').style.display = 'none';
   document.getElementById('ev-existingActions').style.display = 'none';
   document.getElementById('ev-versionHistory').style.display = 'none';
@@ -724,7 +654,6 @@ function evClearForm(){
   document.getElementById('ev-category').value = 'RTI';
   window._evLastPages = null;
   evUpdatePreview(null, null);
-  evRenderQaBlocks();
 }
 function cancelEvidenceEdit(){ evClearForm(); }
 
@@ -734,7 +663,6 @@ function openEvidenceForEdit(id){
   evidenceEditingId = id;
   evCurrentFileName = d.originalFile || null;
   evPendingFile = null;
-  evQaBlocks = (d.qa || []).map(q => ({...q}));
   document.getElementById('evidenceEditBanner').style.display = 'block';
   document.getElementById('ev-existingActions').style.display = 'flex';
   document.getElementById('ev-file').value = '';
@@ -747,7 +675,6 @@ function openEvidenceForEdit(id){
   document.getElementById('ev-summary').value = d.summary || '';
   document.getElementById('ev-category').value = d.category || 'RTI';
   evUpdatePreview(null, evCurrentFileName);
-  evRenderQaBlocks();
   renderEvVersionHistory(d);
   document.getElementById('sec-evidence').scrollIntoView({ behavior: 'smooth' });
 }
@@ -774,8 +701,6 @@ function renderEvVersionHistory(d){
       document.getElementById('ev-summary').value = s.summary || '';
       document.getElementById('ev-category').value = s.category || 'RTI';
       document.getElementById('ev-extractedText').value = s.extractedText || '';
-      evQaBlocks = (s.qa || []).map(q => ({...q}));
-      evRenderQaBlocks();
       showStatus('⏪ जुनी आवृत्ती फॉर्ममध्ये आणली — तपासून Save/Publish करा.', 'ok');
     });
   });
@@ -791,7 +716,6 @@ function evCollectFormData(){
     tags: document.getElementById('ev-tags').value.split(',').map(t => t.trim()).filter(Boolean),
     summary: document.getElementById('ev-summary').value.trim(),
     extractedText: document.getElementById('ev-extractedText').value,
-    qa: evQaBlocks,
   };
 }
 
@@ -804,7 +728,7 @@ async function evUploadFileIfNeeded(){
 }
 
 async function saveEvidenceDocs(docs, message){
-  const body = "// सरकारी कागदपत्रे व पुरावे — edited via admin.html \"सरकारी कागदपत्रे\" tab.\n// qa[].questionMarathi / answerMarathi are ADMIN-REVIEWED text.\nconst EVIDENCE_DOCS = " + JSON.stringify(docs, null, 2) + ";\n";
+  const body = "// सरकारी कागदपत्रे व पुरावे — edited via admin.html \"सरकारी कागदपत्रे\" tab.\n// summary text is ADMIN-REVIEWED. extractedText (OCR) is used for search only.\nconst EVIDENCE_DOCS = " + JSON.stringify(docs, null, 2) + ";\n";
   // Fetch the file's latest sha right before writing — avoids the
   // "409 does not match" error that happens when the copy loaded
   // earlier in the page has since gone stale on GitHub.
@@ -907,8 +831,6 @@ async function deleteEvidence(id){
     loadEvidence();
   } catch (err) { showStatus('❌ ' + err.message, 'err'); }
 }
-
-evRenderQaBlocks();
 
 // ---- Load & list entries ----
 document.getElementById('loadBtn').addEventListener('click', async () => {

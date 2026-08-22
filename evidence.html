@@ -89,7 +89,6 @@ function docSearchText(d){
   return [
     d.title, d.category, d.authority, d.referenceNumber, d.summary, d.extractedText,
     (d.tags || []).join(' '),
-    (d.qa || []).map(q => `${q.questionOriginal} ${q.questionMarathi} ${q.answerOriginal} ${q.answerMarathi}`).join(' '),
   ].join(' ').toLowerCase();
 }
 
@@ -116,7 +115,7 @@ function renderGrid(){
     const card = document.createElement('a');
     card.className = 'ev-card';
     card.href = 'evidence-detail.html?id=' + encodeURIComponent(d.id);
-    const snippet = d.summary || (d.qa && d.qa[0] ? d.qa[0].answerMarathi : '') || '';
+    const snippet = d.summary || '';
     card.innerHTML = `
       <div class="ev-meta-row">
         <span class="ev-badge">${d.category || ''}</span>
