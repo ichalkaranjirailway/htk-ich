@@ -55,6 +55,23 @@
   #quickNav .inner{display:flex;gap:8px;overflow-x:auto;padding:0 16px;-webkit-overflow-scrolling:touch;}
   #quickNav a{flex-shrink:0;background:#fff;border:1px solid var(--line);color:var(--ink);text-decoration:none;font-size:.78rem;font-weight:600;padding:7px 12px;border-radius:20px;white-space:nowrap;}
   #quickNav a:hover, #quickNav a:active{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .ev-side-by-side{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap;}
+  .ev-preview-col{flex:1 1 260px;min-width:220px;}
+  .ev-ocr-col{flex:1 1 320px;min-width:260px;}
+  .ev-preview-box{border:1px solid var(--line);border-radius:8px;background:#fff;min-height:160px;display:flex;align-items:center;justify-content:center;color:#999;font-size:.82rem;overflow:hidden;padding:6px;}
+  .ev-preview-box img{max-width:100%;max-height:340px;object-fit:contain;}
+  .ev-preview-box iframe{width:100%;height:340px;border:none;}
+  .ev-qa-block{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:12px;background:#fff;}
+  .ev-qa-block .ev-reviewed-tag{display:inline-block;font-size:.68rem;font-weight:700;color:#1e6b34;background:#e6f4ea;border:1px solid #b6e0c2;border-radius:10px;padding:2px 8px;margin-left:6px;vertical-align:middle;}
+  .ev-qa-block .ev-copy-row{display:flex;gap:6px;margin:4px 0 8px;}
+  .ev-qa-block .ev-copy-row button{padding:4px 9px;font-size:.72rem;background:#666;}
+  .ev-qa-block .ev-page-row{display:flex;gap:10px;align-items:center;margin-top:8px;}
+  .ev-qa-block .ev-page-row input{width:90px;}
+  .ev-qa-block .ev-removeQaBtn{background:#b23b3b;padding:5px 10px;font-size:.75rem;}
+  #evidenceEditBanner{display:none;background:#e3edf7;border:1px solid #a9c6e8;color:#1a4d7a;padding:10px 14px;border-radius:8px;margin-bottom:12px;font-size:.88rem;}
+  .status-badge{display:inline-block;font-size:.68rem;font-weight:700;border-radius:10px;padding:2px 8px;margin-left:6px;}
+  .status-badge.draft{background:#fff3e0;color:#a05a00;border:1px solid #ffcc80;}
+  .status-badge.published{background:#e6f4ea;color:#1e6b34;border:1px solid #b6e0c2;}
 </style>
 </head>
 <body>
@@ -87,6 +104,7 @@
 <a href="#sec-results">🗳️ निकाल</a>
 <a href="#sec-publiclist">📋 सार्वजनिक यादी</a>
 <a href="#sec-mail">📧 Email</a>
+<a href="#sec-evidence">📁 कागदपत्रे</a>
 <a href="#sec-timeline">📚 Timeline यादी</a>
 <a href="#formHeading">➕ नवीन नोंद</a>
 </div>
@@ -287,6 +305,87 @@ service cloud.firestore {
 <button type="button" id="saveMailBtn" class="wide">💾 Email सेटिंग सेव्ह करा</button>
 </div>
 
+<h2 id="sec-evidence">📁 सरकारी कागदपत्रे व पुरावे</h2>
+<p class="hint">RTI, CPGRAMS, आपले सरकार, पत्रे, PDF/फोटो अपलोड करा. मजकूर वाचणे (OCR) आणि प्रश्न-उत्तर शोधणे हे सगळं तुमच्याच ब्राऊझरमध्ये फुकट चालतं — कुठलाही API-key, बिलिंग किंवा सर्व्हर लागत नाही. मराठी मजकूर तुम्हीच लिहिता/तपासता — तो नेहमी "Admin-Reviewed" म्हणून दाखवला जातो.</p>
+<button id="loadEvidenceBtn">कागदपत्रे लोड करा</button>
+<div id="evidenceList" style="display:none; margin-top:10px;"></div>
+
+<div id="evidenceEditBanner">✏️ कागदपत्र edit करत आहात. <button type="button" class="secondary" onclick="cancelEvidenceEdit()" style="padding:4px 10px;font-size:.78rem;">रद्द करा</button></div>
+
+<fieldset style="margin-top:16px;">
+<legend>➕ नवीन कागदपत्र / Edit</legend>
+
+<label>मूळ फाईल (PDF / JPG / PNG)</label>
+<input type="file" id="ev-file" accept=".pdf,.jpg,.jpeg,.png">
+<p class="hint">Edit करताना नवीन फाईल दिली नाही तर आधीचीच फाईल तशीच राहील.</p>
+
+<div class="ev-side-by-side">
+  <div class="ev-preview-col">
+    <label>मूळ कागदपत्र (Preview)</label>
+    <div id="ev-preview" class="ev-preview-box">फाईल निवडा किंवा आधीची फाईल लोड होईल.</div>
+  </div>
+  <div class="ev-ocr-col">
+    <label>मजकूर वाचा (OCR)</label>
+    <div class="row">
+      <button type="button" id="ev-runOcrBtn" class="secondary">🔍 OCR चालवा</button>
+      <button type="button" id="ev-clearOcrBtn" class="secondary">🧹 OCR मजकूर पुसा</button>
+      <button type="button" id="ev-copyOcrBtn" class="secondary">📋 Copy मूळ मजकूर</button>
+    </div>
+    <div id="ev-ocrProgress" class="hint" style="display:none;"></div>
+    <textarea id="ev-extractedText" style="min-height:160px; font-family:var(--mono, monospace); font-size:.82rem;" placeholder="OCR चालवल्यावर मजकूर इथे दिसेल — हा कच्चा मजकूर आहे, चुका असू शकतात, त्या तपासा."></textarea>
+  </div>
+</div>
+
+<div class="row" style="margin-top:14px;">
+  <div>
+    <label>Category</label>
+    <select id="ev-category">
+      <option value="RTI">RTI</option>
+      <option value="CPGRAMS">CPGRAMS</option>
+      <option value="आपले सरकार">आपले सरकार</option>
+      <option value="Railway / Government Letters">Railway / Government Letters</option>
+      <option value="Photos / Scanned Documents">Photos / Scanned Documents</option>
+      <option value="Official PDFs">Official PDFs</option>
+      <option value="Other Evidence">Other Evidence</option>
+    </select>
+  </div>
+  <div style="flex:0 0 auto; align-self:flex-end;">
+    <button type="button" id="ev-autoDetectBtn" class="secondary">🪄 Auto Detect (सुचवा)</button>
+  </div>
+</div>
+<p class="hint">Auto Detect हे कीवर्ड-आधारित सूचना आहे (AI नाही) — नेहमी स्वतः खात्री करा.</p>
+
+<div class="row">
+  <div><label>शीर्षक (Title)</label><input type="text" id="ev-title"></div>
+  <div><label>दिनांक</label><input type="text" id="ev-date" placeholder="उदा. 02 July 2026"></div>
+</div>
+<div class="row">
+  <div><label>विभाग / प्राधिकरण (Authority)</label><input type="text" id="ev-authority"></div>
+  <div><label>Reference No.</label><input type="text" id="ev-refno"></div>
+</div>
+<label>Tags (स्वल्पविरामाने वेगळे करा)</label>
+<input type="text" id="ev-tags" placeholder="HTK-ICH, Railway, DPR, ROR">
+<label>सारांश / मुख्य मुद्दे (Marathi) — पत्रांसाठी उपयुक्त, पर्यायी</label>
+<textarea id="ev-summary" placeholder="मूळ कागदपत्रात नसलेली माहिती लिहू नका. जर काही उपलब्ध नसेल तर रिकामे ठेवा."></textarea>
+
+<h3 style="margin-top:18px; font-size:1rem;">प्रश्न-उत्तर (RTI / CPGRAMS / आपले सरकार साठी)</h3>
+<div class="row">
+  <button type="button" id="ev-autoSplitBtn" class="secondary">🪄 OCR मधून प्रश्न-उत्तर आपोआप शोधा</button>
+  <button type="button" id="ev-addQaBtn" class="secondary">➕ रिकामा प्रश्न-उत्तर जोडा</button>
+</div>
+<div id="ev-qaList"></div>
+
+<div class="row" style="margin-top:18px;">
+  <button type="button" id="ev-saveDraftBtn" class="secondary wide">💾 Draft म्हणून सेव्ह करा</button>
+  <button type="button" id="ev-publishBtn" class="wide">🚀 Publish करा</button>
+</div>
+<div class="row" id="ev-existingActions" style="display:none; margin-top:8px;">
+  <button type="button" id="ev-unpublishBtn" class="secondary wide">👁️‍🗨️ Unpublish करा</button>
+  <button type="button" id="ev-deleteBtn" class="danger wide">🗑️ Delete करा</button>
+</div>
+<div id="ev-versionHistory" style="display:none; margin-top:14px;"></div>
+</fieldset>
+
 <h2 id="sec-timeline">📚 अस्तित्वात असलेल्या Timeline नोंदी</h2>
 <button id="loadBtn">नोंदी लोड करा</button>
 <div id="entriesList" style="display:none; margin-top:10px;"></div>
@@ -351,6 +450,7 @@ service cloud.firestore {
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="firebase-config.js"></script>
+<script src="ocr-helper.js"></script>
 
 <script>
 const REPO = "ichalkaranjirailway/htk-ich";
@@ -437,6 +537,360 @@ function entryToText(entry){
     `    referenceNo: ${JSON.stringify(entry.referenceNo)}\n` +
     `  },\n\n`;
 }
+
+// ---- Evidence (सरकारी कागदपत्रे) tab ----
+let evidenceSha = null;
+let evidenceEditingId = null;
+let evQaBlocks = []; // in-memory Q&A blocks for the form currently open
+let evCurrentFileName = null; // filename already stored in repo (when editing, no new file picked)
+let evPendingFile = null; // a newly picked File object, not yet uploaded
+
+function evGenId(){ return 'ev-' + Date.now(); }
+
+async function loadEvidence(){
+  requireToken();
+  showStatus('कागदपत्रे लोड होत आहेत...', 'busy');
+  const f = await ghGet('evidence-data.js');
+  evidenceSha = f.sha;
+  const content = b64DecodeUnicode(f.content);
+  const arrText = content.slice(content.indexOf('['), content.lastIndexOf(']') + 1);
+  const docs = new Function('return ' + arrText)();
+  window._evidenceDocs = docs;
+  renderEvidenceList();
+  showStatus(`✅ ${docs.length} कागदपत्रे लोड झाली.`, 'ok');
+}
+document.getElementById('loadEvidenceBtn').addEventListener('click', () => loadEvidence().catch(err => showStatus('❌ ' + err.message, 'err')));
+
+function renderEvidenceList(){
+  const el = document.getElementById('evidenceList');
+  const docs = (window._evidenceDocs || []).slice().sort((a,b) => (b.updatedAt||'').localeCompare(a.updatedAt||''));
+  el.innerHTML = '';
+  docs.forEach(d => {
+    const row = document.createElement('div');
+    row.className = 'entry-row';
+    row.innerHTML = `<div class="meta"><b>${d.title || '(शीर्षक नाही)'} <span class="status-badge ${d.status}">${d.status === 'published' ? 'Published' : 'Draft'}</span></b>
+        <span>${d.category} · ${d.date || ''} · v${d.version || 1}${d.previousVersions && d.previousVersions.length ? ' · इतिहास: ' + d.previousVersions.length : ''}</span></div>
+      <div class="btns">
+        <button type="button" class="evEditBtn" data-id="${d.id}">Edit</button>
+        <button type="button" class="danger evDeleteBtn" data-id="${d.id}">Delete</button>
+      </div>`;
+    el.appendChild(row);
+  });
+  el.style.display = 'block';
+  el.querySelectorAll('.evEditBtn').forEach(b => b.addEventListener('click', () => openEvidenceForEdit(b.dataset.id)));
+  el.querySelectorAll('.evDeleteBtn').forEach(b => b.addEventListener('click', () => deleteEvidence(b.dataset.id)));
+}
+
+function evRenderQaBlocks(){
+  const wrap = document.getElementById('ev-qaList');
+  wrap.innerHTML = '';
+  evQaBlocks.forEach((qa, idx) => {
+    const block = document.createElement('div');
+    block.className = 'ev-qa-block';
+    block.innerHTML = `
+      <label>Original Question <span class="ev-copy-row"></span></label>
+      <textarea data-field="questionOriginal" data-idx="${idx}">${qa.questionOriginal || ''}</textarea>
+      <label>मराठी प्रश्न <span class="ev-reviewed-tag">Admin-Reviewed</span></label>
+      <textarea data-field="questionMarathi" data-idx="${idx}" placeholder="मूळ प्रश्नाचा मराठी मजकूर इथे लिहा/तपासा">${qa.questionMarathi || ''}</textarea>
+
+      <label style="margin-top:12px;">Original Answer</label>
+      <textarea data-field="answerOriginal" data-idx="${idx}">${qa.answerOriginal || ''}</textarea>
+      <label>मराठी अधिकृत उत्तर <span class="ev-reviewed-tag">Admin-Reviewed</span></label>
+      <textarea data-field="answerMarathi" data-idx="${idx}" placeholder="माहिती उपलब्ध नसल्यास: या कागदपत्रात याबाबत माहिती उपलब्ध नाही.">${qa.answerMarathi || ''}</textarea>
+
+      <div class="ev-page-row">
+        <label style="margin:0;">पान क्र. (Source page)</label>
+        <input type="text" data-field="sourcePage" data-idx="${idx}" value="${qa.sourcePage || ''}">
+        <button type="button" class="secondary" data-copy="original" data-idx="${idx}" style="padding:5px 10px;font-size:.75rem;">📋 Copy मूळ</button>
+        <button type="button" class="secondary" data-copy="marathi" data-idx="${idx}" style="padding:5px 10px;font-size:.75rem;">📋 Copy मराठी</button>
+        <button type="button" class="ev-removeQaBtn" data-idx="${idx}">🗑️ काढा</button>
+      </div>
+    `;
+    wrap.appendChild(block);
+  });
+  wrap.querySelectorAll('textarea, input').forEach(inp => {
+    inp.addEventListener('input', () => {
+      const idx = +inp.dataset.idx;
+      evQaBlocks[idx][inp.dataset.field] = inp.value;
+    });
+  });
+  wrap.querySelectorAll('.ev-removeQaBtn').forEach(btn => {
+    btn.addEventListener('click', () => { evQaBlocks.splice(+btn.dataset.idx, 1); evRenderQaBlocks(); });
+  });
+  wrap.querySelectorAll('[data-copy]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const idx = +btn.dataset.idx;
+      const qa = evQaBlocks[idx];
+      const text = btn.dataset.copy === 'original'
+        ? `प्रश्न: ${qa.questionOriginal || ''}\n\nउत्तर: ${qa.answerOriginal || ''}`
+        : `प्रश्न: ${qa.questionMarathi || ''}\n\nउत्तर: ${qa.answerMarathi || ''}`;
+      try { await navigator.clipboard.writeText(text); showStatus('✅ Copy झालं.', 'ok'); }
+      catch { showStatus('❌ Copy करता आलं नाही (browser परवानगी तपासा).', 'err'); }
+    });
+  });
+}
+document.getElementById('ev-addQaBtn').addEventListener('click', () => {
+  evQaBlocks.push({ questionOriginal:'', questionMarathi:'', answerOriginal:'', answerMarathi:'', sourcePage:'' });
+  evRenderQaBlocks();
+});
+
+function evUpdatePreview(file, existingFileName){
+  const box = document.getElementById('ev-preview');
+  if (file) {
+    const url = URL.createObjectURL(file);
+    if (file.type === 'application/pdf') box.innerHTML = `<iframe src="${url}"></iframe>`;
+    else box.innerHTML = `<img src="${url}">`;
+  } else if (existingFileName) {
+    const url = existingFileName; // relative path in repo root, same as gallery/team images
+    if (/\.pdf$/i.test(existingFileName)) box.innerHTML = `<iframe src="${url}"></iframe>`;
+    else box.innerHTML = `<img src="${url}">`;
+  } else {
+    box.innerHTML = 'फाईल निवडा किंवा आधीची फाईल लोड होईल.';
+  }
+}
+document.getElementById('ev-file').addEventListener('change', (e) => {
+  evPendingFile = e.target.files[0] || null;
+  evUpdatePreview(evPendingFile, evCurrentFileName);
+});
+
+document.getElementById('ev-runOcrBtn').addEventListener('click', async () => {
+  const file = evPendingFile;
+  if (!file) { showStatus('आधी फाईल निवडा.', 'err'); return; }
+  const progEl = document.getElementById('ev-ocrProgress');
+  progEl.style.display = 'block';
+  progEl.textContent = 'OCR सुरू होत आहे... (मोठ्या PDF/स्कॅनसाठी थोडा वेळ लागू शकतो)';
+  try {
+    const { pages, fullText } = await EvidenceOCR.extract(file, (p) => {
+      progEl.textContent = `OCR चालू आहे... ${Math.round(p * 100)}%`;
+    });
+    document.getElementById('ev-extractedText').value = fullText;
+    window._evLastPages = pages;
+    progEl.textContent = `✅ OCR पूर्ण — ${pages.length} पान(ने) वाचली.`;
+    setTimeout(() => { progEl.style.display = 'none'; }, 4000);
+  } catch (err) {
+    progEl.style.display = 'none';
+    showStatus('❌ OCR मध्ये अडचण: ' + err.message, 'err');
+  }
+});
+document.getElementById('ev-clearOcrBtn').addEventListener('click', () => {
+  if (!confirm('OCR मजकूर पुसायचा आहे का?')) return;
+  document.getElementById('ev-extractedText').value = '';
+  window._evLastPages = null;
+});
+document.getElementById('ev-copyOcrBtn').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(document.getElementById('ev-extractedText').value); showStatus('✅ Copy झालं.', 'ok'); }
+  catch { showStatus('❌ Copy करता आलं नाही.', 'err'); }
+});
+
+document.getElementById('ev-autoDetectBtn').addEventListener('click', () => {
+  const text = document.getElementById('ev-extractedText').value;
+  if (!text.trim()) { showStatus('आधी OCR चालवा, मग Auto Detect वापरा.', 'err'); return; }
+  const cat = EvidenceOCR.detectCategory(text);
+  if (cat) document.getElementById('ev-category').value = cat;
+  const date = EvidenceOCR.detectDate(text);
+  if (date && !document.getElementById('ev-date').value) document.getElementById('ev-date').value = date;
+  const ref = EvidenceOCR.detectReferenceNumber(text);
+  if (ref && !document.getElementById('ev-refno').value) document.getElementById('ev-refno').value = ref;
+  showStatus(cat ? `🪄 सुचवलेली category: ${cat} (कीवर्ड-आधारित सूचना — खात्री करा)` : 'कुठलीही category ओळखता आली नाही — स्वतः निवडा.', 'ok');
+});
+
+document.getElementById('ev-autoSplitBtn').addEventListener('click', () => {
+  if (!window._evLastPages) { showStatus('आधी OCR चालवा.', 'err'); return; }
+  const found = EvidenceOCR.splitQA(window._evLastPages);
+  if (!found.length) { showStatus('कुठलेही प्रश्न-उत्तर सापडले नाहीत — मॅन्युअली जोडा.', 'err'); return; }
+  evQaBlocks = evQaBlocks.concat(found.map(f => ({
+    questionOriginal: f.question, questionMarathi: '', answerOriginal: f.answer, answerMarathi: '', sourcePage: f.sourcePage,
+  })));
+  evRenderQaBlocks();
+  showStatus(`🪄 ${found.length} प्रश्न-उत्तर सुचवले — प्रत्येक तपासून मराठी लिहा/भरा.`, 'ok');
+});
+
+function evClearForm(){
+  evidenceEditingId = null;
+  evCurrentFileName = null;
+  evPendingFile = null;
+  evQaBlocks = [];
+  document.getElementById('evidenceEditBanner').style.display = 'none';
+  document.getElementById('ev-existingActions').style.display = 'none';
+  document.getElementById('ev-versionHistory').style.display = 'none';
+  document.getElementById('ev-file').value = '';
+  document.getElementById('ev-extractedText').value = '';
+  document.getElementById('ev-title').value = '';
+  document.getElementById('ev-date').value = '';
+  document.getElementById('ev-authority').value = '';
+  document.getElementById('ev-refno').value = '';
+  document.getElementById('ev-tags').value = '';
+  document.getElementById('ev-summary').value = '';
+  document.getElementById('ev-category').value = 'RTI';
+  window._evLastPages = null;
+  evUpdatePreview(null, null);
+  evRenderQaBlocks();
+}
+function cancelEvidenceEdit(){ evClearForm(); }
+
+function openEvidenceForEdit(id){
+  const d = (window._evidenceDocs || []).find(x => x.id === id);
+  if (!d) return;
+  evidenceEditingId = id;
+  evCurrentFileName = d.originalFile || null;
+  evPendingFile = null;
+  evQaBlocks = (d.qa || []).map(q => ({...q}));
+  document.getElementById('evidenceEditBanner').style.display = 'block';
+  document.getElementById('ev-existingActions').style.display = 'flex';
+  document.getElementById('ev-file').value = '';
+  document.getElementById('ev-extractedText').value = d.extractedText || '';
+  document.getElementById('ev-title').value = d.title || '';
+  document.getElementById('ev-date').value = d.date || '';
+  document.getElementById('ev-authority').value = d.authority || '';
+  document.getElementById('ev-refno').value = d.referenceNumber || '';
+  document.getElementById('ev-tags').value = (d.tags || []).join(', ');
+  document.getElementById('ev-summary').value = d.summary || '';
+  document.getElementById('ev-category').value = d.category || 'RTI';
+  evUpdatePreview(null, evCurrentFileName);
+  evRenderQaBlocks();
+  renderEvVersionHistory(d);
+  document.getElementById('sec-evidence').scrollIntoView({ behavior: 'smooth' });
+}
+
+function renderEvVersionHistory(d){
+  const el = document.getElementById('ev-versionHistory');
+  if (!d.previousVersions || !d.previousVersions.length) { el.style.display = 'none'; return; }
+  el.style.display = 'block';
+  el.innerHTML = `<label>आवृत्ती इतिहास (Version History)</label>` + d.previousVersions.slice().reverse().map(v => `
+    <div class="entry-row">
+      <div class="meta"><b>आवृत्ती v${v.version}</b><span>${v.savedAt || ''} — ${v.snapshot.title || ''}</span></div>
+      <div class="btns"><button type="button" class="secondary evRestoreBtn" data-version="${v.version}">ही आवृत्ती फॉर्ममध्ये आणा</button></div>
+    </div>`).join('');
+  el.querySelectorAll('.evRestoreBtn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const v = d.previousVersions.find(x => x.version === +btn.dataset.version);
+      if (!v) return;
+      const s = v.snapshot;
+      document.getElementById('ev-title').value = s.title || '';
+      document.getElementById('ev-date').value = s.date || '';
+      document.getElementById('ev-authority').value = s.authority || '';
+      document.getElementById('ev-refno').value = s.referenceNumber || '';
+      document.getElementById('ev-tags').value = (s.tags || []).join(', ');
+      document.getElementById('ev-summary').value = s.summary || '';
+      document.getElementById('ev-category').value = s.category || 'RTI';
+      document.getElementById('ev-extractedText').value = s.extractedText || '';
+      evQaBlocks = (s.qa || []).map(q => ({...q}));
+      evRenderQaBlocks();
+      showStatus('⏪ जुनी आवृत्ती फॉर्ममध्ये आणली — तपासून Save/Publish करा.', 'ok');
+    });
+  });
+}
+
+function evCollectFormData(){
+  return {
+    title: document.getElementById('ev-title').value.trim(),
+    category: document.getElementById('ev-category').value,
+    date: document.getElementById('ev-date').value.trim(),
+    authority: document.getElementById('ev-authority').value.trim(),
+    referenceNumber: document.getElementById('ev-refno').value.trim(),
+    tags: document.getElementById('ev-tags').value.split(',').map(t => t.trim()).filter(Boolean),
+    summary: document.getElementById('ev-summary').value.trim(),
+    extractedText: document.getElementById('ev-extractedText').value,
+    qa: evQaBlocks,
+  };
+}
+
+async function evUploadFileIfNeeded(){
+  if (!evPendingFile) return evCurrentFileName; // unchanged
+  const filename = 'evidence-' + Date.now() + '-' + slugify(evPendingFile.name);
+  const b64 = await fileToBase64(evPendingFile);
+  await ghPut(filename, b64, 'Add evidence file: ' + filename);
+  return filename;
+}
+
+async function saveEvidenceDocs(docs, message){
+  const body = "// सरकारी कागदपत्रे व पुरावे — edited via admin.html \"सरकारी कागदपत्रे\" tab.\n// qa[].questionMarathi / answerMarathi are ADMIN-REVIEWED text.\nconst EVIDENCE_DOCS = " + JSON.stringify(docs, null, 2) + ";\n";
+  await ghPut('evidence-data.js', b64EncodeUnicode(body), message, evidenceSha);
+}
+
+async function evSave(status){
+  try {
+    requireToken();
+    const form = evCollectFormData();
+    if (!form.title) throw new Error('शीर्षक (Title) आवश्यक आहे.');
+    showStatus('सेव्ह होत आहे...', 'busy');
+    if (!window._evidenceDocs) await loadEvidence();
+    const docs = window._evidenceDocs.slice();
+    const filename = await evUploadFileIfNeeded();
+    if (!filename && !evidenceEditingId) throw new Error('मूळ फाईल आवश्यक आहे.');
+
+    const now = new Date().toISOString();
+    if (evidenceEditingId) {
+      const idx = docs.findIndex(d => d.id === evidenceEditingId);
+      if (idx === -1) throw new Error('मूळ नोंद सापडली नाही.');
+      const old = docs[idx];
+      const snapshot = { ...old };
+      delete snapshot.previousVersions;
+      const previousVersions = (old.previousVersions || []).concat([{ version: old.version || 1, savedAt: old.updatedAt || old.createdAt, snapshot }]);
+      docs[idx] = {
+        ...old, ...form,
+        originalFile: filename,
+        status,
+        version: (old.version || 1) + 1,
+        previousVersions,
+        updatedAt: now,
+      };
+    } else {
+      docs.push({
+        id: evGenId(),
+        ...form,
+        originalFile: filename,
+        status,
+        version: 1,
+        previousVersions: [],
+        createdAt: now,
+        updatedAt: now,
+      });
+    }
+    await saveEvidenceDocs(docs, (status === 'published' ? 'Publish' : 'Save draft') + ': ' + form.title);
+    showStatus(status === 'published' ? '✅ Publish झालं — साईटवर दिसेल.' : '✅ Draft सेव्ह झाला (अजून सार्वजनिक नाही).', 'ok');
+    evClearForm();
+    loadEvidence();
+  } catch (err) { showStatus('❌ ' + err.message, 'err'); }
+}
+document.getElementById('ev-saveDraftBtn').addEventListener('click', () => evSave('draft'));
+document.getElementById('ev-publishBtn').addEventListener('click', () => evSave('published'));
+
+document.getElementById('ev-unpublishBtn').addEventListener('click', async () => {
+  if (!evidenceEditingId) return;
+  try {
+    requireToken();
+    showStatus('Unpublish होत आहे...', 'busy');
+    const docs = window._evidenceDocs.slice();
+    const idx = docs.findIndex(d => d.id === evidenceEditingId);
+    if (idx === -1) throw new Error('नोंद सापडली नाही.');
+    docs[idx] = { ...docs[idx], status: 'draft', updatedAt: new Date().toISOString() };
+    await saveEvidenceDocs(docs, 'Unpublish: ' + docs[idx].title);
+    showStatus('✅ Unpublish झालं — आता फक्त Draft आहे.', 'ok');
+    evClearForm();
+    loadEvidence();
+  } catch (err) { showStatus('❌ ' + err.message, 'err'); }
+});
+
+document.getElementById('ev-deleteBtn').addEventListener('click', async () => {
+  if (!evidenceEditingId) return;
+  if (!confirm('हे कागदपत्र कायमचं काढायचं आहे का? (मूळ फाईल repo मध्येच राहील, फक्त नोंद काढली जाईल)')) return;
+  await deleteEvidence(evidenceEditingId);
+});
+async function deleteEvidence(id){
+  try {
+    requireToken();
+    if (!window._evidenceDocs) await loadEvidence();
+    showStatus('काढलं जात आहे...', 'busy');
+    const docs = window._evidenceDocs.filter(d => d.id !== id);
+    await saveEvidenceDocs(docs, 'Delete evidence doc: ' + id);
+    showStatus('✅ नोंद काढली.', 'ok');
+    evClearForm();
+    loadEvidence();
+  } catch (err) { showStatus('❌ ' + err.message, 'err'); }
+}
+
+evRenderQaBlocks();
 
 // ---- Load & list entries ----
 document.getElementById('loadBtn').addEventListener('click', async () => {

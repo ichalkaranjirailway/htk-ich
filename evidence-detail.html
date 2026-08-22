@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>कागदपत्र — इचलकरंजी रेल्वे कृती समिती</title>
+<meta name="robots" content="noindex, follow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="evidence.css">
+<style>
+  .ev-page{max-width:1080px;margin:0 auto;padding:0 24px 70px;}
+  .ev-back{display:inline-block;margin:20px 0 0;font-size:13px;color:var(--ink-soft);text-decoration:none;}
+  .ev-back:hover{color:var(--navy);}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+<div class="wrap masthead-top">
+<span>इचलकरंजी रेल्वे कृती समिती</span>
+<span>Est. Demand — 1965 Onward</span>
+</div>
+</header>
+
+<div class="ev-page">
+<a class="ev-back" href="evidence.html">← सर्व कागदपत्रे यादीकडे परत</a>
+<div id="evDetailRoot"></div>
+</div>
+
+<footer id="footer">
+<div class="wrap">
+<div><strong>इचलकरंजी रेल्वे कृती समिती</strong></div>
+<div>Citizen-maintained evidence archive · अद्ययावत केले जात आहे</div>
+</div>
+</footer>
+
+<script src="evidence-data.js"></script>
+<script>
+function esc(s){ return (s || '').toString().replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+
+function renderQaItem(qa){
+  return `
+    <div class="ev-qa-item">
+      <div class="ev-q-label">प्रश्न <span class="ev-reviewed-tag">Admin-Reviewed</span></div>
+      <p>${esc(qa.questionMarathi) || '<em>या कागदपत्रात याबाबत माहिती उपलब्ध नाही.</em>'}</p>
+      <div class="ev-original-toggle" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'block' ? 'none' : 'block';">मूळ प्रश्न (इंग्रजी/मूळ भाषेत) पाहा ▾</div>
+      <div class="ev-original-text">${esc(qa.questionOriginal)}</div>
+
+      <div class="ev-q-label" style="margin-top:14px;">अधिकृत उत्तर <span class="ev-reviewed-tag">Admin-Reviewed</span></div>
+      <p>${esc(qa.answerMarathi) || '<em>या कागदपत्रात याबाबत माहिती उपलब्ध नाही.</em>'}</p>
+      <div class="ev-original-toggle" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'block' ? 'none' : 'block';">मूळ उत्तर (इंग्रजी/मूळ भाषेत) पाहा ▾</div>
+      <div class="ev-original-text">${esc(qa.answerOriginal)}</div>
+
+      ${qa.sourcePage ? `<div class="ev-source-page">📄 स्रोत: पान ${esc(qa.sourcePage)}</div>` : ''}
+    </div>`;
+}
+
+function renderFilePreview(d){
+  if (!d.originalFile) return '<div class="ev-file-box">मूळ फाईल उपलब्ध नाही.</div>';
+  const url = d.originalFile;
+  const box = /\.pdf$/i.test(url) ? `<iframe src="${url}"></iframe>` : `<img src="${url}">`;
+  return `<div class="ev-file-box">${box}</div><a class="ev-original-link" href="${url}" target="_blank" rel="noopener">📄 मूळ कागदपत्र पाहा / Download</a>`;
+}
+
+function render(){
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id');
+  const root = document.getElementById('evDetailRoot');
+  const docs = (typeof EVIDENCE_DOCS !== 'undefined' ? EVIDENCE_DOCS : []);
+  const d = docs.find(x => x.id === id && x.status === 'published');
+
+  if (!d) {
+    root.innerHTML = `<div class="ev-empty" style="margin-top:40px;">हे कागदपत्र सापडलं नाही — कदाचित लिंक चुकीची आहे किंवा अजून Publish झालेलं नाही.</div>`;
+    return;
+  }
+
+  document.title = (d.title || 'कागदपत्र') + ' — इचलकरंजी रेल्वे';
+
+  root.innerHTML = `
+    <div class="ev-detail-header">
+      <h1>${esc(d.title)}</h1>
+      <div class="ev-detail-meta">
+        <span><b>Category:</b> ${esc(d.category)}</span>
+        ${d.date ? `<span><b>दिनांक:</b> ${esc(d.date)}</span>` : ''}
+        ${d.authority ? `<span><b>विभाग:</b> ${esc(d.authority)}</span>` : ''}
+        ${d.referenceNumber ? `<span><b>Reference No.:</b> ${esc(d.referenceNumber)}</span>` : ''}
+      </div>
+    </div>
+    <div class="ev-detail-body">
+      <div class="ev-original-col">
+        ${renderFilePreview(d)}
+      </div>
+      <div class="ev-content-col">
+        ${d.summary ? `<div class="ev-summary-box"><span class="ev-reviewed-tag">Admin-Reviewed</span><br>${esc(d.summary)}</div>` : ''}
+        ${(d.qa || []).length ? (d.qa || []).map(renderQaItem).join('') : (!d.summary ? '<p class="ev-empty">या कागदपत्रात याबाबत माहिती उपलब्ध नाही.</p>' : '')}
+        ${d.tags && d.tags.length ? `<div class="ev-tags" style="margin-top:6px;">🏷️ ${d.tags.map(esc).join(', ')}</div>` : ''}
+      </div>
+    </div>
+  `;
+}
+render();
+</script>
+</body>
+</html>
