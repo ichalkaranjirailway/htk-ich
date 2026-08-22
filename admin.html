@@ -805,7 +805,25 @@ async function evUploadFileIfNeeded(){
 
 async function saveEvidenceDocs(docs, message){
   const body = "// सरकारी कागदपत्रे व पुरावे — edited via admin.html \"सरकारी कागदपत्रे\" tab.\n// qa[].questionMarathi / answerMarathi are ADMIN-REVIEWED text.\nconst EVIDENCE_DOCS = " + JSON.stringify(docs, null, 2) + ";\n";
-  await ghPut('evidence-data.js', b64EncodeUnicode(body), message, evidenceSha);
+  // Fetch the file's latest sha right before writing — avoids the
+  // "409 does not match" error that happens when the copy loaded
+  // earlier in the page has since gone stale on GitHub.
+  try {
+    const fresh = await ghGet('evidence-data.js');
+    evidenceSha = fresh.sha;
+  } catch (e) { /* fall through and try with whatever sha we have */ }
+  try {
+    await ghPut('evidence-data.js', b64EncodeUnicode(body), message, evidenceSha);
+  } catch (err) {
+    if (String(err.message).includes('409')) {
+      // Someone/something else changed the file in the last instant — retry once more with the very latest sha.
+      const fresh2 = await ghGet('evidence-data.js');
+      evidenceSha = fresh2.sha;
+      await ghPut('evidence-data.js', b64EncodeUnicode(body), message, evidenceSha);
+    } else {
+      throw err;
+    }
+  }
 }
 
 async function evSave(status){
