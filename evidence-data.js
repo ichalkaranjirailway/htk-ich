@@ -1,5 +1,30 @@
 // सरकारी कागदपत्रे व पुरावे — edited via admin.html "सरकारी कागदपत्रे" tab.
-// Each record's `qa` array items are ADMIN-REVIEWED (a human read the
-// original document and confirmed/edited the Marathi text) — never
-// auto-published AI/OCR output.
-const EVIDENCE_DOCS = [];
+// qa[].questionMarathi / answerMarathi are ADMIN-REVIEWED text.
+const EVIDENCE_DOCS = [
+  {
+    "id": "ev-1787383568850",
+    "title": "RTI 12-8-26 (C.Gov)",
+    "category": "Railway / Government Letters",
+    "date": "12.08.2026",
+    "authority": "",
+    "referenceNumber": "",
+    "tags": [],
+    "summary": "",
+    "extractedText": "--- पान 1 ---\n—\nCENTRALRAILWAY\n« IND;\n$F ao Sy Office of the\n(4 ERIE Chief Administrative Officer (Const.)\nSe. 6\" floor, New Administrative Building\nSi il D.N. Road, CSMT, Mumbai-400 001\nNo. EW/106/RT1/2026/0L-295 Date: - 12.08.2026\nShri Vicky Manisha Balu Lokare\nSub: Information required under Section 6(1) of the RTI Act 2005.\nRef: Online RTI application No. CRAIL/R/T/26/00731 dated 22.07.2026.\nhocks\nर With reference to the above, the information available in Central Railway Construction\nOrganization for Hatkanangale -Ichalkaranji Railway project is given as under: -\nInformation Sought\n\n1 Please provide the certified copies of the | The work of Hatkanangale -\nofficial file notings and processing history of | Ichalkaranji new Railway line (8Km)\nthe Detailed Project Report (DPR) for the | appeared in the Pink Book of 2017-18.\nHatkanangale-Ichalkaranji New BG line which | The Detailed Project Report (DPR) of\nwas submitted to the Railway Board by the | the said project was submitted to the\nCentral Railway Construction Wing in the year | Railway Board on 02.01.2020, ata cost\n2018. प of Rs. 180.73 crore & ROR (-12.73%).\n\nThe same is under scrutiny of Railway\nBoard.\n\nProject is not sanctioned yet, hence\ndetails cannot be shared.\n\n2 As per the official Twitter announcement by | Under the RTI Act, public authorities\nCentral Railway dated 11 June 2017 the | are not obligated to answer questions\nfoundation stone for the Final Location Survey | that seek explanations, reasons,\nof this line was laid by the then Minister of | opinions, or justifications for actions\nRailways. Please state the specific technical or | or decisions. The Act focuses on\nfinancial reasons why the Railway Board has | providing access to information in the\nnot granted final sanction to this project even | form of records, documents, etc,\nafter 8 years. rather than interpretations or\n\nopinions.\nPlease provide copies of any correspondence | Project is not sanctioned yet, hence\nor official remarks exchanged between the | details cannot be shared.\nRailway Board and NITI Aayog or the Ministry\nof Finance regarding the fund allocation. for\nthis specific Hatkanangale-Ichalkaranji rail\nlink.\n\n4 Please intimate whether this project is | The work of Hatkanangale-\ncurrently under consideration for inclusion in | Ichalkaranji new Railway line (8Km)\nthe upcoming Pink Book or Budgetary | appeared in the Pink Book 0f2017-18.\nAllocation. What is the current official status of | The Detailed Project Report (DPR) of\nthis project file in the Railway Board? the said project was submitted to the\n\nRailway Board on 02.01.2020, ata cost\nof Rs. 180.73 crore & ROR (-12.73%).\nThe same is under scrutiny of Railway\nBoard.\n(scanned with OKEN Scanner\n\n--- पान 2 ---\nPeriod to which information relates: June 2017 | The work of ) Hatkanangale-\nto May 2026. Ichalkaranji new Railway line (8Km)\nappeared in the Pink Book of 2017-18.\nThe Detailed Project Report (DPR) of\nthe said project was submitted to the\nRailway Board on 02.01.2020, ata cost\nof Rs. 180.73 crore & ROR (-12.73%).\nThe same is under scrutiny of Railway\nBoard.\nFormat of Information: Certified Copies via | Project is not sanctioned yet, hence\nRegistered Post or Online RTI Portal. | details cannot be shared.\nThis is for your information please.\nIf you are not satisfied with this information, appeal to the above lies with the 1st Appellate\nAuthority, within 30 days, from the date of receipt of this communication.\nThe name and address of the First appellate Authority are given Below: -\nChief Engineer (Construction) South,\nFirst Appellate Authority,\nCAO (C)’s Office, NAB Bldg.,\n6th Floor, D.N. Road,\nCST Mumbai-400 001.\n3 5\noii\nDy.\\CE(C)PLG & CPIO\nRly. No. - 022674-54310\nEmail- dycecpl@gmail.com\n(scanned with OKEN Scanner",
+    "qa": [
+      {
+        "questionOriginal": "",
+        "questionMarathi": "",
+        "answerOriginal": "fter 8 years. rather than interpretations or opinions. Please provide copies of any correspondence | Project is not sanctioned yet, hence or official remarks exchanged between the | details cannot be shared. Railway Board and NITI Aayog or the Ministry of Finance regarding the fund allocation. for this specific Hatkanangale-Ichalkaranji rail link. 4 Please intimate whether this project is | The work of Hatkanangale- currently under consideration for inclusion in | Ichalkaranji new Railway line (8Km) the upcoming Pink Book or Budgetary | appeared in the Pink Book 0f2017-18. llocation. What is the current official status of | The Detailed Project Report (DPR) of this project file in the Railway Board? the said project was submitted to the Railway Board on 02.01.2020, ata cost of Rs. 180.73 crore & ROR (-12.73%). The same is under scrutiny of Railway Board. (scanned with OKEN Scanner Period to which information relates: June 2017 | The work of ) Hatkanangale- to May 2026. Ichalkaranji new Railway line (8Km) ppeared in the Pink Book of 2017-18. The Detailed Project Report (DPR) of the said project was submitted to the Railway Board on 02.01.2020, ata cost of Rs. 180.73 crore & ROR (-12.73%). The same is under scrutiny of Railway Board. Format of Information: Certified Copies via | Project is not sanctioned yet, hence Registered Post or Online RTI Portal. | details cannot be shared. This is for your information please. If you are not satisfied with this information, appeal to the above lies with the 1st Appellate uthority, within 30 days, from the date of receipt of this communication. The name and address of the First appellate Authority are given Below: - Chief Engineer (Construction) South, First Appellate Authority, CAO (C)’s Office, NAB Bldg., 6th Floor, D.N. Road, CST Mumbai-400 001. 3 5 oii Dy.\\CE(C)PLG & CPIO Rly. No. - 022674-54310 Email- dycecpl@gmail.com (scanned with OKEN Scanner",
+        "answerMarathi": "",
+        "sourcePage": 1
+      }
+    ],
+    "originalFile": "evidence-1787383566049-rti-12-8-26-c.gov-.pdf",
+    "status": "published",
+    "version": 1,
+    "previousVersions": [],
+    "createdAt": "2026-08-22T07:26:08.850Z",
+    "updatedAt": "2026-08-22T07:26:08.850Z"
+  }
+];
