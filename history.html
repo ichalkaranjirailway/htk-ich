@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>इतिहास व Master Timeline — हातकणंगले–इचलकरंजी रेल्वे</title>
+<meta name="description" content="हातकणंगले–इचलकरंजी रेल्वे प्रकल्पाचा 1956 पासूनचा पडताळलेला ऐतिहासिक कालपट — प्रत्येक नोंद स्रोत व पडताळणी स्थितीसह.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://ichalkaranjirailway.github.io/htk-ich/history.html">
+<meta property="og:title" content="इतिहास व Master Timeline — इचलकरंजी रेल्वे">
+<meta property="og:description" content="1956 पासूनचा पडताळलेला ऐतिहासिक कालपट — स्रोत व पडताळणी स्थितीसह.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .hist-page{max-width:900px;margin:0 auto;padding:0 24px 70px;}
+  .hist-back{display:inline-block;margin:20px 0 0;font-size:13px;color:var(--ink-soft);text-decoration:none;}
+  .hist-back:hover{color:var(--navy);}
+  .hist-hero{padding:28px 0 10px;}
+  .hist-hero h1{font-family:var(--display);font-size:1.7rem;color:var(--navy);margin:0 0 6px;}
+  .hist-hero p{color:var(--ink-soft);font-size:.95rem;max-width:640px;line-height:1.55;}
+  .hist-legend{display:flex;flex-wrap:wrap;gap:14px;margin:18px 0 30px;font-size:.8rem;color:var(--ink-soft);}
+  .hist-legend span{display:inline-flex;align-items:center;gap:5px;}
+
+  .hist-track{position:relative;padding-left:28px;border-left:2px solid var(--line);}
+  .hist-item{position:relative;padding-bottom:34px;}
+  .hist-item:last-child{padding-bottom:4px;}
+  .hist-item::before{content:"";position:absolute;left:-34px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--navy);border:2px solid var(--paper);box-shadow:0 0 0 2px var(--navy);}
+  .hist-date{font-family:var(--mono);font-size:.78rem;color:var(--signal-red);font-weight:600;letter-spacing:.02em;}
+  .hist-title{font-family:var(--display);font-size:1.12rem;color:var(--navy);margin:4px 0 8px;line-height:1.35;}
+  .hist-desc{font-size:.9rem;line-height:1.6;color:var(--ink);}
+  .hist-meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center;}
+  .hist-badge{display:inline-block;font-size:.68rem;font-weight:700;padding:3px 9px;border-radius:12px;background:var(--navy);color:#fff;}
+  .hist-verify{display:inline-flex;align-items:center;gap:4px;font-size:.72rem;font-weight:600;padding:3px 9px;border-radius:12px;}
+  .hist-verify.verified{background:#e6f4ea;color:#1e6b34;border:1px solid #b6e0c2;}
+  .hist-verify.pending{background:#fff3e0;color:#a05a00;border:1px solid #ffcc80;}
+  .hist-verify.context{background:#eef0f3;color:#555;border:1px solid #d5d8dc;}
+  .hist-note{font-size:.78rem;color:var(--ink-soft);margin-top:6px;font-style:italic;}
+  .hist-evidence-link{display:inline-block;margin-top:8px;font-size:.8rem;color:var(--signal-red);font-weight:600;text-decoration:none;}
+  .hist-evidence-link:hover{text-decoration:underline;}
+  .hist-disclaimer{margin-top:40px;padding:16px 18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper-raised);font-size:.82rem;color:var(--ink-soft);line-height:1.6;}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+<div class="wrap masthead-top">
+<span>इचलकरंजी रेल्वे कृती समिती</span>
+<span>Est. Demand — 1965 Onward</span>
+</div>
+</header>
+
+<div class="hist-page">
+<a class="hist-back" href="index.html">← मुख्य पानावर परत</a>
+
+<div class="hist-hero">
+<h1>📜 इतिहास व Master Timeline</h1>
+<p>सध्या उपलब्ध असलेल्या पडताळलेल्या पुराव्यांवर आधारित कालपट — सर्वात जुन्या संसदीय संदर्भापासून ते नवीनतम अधिकृत अद्यतनापर्यंत. प्रत्येक नोंदीला स्रोत व पडताळणी स्थिती दिलेली आहे — कुठलीही माहिती स्वतः तयार केलेली नाही.</p>
+</div>
+
+<div class="hist-legend">
+  <span>🟢 <span class="hist-verify verified" style="padding:2px 7px;">पडताळलेलं</span></span>
+  <span>🟡 <span class="hist-verify pending" style="padding:2px 7px;">पडताळणी आवश्यक</span></span>
+  <span>⚪ <span class="hist-verify context" style="padding:2px 7px;">ऐतिहासिक संदर्भ</span></span>
+</div>
+
+<div class="hist-track" id="histTrack"></div>
+
+<div class="hist-disclaimer">
+📌 ही कालरेषा उपलब्ध सार्वजनिक व अधिकृत नोंदींवर आधारित तयार केली आहे. यातील प्रत्येक तपशील मूळ दस्तऐवजाशी स्वतंत्रपणे पडताळून पाहण्याची शिफारस केली जाते. 1956 पूर्वीचा कुठलाही पडताळलेला दस्तऐवज सध्या उपलब्ध नाही — असा दस्तऐवज सापडल्यास ही कालरेषा अद्ययावत केली जाईल.
+</div>
+
+</div>
+
+<footer id="footer">
+<div class="wrap">
+<div><strong>इचलकरंजी रेल्वे कृती समिती</strong></div>
+<div>Citizen-maintained evidence archive · अद्ययावत केले जात आहे</div>
+</div>
+</footer>
+
+<script src="timeline-data.js"></script>
+<script>
+const VERIFY_LABEL = { verified: "🟢 पडताळलेलं", pending: "🟡 पडताळणी आवश्यक", context: "⚪ ऐतिहासिक संदर्भ" };
+const VERIFY_CLASS = { verified: "verified", pending: "pending", context: "context" };
+
+function esc(s){ return (s || "").toString().replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+
+function render(){
+  const track = document.getElementById('histTrack');
+  const events = (typeof TIMELINE_EVENTS !== 'undefined' ? TIMELINE_EVENTS : []).slice().sort((a,b) => a.date.localeCompare(b.date));
+  track.innerHTML = events.map(ev => `
+    <div class="hist-item">
+      <div class="hist-date">${esc(ev.dateLabel)}</div>
+      <div class="hist-title">${esc(ev.title)}</div>
+      <div class="hist-desc">${esc(ev.description)}</div>
+      <div class="hist-meta-row">
+        <span class="hist-badge">${esc(ev.sourceType)}</span>
+        <span class="hist-verify ${VERIFY_CLASS[ev.verification] || 'context'}">${VERIFY_LABEL[ev.verification] || '⚪ ऐतिहासिक संदर्भ'}</span>
+      </div>
+      ${ev.verificationNote ? `<div class="hist-note">${esc(ev.verificationNote)}</div>` : ''}
+      ${ev.evidenceUrl && ev.evidenceUrl.startsWith('evidence-detail') ? `<a class="hist-evidence-link" href="${ev.evidenceUrl}">📄 मूळ पुरावा पहा →</a>` : ''}
+    </div>
+  `).join('');
+}
+render();
+</script>
+</body>
+</html>
