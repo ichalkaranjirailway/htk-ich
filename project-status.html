@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>प्रकल्प स्थिती — हातकणंगले–इचलकरंजी रेल्वे</title>
+<meta name="description" content="हातकणंगले–इचलकरंजी रेल्वे प्रकल्पाची सद्यस्थिती — DPR, सुधारित DPR, ROR, आणि सर्वात अलीकडील अधिकृत नोंद, स्रोत व पडताळणी स्थितीसह.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://ichalkaranjirailway.github.io/htk-ich/project-status.html">
+<meta property="og:title" content="प्रकल्प स्थिती — इचलकरंजी रेल्वे">
+<meta property="og:description" content="DPR, सुधारित DPR, ROR, आणि सर्वात अलीकडील अधिकृत नोंद — स्रोत व पडताळणी स्थितीसह.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .ps-page{max-width:900px;margin:0 auto;padding:0 24px 70px;}
+  .ps-back{display:inline-block;margin:20px 0 0;font-size:13px;color:var(--ink-soft);text-decoration:none;}
+  .ps-back:hover{color:var(--navy);}
+  .ps-hero{padding:28px 0 10px;}
+  .ps-hero h1{font-family:var(--display);font-size:1.7rem;color:var(--navy);margin:0 0 6px;}
+  .ps-hero p{color:var(--ink-soft);font-size:.95rem;max-width:640px;line-height:1.55;}
+  .ps-updated{font-size:.78rem;color:var(--ink-soft);margin-top:8px;}
+
+  .ps-legend{display:flex;flex-wrap:wrap;gap:14px;margin:18px 0 28px;font-size:.8rem;color:var(--ink-soft);}
+  .ps-legend span{display:inline-flex;align-items:center;gap:5px;}
+
+  .ps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:20px;}
+  .ps-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;}
+  .ps-card .ps-label{font-family:var(--display);font-size:.92rem;color:var(--navy);font-weight:600;margin-bottom:8px;}
+  .ps-card .ps-value{font-size:.9rem;line-height:1.55;color:var(--ink);}
+  .ps-card .ps-meta-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px;}
+  .ps-verify{display:inline-flex;align-items:center;gap:4px;font-size:.72rem;font-weight:600;padding:3px 9px;border-radius:12px;}
+  .ps-verify.verified{background:#e6f4ea;color:#1e6b34;border:1px solid #b6e0c2;}
+  .ps-verify.pending{background:#fff3e0;color:#a05a00;border:1px solid #ffcc80;}
+  .ps-verify.context{background:#eef0f3;color:#555;border:1px solid #d5d8dc;}
+  .ps-source{font-size:.76rem;color:var(--ink-soft);margin-top:6px;font-style:italic;}
+  .ps-evidence-link{display:inline-block;margin-top:6px;font-size:.78rem;color:var(--signal-red);font-weight:600;text-decoration:none;}
+  .ps-evidence-link:hover{text-decoration:underline;}
+
+  .ps-disclaimer{margin-top:30px;padding:16px 18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper-raised);font-size:.82rem;color:var(--ink-soft);line-height:1.6;}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+<div class="wrap masthead-top">
+<span>इचलकरंजी रेल्वे कृती समिती</span>
+<span>Est. Demand — 1965 Onward</span>
+</div>
+</header>
+
+<div class="ps-page">
+<a class="ps-back" href="index.html">← मुख्य पानावर परत</a>
+
+<div class="ps-hero">
+<h1>📊 प्रकल्प स्थिती</h1>
+<p>हातकणंगले–इचलकरंजी रेल्वे प्रकल्पाची सद्यस्थिती — एका दृष्टिक्षेपात. प्रत्येक ओळीला स्रोत व पडताळणी स्थिती दिलेली आहे.</p>
+<div class="ps-updated" id="psUpdated"></div>
+</div>
+
+<div class="ps-legend">
+  <span>🟢 <span class="ps-verify verified" style="padding:2px 7px;">पडताळलेलं</span></span>
+  <span>🟡 <span class="ps-verify pending" style="padding:2px 7px;">पडताळणी आवश्यक</span></span>
+  <span>⚪ <span class="ps-verify context" style="padding:2px 7px;">ऐतिहासिक संदर्भ</span></span>
+</div>
+
+<div class="ps-grid" id="psGrid"></div>
+
+<div class="ps-disclaimer">
+📌 ही माहिती उपलब्ध सार्वजनिक व अधिकृत नोंदींवर आधारित तयार केली आहे — विशेषतः 12 ऑगस्ट 2026 च्या RTI उत्तरावर. कुठलीही रक्कम, तारीख किंवा टक्केवारी स्वतः तयार केलेली नाही. अधिक अद्ययावत अधिकृत माहिती उपलब्ध झाल्यास हे पान त्वरित अद्ययावत केलं जाईल. संपूर्ण मूळ कागदपत्रांसाठी <a href="evidence.html">पुरावा संग्रह</a> पहा.
+</div>
+
+</div>
+
+<footer id="footer">
+<div class="wrap">
+<div><strong>इचलकरंजी रेल्वे कृती समिती</strong></div>
+<div>Citizen-maintained evidence archive · अद्ययावत केले जात आहे</div>
+</div>
+</footer>
+
+<script src="project-status-data.js"></script>
+<script>
+const VERIFY_LABEL = { verified: "🟢 पडताळलेलं", pending: "🟡 पडताळणी आवश्यक", context: "⚪ ऐतिहासिक संदर्भ" };
+function esc(s){ return (s || "").toString().replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+
+function render(){
+  const data = (typeof PROJECT_STATUS !== 'undefined') ? PROJECT_STATUS : { fields: [], updatedAt: '' };
+  document.getElementById('psUpdated').textContent = data.updatedAt ? `शेवटचं अद्ययावत: ${data.updatedAt}` : '';
+  document.getElementById('psGrid').innerHTML = data.fields.map(f => `
+    <div class="ps-card">
+      <div class="ps-label">${esc(f.label)}</div>
+      <div class="ps-value">${esc(f.value)}</div>
+      <div class="ps-meta-row">
+        <span class="ps-verify ${f.verification || 'context'}">${VERIFY_LABEL[f.verification] || '⚪ ऐतिहासिक संदर्भ'}</span>
+      </div>
+      ${f.source ? `<div class="ps-source">स्रोत: ${esc(f.source)}</div>` : ''}
+      ${f.evidenceUrl ? `<a class="ps-evidence-link" href="${f.evidenceUrl}">📄 मूळ पुरावा पहा →</a>` : ''}
+    </div>
+  `).join('');
+}
+render();
+</script>
+</body>
+</html>
