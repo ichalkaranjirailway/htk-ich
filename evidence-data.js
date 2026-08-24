@@ -146,5 +146,22 @@ const EVIDENCE_DOCS = [
     "previousVersions": [],
     "createdAt": "2026-08-24T09:49:58.471Z",
     "updatedAt": "2026-08-24T09:49:58.471Z"
+  },
+  {
+    "id": "ev-1787565275122",
+    "title": "RTI 19-5-26 (C.Gov)",
+    "category": "RTI",
+    "date": "",
+    "authority": "",
+    "referenceNumber": "",
+    "tags": [],
+    "summary": "",
+    "extractedText": "--- पान 1 ---\nI  ,;  iNoi 4 '  ~- .. . ~'.  . .   . .. .   . . .   .  CENTRAL   RAILWAY  • • •   I E. • er (Co-ord) & Chief Public Information Officer Office of the  Sr.  D1v1s1ona ng1ne (Engg), .   . • • •   I   R ·1 ay ORM Office   Building, near Pune Railway Station, Pune D1v1s1on, Centr~un!'  ~  411   001 Tel.No.020-26105312 Central Railway No. PA.W.RTI/2026 Dy. CE /Construction, Satara ORM (W) Pune Pune Division Date: 15-05-2026 Sub: Transfer of RTI cases   under   provision of section-6 (3) of RTI Act- Case of Shri.Vicky Balu Lokare Ref: 1. Online RTI Registration   No.DRMOP/R/P/24/00164   dated   14.05 .2026. Please   find enclosed herewith an online RTI   application of Shri.   Vicky   Balu Lokare received in this office. Since   the   information   sought   therein   is   pertaining   to   Dy CE Construction, Satara.   Hence, this RTI is   transferred   herewith   in   accordance   with Section -6   (3) of RTI   Act, 2005. It is, therefore requested   to   communicate   the   information   directly   to   the RTI applicant under advice   to   this office.  Uk,~o~~  DRM(Wks)Pune",
+    "originalFile": "evidence-1787565272367-rti-19-5-26-c.gov-.pdf",
+    "status": "published",
+    "version": 1,
+    "previousVersions": [],
+    "createdAt": "2026-08-24T09:54:35.122Z",
+    "updatedAt": "2026-08-24T09:54:35.122Z"
   }
 ];
