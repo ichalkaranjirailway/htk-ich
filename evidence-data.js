@@ -180,5 +180,22 @@ const EVIDENCE_DOCS = [
     "previousVersions": [],
     "createdAt": "2026-08-24T10:00:43.358Z",
     "updatedAt": "2026-08-24T10:00:43.358Z"
+  },
+  {
+    "id": "ev-1787566038560",
+    "title": "Appeal RTI 21-7-26 (C.GOV)",
+    "category": "RTI",
+    "date": "",
+    "authority": "",
+    "referenceNumber": "",
+    "tags": [],
+    "summary": "",
+    "extractedText": "--- पान 1 ---\nर CENTRAL RAILWAY\no Pa, Office of the\nधडे: Chief Administrative Officer (Const.)\nAo S/S 6th floor, New Administrative Building\nNE © D.N. Road, CSMT, Mumbai-400 001\nEW/106/RT1/Appeal/2026/57 Date: 20.07.2026\nVicky Manisha Balu Lokare\nSub: - RTI Appeal of Vicky Manisha Balu Lokare under Section\n19(1) of the RTI Act, 2005.\nRef: - Online Appeal vide Registration No. CRAIL/A/E/26/00169\ndated 14.07.2026\nsxkkkk\nWith reference to the above subject, you had sought various information\nregarding “Hatkanangale - Ichalkaranji (8 km) New Broad Gauge Line project”\nthrough initial RTI application dated 03.07.2026.\nThe information available in this office was given to you vide this office letter No.\nEW/106/RT1/2026/0L-273 dated 13.07.2026.\nHowever, upon dissatisfied with the initial reply you have filed an instant appeal dated\n14.07.2026.\nIn this connection, views on the appeal were requested from the CPIO. The observations\nof First Appellate Authority are as follows: -\n“The information available in the Central Railway Construction Organisation has\nalready been provided to you in response to your initial RTI application. The\ninformation provided is factually correct. No further information is available in this\nregard.”\nIn view of the above your Appeal is disposed of.\nIn case you are not satisfied with this order, you may prefer an appeal to the Chief\nInformation Commissioner within 90 days from the receipt of this letter at the address\ngiven below:\nCentral Information Commissioner,\nBaba Gang Nath Marg, Munirka,\nNew Delhi - 110 066. 1\nSawn\n(Ga > Kumar)\nChief Engineer(C) South &\nFirst Appellatg Authority\nRly. No.- 02 4- 54315\nEmail- cesouth.cr@gmail.com\n(Scanned with OKEN Scanner",
+    "originalFile": "evidence-1787566035833-appeal-rti-21-7-26-c.gov-.pdf",
+    "status": "published",
+    "version": 1,
+    "previousVersions": [],
+    "createdAt": "2026-08-24T10:07:18.560Z",
+    "updatedAt": "2026-08-24T10:07:18.560Z"
   }
 ];
