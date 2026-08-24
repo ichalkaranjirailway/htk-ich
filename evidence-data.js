@@ -163,5 +163,22 @@ const EVIDENCE_DOCS = [
     "previousVersions": [],
     "createdAt": "2026-08-24T09:54:35.122Z",
     "updatedAt": "2026-08-24T09:54:35.122Z"
+  },
+  {
+    "id": "ev-1787565643358",
+    "title": "RTI 02-4-26 (C.Gov)",
+    "category": "RTI",
+    "date": "",
+    "authority": "",
+    "referenceNumber": "",
+    "tags": [],
+    "summary": "",
+    "extractedText": "--- पान 1 ---\nCENTRAL   RAILWAY  . • •   l Engine·er (Co-ord) & Chief Public Information Officer Office   of the Sr. D1v1s1ona ) (Engg,   .   . ·1 ORM Office Building, near Pune Railway Statton, Pune Division, Centra~~:~ w?l 1 001 Tel.No.   020-2610   53 12 To Vicky   Lokare 24/1193   Balaji Nagar shahapur Lchalkaranji Ichalkaranji Pin   :416115 tj '5 ci~ ci  ~  cit WP  (ct,  I  Q)ct,  I cf> I tt~ci  ti, ljU!l4'5t1,~ Far1ict>: 01-04-2026  Sub:   Information under   RTI   Act 2005- Case   of   Shri   Shri   Vicky Lokare  Ref:  1. RTI   application No. DRMOP/R/P/24/00107 <ltd. 28/03/2026. ********* In   connection with the above, it is_ inform   you   that, the required information sought by you   pertains   to   Dy   CE/Constuction, Satara. Hence, your application   in   this regard is transferred   to   Dy   CE/Constuction, Satara   of   Pune Division under section 6(3) of RTI act, 2005. This is for   your information please.  ~\\1-'tl~\" DRM(Wks)Pune  I I  I",
+    "originalFile": "evidence-1787565640760-rti-02-4-26-c.gov-.pdf",
+    "status": "published",
+    "version": 1,
+    "previousVersions": [],
+    "createdAt": "2026-08-24T10:00:43.358Z",
+    "updatedAt": "2026-08-24T10:00:43.358Z"
   }
 ];
