@@ -5,8 +5,34 @@ const trackEl = document.getElementById("track");
 const tabsEl = document.getElementById("tabs");
 const statsEl = document.getElementById("stats-grid");
 const emptyEl = document.getElementById("empty-state");
+const langToggleEl = document.getElementById("langToggle"); // may not exist on every page — that's fine
 
 let activeCategory = "all";
+// भाषा नेहमी "mr" (मराठी) पासून सुरू होते — कुठल्याही पानावर काहीही न
+// बदलल्यास आधीसारखंच मराठी दिसतं. फक्त langToggle बटण असलेल्या पानांवरच
+// इंग्रजीकडे स्विच करता येतं, आणि इंग्रजी अनुवाद (entry.en) नसलेल्या
+// नोंदी इंग्रजीतही मराठीतच दिसत राहतात (कधीही रिकाम्या दिसणार नाहीत).
+let lang = "mr";
+
+function t(entry, field) {
+  if (lang === "en" && entry.en && entry.en[field]) return entry.en[field];
+  return entry[field];
+}
+
+function renderLangToggle() {
+  if (!langToggleEl) return; // page doesn't have a toggle — skip silently
+  langToggleEl.innerHTML = `
+    <button type="button" class="tab" data-lang="mr" aria-pressed="${lang === "mr"}">मराठी</button>
+    <button type="button" class="tab" data-lang="en" aria-pressed="${lang === "en"}">English</button>
+  `;
+  langToggleEl.querySelectorAll(".tab").forEach(btn => {
+    btn.addEventListener("click", () => {
+      lang = btn.dataset.lang;
+      renderLangToggle();
+      renderTimeline();
+    });
+  });
+}
 
 function fmtDate(iso) {
   const d = new Date(iso + "T00:00:00");
@@ -103,16 +129,17 @@ function renderTimeline() {
           <span class="tag status-${e.status}">${statusLabel}</span>
           <span class="entry-date">${fmtDate(e.date)}${e.referenceNo ? " · Ref: " + e.referenceNo : ""}</span>
         </div>
-        <h3>${e.title}</h3>
-        <p class="to-whom">To: ${e.to_whom}</p>
-        <p class="desc">${e.description}</p>
-        <div class="response"><strong>Response received</strong>${e.response}</div>
+        <h3>${t(e, "title")}</h3>
+        <p class="to-whom">To: ${t(e, "to_whom")}</p>
+        <p class="desc">${t(e, "description")}</p>
+        <div class="response"><strong>Response received</strong>${t(e, "response")}</div>
         ${proofHTML(e)}
       </article>
     `;
   }).join("");
 }
 
+renderLangToggle();
 renderStats();
 renderTabs();
 renderTimeline();
