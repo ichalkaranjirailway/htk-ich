@@ -214,5 +214,22 @@ const EVIDENCE_DOCS = [
     "previousVersions": [],
     "createdAt": "2026-08-24T10:16:27.521Z",
     "updatedAt": "2026-08-24T10:16:27.521Z"
+  },
+  {
+    "id": "ev-1787566752488",
+    "title": "CPGRAM 6-8-26",
+    "category": "CPGRAMS",
+    "date": "",
+    "authority": "",
+    "referenceNumber": "",
+    "tags": [],
+    "summary": "",
+    "extractedText": "--- पान 1 ---\n—\nCENTRAL RAILWAY\nटा HRD, Office of the\ntl WA Chief Administrative Officer (Const.)\n8585 6th floor, New Administrative Building\nEE 4 D.N. Road, CSMT, Mumbai-400 001\nNo.EW/545/G/CPGRAM/2026/122 Date:06.08.2026\nDy. CPO(C)/CSMT\nSub.: Grievance of Shri Vicky Balu Lokare.\nRef.: Registration number MORLY/E/2026/0036607 dated 21.07.2026\nreceived in this office on 06.08.2026.\nHookkkk\nWith reference to the above, the information available in Central Railway Construction\nOrganization for Hatkanangale-Ichalkaranji New Railway Line (8 km) Project is given as\nunder: -\nSr.N Grievance Remarks\n1 Obtain the latest status | The work of Hatkanangale- Ichalkaranji new Railway line\nof the Hatkanangale- | (gkm) appeared in the Pink Book of 2017-18. The Detailed\n1 chalkaranji New Project Report (DPR) of the said project was submitted to\nन ine reject the Railway Board on 02.01.2020, at a cost of Rs. 180.73\nBoard v crore & ROR (-12.73%). The same is under scrutiny of\n’ Railway Board.\n2 Examine the reasons | The Detailed project Report (DPR) is under scrutiny of\nfor the prolonged delay | Railway Board.”\nsince the Revised DPR :\nwas submitted on\n02.01.2020.\n3 Direct the concerned | Noted.\nauthorities to expedite\nthe approval process.\n4 Inform the expected | Project is not sanctioned yet.\ntimeline for approval\nand commencement of\nthe project.\nThis is for your information please.\nनि\ngen\nG m Kumar)\nEngineer (c) Proc\n:\n(Scanned with OKEN Scanner",
+    "originalFile": "evidence-1787566749986-cpgram-6-8-26.pdf",
+    "status": "published",
+    "version": 1,
+    "previousVersions": [],
+    "createdAt": "2026-08-24T10:19:12.488Z",
+    "updatedAt": "2026-08-24T10:19:12.488Z"
   }
 ];
