@@ -129,5 +129,22 @@ const EVIDENCE_DOCS = [
     "previousVersions": [],
     "createdAt": "2026-08-24T07:26:42.860Z",
     "updatedAt": "2026-08-24T07:26:42.860Z"
+  },
+  {
+    "id": "ev-1787564998472",
+    "title": "RTI 13-7-26 (C.Gov)",
+    "category": "RTI",
+    "date": "",
+    "authority": "",
+    "referenceNumber": "",
+    "tags": [],
+    "summary": "",
+    "extractedText": "--- पान 1 ---\nग CENTRALRAILWAY\npe’. o Office of the\n(4 Sow Chief Administrative Officer (Const.)\nEERE) § 6५ floor, New Administrative Building\nBPE D.N. Road, CSMT, Mumbai-400 001\nNo. EW/106/RT1/2026/0L-274 Date: -13.07.2026\nShri Vicky\n3 Sub: Information required under Section 6(1) of the RTI Act 2005.\nRef: Online RTI application No. CRAIL/R/E/26/01707 dated 03.07.2026.\nकवन\nWith reference to the above, the information available in Central Railway Construction\nOrganization are given as under: -\n\nNo\n\n1 DPR Executive Summary: Please provide a | Project has not been sanctioned yet; hence details\ncertified copy of the Executive Summary and | cannot be shared.\n\nTraffic Survey findings of the updated Detailed\nProject Report (DPR) submitted to the Railway\nBoard.\n\n2 Pink Book Status: Please provide the current | The work of Hatkanangale- Ichalkaranji new Railway\nofficial status of the project listed under Pink | line (8Km) appeared in the Pink Book of 2017-18. The\nBook Item Number 12 (Central Railway New | Detailed Project Report (DPR) of the said project was\nLines). Provide copies of official | submitted to the Railway Board on 02.01.2020, at a cost\ncorrespondence regarding its clearance or | Of Rs. 180.73 crore & ROR (-12.73%). The same is under\npending queries. scrutiny of Railway Board.\n\ncopies of official correspondence regarding its clearance\nor pending queries are not available in this office.\n\n3 Financial and ROR Reconsideration: Please | copies of any official reviews or notes where this project\nprovide copies of any official reviews or notes | is being evaluated under the PM GatiShakti National\nwhere this project is being evaluated under the | Master Plan guidelines, bypassing the negative Rate of\nPM GatiShakti National Master Plan guidelines, | Return (ROR) of -12.73 percent, are not available in this\nbypassing the negative Rate of Return (ROR) of | office.\n\n-12.73 percent.\n\n4 Cost Sharing Infrastructure: Please provide | There is no cost sharing between the Government of\ncopies of letters or proposals sent to or | Maharashtra and the Indian Railways for this project.\nreceived from the Government of Maharashtra\nregarding 50:50 cost-sharing or land allocation\nfor this 8 KM line.\n\n5 Land Acquisition Plans: Please provide copies | Project has not been sanctioned yet, hence details\nof the preliminary alignment reports or joint | cannot be shared.\nmeasurement surveys identifying affected\nareas in villages between Hatkanangale and\nIchalkaranji.\n\nThis is for your information please.\n\nIf you are not satisfied with this information, appeal to the above lies with the 1st Appellate Authority,\n\nwithin 30 days, from the date of receipt of this communication.\n\nThe name and address of the First appellate Authority are given Below: -\n\nChief Engineer (Construction) South,\n\nFirst Appellate Authority,\n\nCAO (C)'s Office, NAB Bldg,\n\n6० Floor, D.N, Road,\n\nCST Mumbal-400 001. 0\n\nOND\nonly Bada\nDy. CE(C)PL & CPIO\nRly. No. - 022674-54310\nEmail- dycecpl@gmail.com\n(scanned with OKEN Scanner",
+    "originalFile": "evidence-1787564995607-rti-13-7-26-c.gov-.pdf",
+    "status": "published",
+    "version": 1,
+    "previousVersions": [],
+    "createdAt": "2026-08-24T09:49:58.471Z",
+    "updatedAt": "2026-08-24T09:49:58.471Z"
   }
 ];
