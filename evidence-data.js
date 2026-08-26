@@ -20,11 +20,11 @@ const EVIDENCE_DOCS = [
   },
   {
     "id": "ev-1956-loksabha",
-    "title": "लोकसभा संदर्भ — 19 डिसेंबर 1956",
+    "title": "लोकसभा प्रश्न क्र. 1205 — Ichal-Karanji ते Kolhapur-Miraj रेल्वे जोडणी (19 डिसेंबर 1956)",
     "category": "Railway / Government Letters",
     "date": "19.12.1956",
     "authority": "लोकसभा (Lok Sabha), भारत सरकार",
-    "referenceNumber": "",
+    "referenceNumber": "प्रश्न क्र. 1205, Written Answers पान 1799-1800",
     "tags": [
       "1956",
       "Lok Sabha",
@@ -32,14 +32,14 @@ const EVIDENCE_DOCS = [
       "Historical",
       "Earliest Record"
     ],
-    "summary": "सध्या उपलब्ध असलेला सर्वात जुना पडताळलेला संसदीय संदर्भ — इचलकरंजी भागाच्या रेल्वे कनेक्टिव्हिटीसंदर्भात 19 डिसेंबर 1956 रोजीच्या लोकसभा कामकाजातील नोंद (पान 53-54). हा दस्तऐवज ऐतिहासिक संदर्भासाठी जतन केला आहे — तपशीलवार मजकुरासाठी मूळ PDF पहा.",
-    "extractedText": "",
+    "summary": "खासदार श्री. कजरोळकर यांनी लोकसभेत विचारलेला प्रश्न क्र. 1205 (19 डिसेंबर 1956, Written Answers, पान 1799-1800), शीर्षक: \"Railway Connection from Ichal-Karanji to Kolhapur-Miraj Line\". प्रश्न: महाराष्ट्र चेंबर ऑफ कॉमर्स, पुणे यांच्याकडून सरकारला असं निवेदन मिळालं आहे का, की कोल्हापूर-मिरज दरम्यान टाकल्या जाणाऱ्या ब्रॉडगेज मार्गाला हातकणंगल्याऐवजी इचलकरंजीशी जोडावं (इचलकरंजीच्या औद्योगिक व व्यावसायिक महत्त्वामुळे)? रेल्वे व वाहतूक उपमंत्री (श्री. अळगेसन) यांचं उत्तर: (अ) होय, असं निवेदन मिळालं आहे. (ब) कोल्हापूर-मिरज मीटरगेज मार्गाच्या ब्रॉडगेजमध्ये रूपांतरणासाठी प्राथमिक अभियांत्रिकी व वाहतूक सर्वेक्षणाचा अंदाज मध्य रेल्वेकडून मागवण्यात आला असून, हातकणंगल्याऐवजी इचलकरंजीला जोडण्याचा मुद्दा त्या सर्वेक्षणादरम्यान विचारात घेतला जाईल असं नमूद केलं आहे.",
+    "extractedText": "Railway Connection from Ichal-Karanji to Kolhapur-Miraj Line. 1205. Shri Kajrolkar: Will the Minister of Railways be pleased to state: (a) whether a representation has been received by Government from the Maharashtra Chamber of Commerce, Poona, requesting to connect Ichal-Karanji instead of Hathkanangale to the broad-gauge line to be laid between Kolhapur and Miraj on account of the industrial and commercial importance of Ichal-Karanji; and (b) if the reply to part (a) be in the affirmative, what steps Government propose to take in the matter? The Deputy Minister of Railways and Transport (Shri Alagesan): (a) Yes. (b) An estimate for Preliminary Engineering and Traffic Surveys for conversion of Kolhapur Miraj M.G. section into B.G. has been called for from the Central Railway. The question of connecting Ichal-Karanji instead of Hathkanangale has been noted for consideration during the survey.",
     "status": "published",
-    "version": 1,
+    "version": 2,
     "previousVersions": [],
     "originalFile": "evidence-1956-lok-sabha-reference.pdf",
     "createdAt": "2026-08-22T13:07:48.131Z",
-    "updatedAt": "2026-08-22T13:07:48.144Z"
+    "updatedAt": "2026-08-26T01:32:12.835Z"
   },
   {
     "id": "ev-1929-story-of-ichalkaranji",
