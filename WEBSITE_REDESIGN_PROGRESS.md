@@ -162,19 +162,130 @@ voters-list.html`.
   bundled into a navigation task.
 
 ## KNOWN OPEN ITEM CARRIED FORWARD
-`index.html` has one unclosed `<div>` somewhere (pre-existing, not caused by this project). Needs
-a dedicated, careful diagnostic pass before Phase 11 (mobile) / Phase 12 (visual consistency) —
-an unclosed div can silently break layout nesting in ways that only show up at certain
-breakpoints.
+~~`index.html` has one unclosed `<div>` somewhere (pre-existing, not caused by this project).~~
+**FIXED this session — see "P1 TASK 1" below.**
+
+## P1 TASK 1 — UNCLOSED `<div>` IN index.html (FIXED)
+Root cause found via a line-by-line open/close stack trace (not guessing): the `#facts` section
+(section 03, "इचलकरंजीला रेल्वे का हवी — पाच सिद्ध तथ्ये") opened `<div class="wrap">` but was
+missing its matching closing `</div>` before `</section>` — compare with the `#about` section
+right above it, which has the correct `</div></div></section>` pattern. The impact: every element
+after this point in the DOM (`#gallery`, `#team`, `#timeline`, footer, and the entire vote-related
+markup that comes later) was nested one level deeper than the CSS expected, which is exactly the
+kind of bug that can cause silent, breakpoint-specific layout glitches. Fixed by adding the one
+missing `</div>`. Verified before/after:
+- Full stack-trace re-run: 0 unclosed tags, 0 orphan closes, total opens (76) = total closes (76).
+- All 30 voting-widget IDs still present exactly once, `owSubmitVote` count unchanged (2) — this
+  fix is far above the vote widget in the DOM and doesn't touch it, confirmed by ID/count re-scan.
+- All 4 inline `<script>` blocks in `index.html` still pass Node syntax parse.
+- Section landmarks (`#stats #about #facts #gallery #team #timeline #footer`) each still appear
+  exactly once, in the same order.
+No other file touched for this fix.
+
+## P1 TASK 2 — NAVIGATION RESPONSIVE AUDIT (DONE — audit + 2 safe fixes)
+Reviewed the shared `nav.subnav` CSS and the `.masthead-top` band that sits above it on every
+page (both already shared/reused, not duplicated per-page — good baseline).
+
+Findings:
+- `nav.subnav` was already a solid mobile pattern: sticky, horizontal-scroll (`overflow-x:auto`),
+  `white-space:nowrap` per link — so the 10 Marathi labels (including the two longest,
+  "अधिकाऱ्यांसाठी" and "प्रकल्प स्थिती") never wrap or overflow the page; they just scroll. No
+  structural fix needed there — added a small mobile-only padding/font-size reduction (`@media
+  max-width:480px`) so the bar feels less cramped on the smallest phones, plus
+  `-webkit-overflow-scrolling: touch` for smoother iOS scroll momentum.
+- `.masthead-top` (the branding + tagline band above the nav) had **no wrap protection** —
+  `display:flex; justify-content:space-between` with two text spans and no `flex-wrap`. On
+  narrow phones (~320–360px) the two spans ("इचलकरंजी रेल्वे कृती समिती" + tagline) are long
+  enough to be tight. Added `@media max-width:480px` rule: wraps, centers, reduces gap/font-size
+  slightly. Low-risk, purely additive — does not change desktop rendering at all.
+- **Observation, not fixed (out of scope / not part of the new nav)**: `index.html`'s own subnav
+  has 13 items (uses in-page anchors like `#stats`, `#facts`, `#footer` alongside page links)
+  while the new inner-page navs have 10 items (page links only, since inner pages don't have
+  those homepage sections to anchor to). This is a real inconsistency in item *count*, but
+  changing `index.html`'s existing subnav wasn't asked for this session and risks interacting
+  with anchor-scroll behavior — flagging for a future Phase 3.1 decision rather than changing it
+  now.
+- **Observation, not fixed (pre-existing, unrelated to nav)**: the petition CTA button
+  (`class="lang-toggle"`, "याचिकेवर स्वाक्षरी करा", appears to be on the stray `index (2).html`
+  duplicate, not on the live `index.html`) has no matching CSS rule anywhere in the repo — would
+  render as unstyled default link text if it were live. Since it's not on the actual live
+  `index.html`, no action taken; noting only for completeness.
+
+Verified after both mobile CSS additions: `styles.css` brace count still balanced (82/82), no
+existing rule overridden (both changes are pure additions inside new `@media` blocks or as new
+declarations), voting widget untouched (this task only edited `styles.css`).
+
+## P1 TASK 3 — FACTUAL CONSISTENCY AUDIT: data.js / evidence-data.js / project-status-data.js /
+timeline-data.js (DONE — audit only, zero values changed, per instruction)
+
+Cross-checked every date/cost/ROR/status claim across all four data files against each other and
+against the OCR'd `extractedText` already embedded in `evidence-data.js` for each source document
+(this is the closest available stand-in for "reading the original PDF" without a scanned-image
+OCR pass). Overall finding: the data is in noticeably good shape — most claims are internally
+consistent, cross-referenced correctly between files, and dates/figures match the underlying
+OCR'd source text word-for-word (e.g. the 02.01.2020 revised DPR figures of ₹180.73 crore / ROR
+−12.73% appear identically in `evidence-data.js`'s OCR text, `project-status-data.js`, and
+`timeline-data.js`). The site's existing practice of self-flagging genuine conflicts (see below)
+is good practice and was left as-is.
+
+**One data-quality issue found — flagged, not changed:**
+- **"मूळ DPR" (original DPR) claim** — appears in both `project-status-data.js` and
+  `timeline-data.js` (`t-2017-dpr`): "30 नोव्हेंबर 2017 — खर्च ₹191.59 कोटी, ROR −10.11%". Both
+  entries are labeled `verification: "verified"`, but **`evidenceUrl` is `null` in both**, and
+  the only source cited is "प्रकल्पाच्या अधिकृत नोंदी" / "साईटच्या content.js मध्ये पूर्वीपासून
+  नमूद" (the project's own prior records / the site's own earlier content) — i.e. no independent,
+  traceable source document exists in the current evidence set for this specific 2017 figure.
+  Per the site's own documented convention (`verified` = 🟢 "पुराव्यासह पडताळलेलं" / verified
+  *with evidence*), this entry does not currently meet its own bar for that label. **Marking as
+  REQUIRES VERIFICATION here rather than editing the file** — the owner should either locate the
+  original 2017 DPR document (RTI, official letter, etc.) to properly back this figure with an
+  `evidenceUrl`, or relabel it `pending`/`context` to match what's actually evidenced today. No
+  value or label was changed in the repo.
+- **Related, already self-flagged by the site (no action needed)**: `timeline-data.js`'s
+  `t-2018-survey-conflict` entry already transparently marks itself `verification: "pending"` and
+  documents that the MP's 22.07.2026 letter states the survey/DPR was sent in **August 2018**,
+  which doesn't match either the 30.11.2017 or 02.01.2020 dates used elsewhere. This is good
+  existing practice — the site is not hiding the discrepancy — confirmed correctly cross-linked
+  and left untouched.
+- **Minor verification nuance (not an error, just a precision note)**: `t-2017-survey` /
+  "Final Location Survey — भूमिपूजन" (11 June 2017) cites the RTI reply as its source, but reading
+  the OCR'd RTI text closely, that date actually appears in the *RTI applicant's own question*
+  (which cites a Central Railway Twitter announcement) — the RTI reply itself declines to engage
+  with that part of the question rather than independently confirming the date. The date is,
+  however, independently corroborated by the separate MP Mane letter ("भूमिपूजन 11.06.2017 रोजी
+  तत्कालीन रेल्वेमंत्री सुरेश प्रभू यांच्या हस्ते"), so the underlying fact does have two-document
+  support even though the RTI citation alone doesn't fully carry it. No change made; noting for
+  precision only.
+
+No dates, costs, ROR/FIRR/EIRR figures, or sanction-status wording were altered anywhere in this
+task — audit only, as instructed.
+
+## TASK 4 — DUPLICATE FILES (confirmed, still NOT deleted)
+Re-ran a full-repository reference search (`.html`, `.js`, `.css`, `.md`) for all 5 suspected
+files — zero references anywhere except this progress file's own notes. Additionally diffed each
+against its live counterpart to characterize *what* they are, not just that they're unused:
+- `admin (1).html` (489 lines) and `admin (2).html` (563 lines) are both substantially shorter,
+  earlier-looking versions of the live `admin.html` (1749 lines) — look like superseded drafts.
+- `index (2).html` (208 lines) is a much shorter, earlier version of the live `index.html` (565
+  lines) — missing SEO meta tags present in the live version, among other differences.
+- `gallery (1).css` (17 lines) is a stub compared to the live `gallery.css` (47 lines).
+- `team-data (2) (1).js` (4 lines) is essentially empty compared to the live `team-data.js` (78
+  lines).
+All five read as accidental leftover exports of earlier work-in-progress states, not alternate
+live variants or decoys with unique content. This strengthens confidence they're safe to delete,
+but per instruction they remain untouched this session — still flagged
+"suspected duplicates — confirmed unreferenced, confirmed superseded drafts — do not delete yet,
+awaiting owner's explicit go-ahead."
 
 ## NEXT RECOMMENDED TASK
-Options for the next session, in priority order: (a) locate and safely fix the pre-existing
-unclosed `<div>` in `index.html` (isolated, careful diff-based fix, verify voting widget
-untouched afterward), (b) Phase 3 continued — responsive/spacing check of the newly-added nav
-on the 4-6 pages with the busiest existing headers (officials.html, brief.html had the most
-existing `<div>`s, worth a visual gut-check), (c) begin the outstanding P1 fact-checking pass on
-data.js/evidence-data.js/project-status-data.js against source PDFs (flagged since Phase 0,
-still not started).
+All four P1 items from this session are closed out. For the next session, in rough priority
+order: (a) owner decision needed on the "मूळ DPR" verification-label question above (locate a
+source document or relabel — this is a judgment call for the owner, not something to auto-fix),
+(b) owner decision on deleting the 5 confirmed-safe duplicate files, (c) Phase 3.1 — decide
+whether to reconcile `index.html`'s 13-item subnav with the new 10-item inner-page nav pattern,
+(d) resume the broader Phase 4+ mobile-first pass now that the structural (div) and factual
+audits are both clean, per the instruction to hold off on larger visual redesign until this
+point.
 
 ## BASELINE FACTS (do not re-derive these — just verify if repo changes)
 

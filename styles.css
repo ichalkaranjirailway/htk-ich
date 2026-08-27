@@ -74,6 +74,16 @@ img { max-width: 100%; display: block; }
   color: #C9CEDB;
   border-bottom: 1px solid rgba(255,255,255,0.15);
 }
+@media (max-width: 480px) {
+  .masthead-top {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+    gap: 4px 10px;
+    font-size: 10.5px;
+    padding: 10px 0;
+  }
+}
 
 .masthead-body {
   padding: 40px 0 32px;
@@ -137,6 +147,7 @@ nav.subnav .wrap {
   display: flex;
   gap: 4px;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 nav.subnav a {
   font-family: var(--mono);
@@ -149,6 +160,12 @@ nav.subnav a {
 }
 nav.subnav a:hover { color: var(--navy); border-bottom-color: var(--line); }
 nav.subnav a[aria-current="page"] { color: var(--navy); border-bottom-color: var(--navy); font-weight: 600; }
+@media (max-width: 480px) {
+  nav.subnav a {
+    font-size: 11.5px;
+    padding: 12px 10px 10px;
+  }
+}
 
 /* ==========================================================
    SECTION SCAFFOLDING
