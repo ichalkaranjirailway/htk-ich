@@ -116,5 +116,28 @@ const EVIDENCE_DOCS = [
     "originalFile": "evidence-2026-mp-mane-letter.pdf",
     "createdAt": "2026-08-27T03:59:18.708Z",
     "updatedAt": "2026-08-27T03:59:18.725Z"
+  },
+  {
+    "id": "ev-1965-tarun-bharat",
+    "title": "तरुण भारत वृत्त — इचलकरंजी रेल्वेसाठी पालिकेचा 1965 चा ठराव",
+    "category": "Photos / Scanned Documents",
+    "date": "1965 (नेमकी मासिक तारीख अस्पष्ट — पत्रिकेवर फक्त \"20 नोव्हेंबर\" दिसतं, वर्षाचा अंक अस्पष्ट)",
+    "authority": "तरुण भारत (वृत्तपत्र)",
+    "referenceNumber": "",
+    "tags": [
+      "1965",
+      "Municipal Resolution",
+      "Tarun Bharat",
+      "Newspaper",
+      "Miraj-Kolhapur Broad Gauge"
+    ],
+    "summary": "तरुण भारत वृत्तपत्रातील बातमी — मथळा: \"इचलकरंजीत रेल्वे येण्यासाठी पालिकेचा 1965 ला ठराव\". उपमथळा: \"मिरज-कोल्हापूर रेल्वेलाईन ब्रॉडगेज करताना इचलकरंजी रेल्वे स्टेशन : रेल्वे खात्याकडून मिळाले होते आश्वासन\". बातमीत इचलकरंजी नगरपालिकेने 1965 साली रेल्वे जोडणीसंदर्भात ठराव पारित केल्याचा आणि मिरज-कोल्हापूर मार्गाच्या ब्रॉडगेज रूपांतरणावेळी इचलकरंजी स्टेशनबाबत रेल्वे खात्याकडून आश्वासन मिळाल्याचा उल्लेख आहे. सोबत तत्कालीन नगरपालिका पदाधिकाऱ्यांचा फोटो व यादीही आहे (5 जुलै 1961 रोजी निवडून आलेले सदस्य असं नमूद). ⚠️ प्रामाणिक मर्यादा: वृत्तपत्र कात्रणाच्या फोटोतील सर्व बारीक मजकूर (उदा. नेमका ठराव क्रमांक, पूर्ण तारीख) स्पष्टपणे वाचता आलेला नाही — मथळा व मुख्य आशय स्पष्ट आहे.",
+    "extractedText": "Tarun Bharat newspaper clipping. Headline: Ichalkaranjit railway yenyasathi palikecha 1965 la tharav (Ichalkaranji Municipal Council 1965 resolution for railway to come to Ichalkaranji). Subheadline: Miraj-Kolhapur railway line broad gauge karताना Ichalkaranji railway station - railway khatyakadun milale hote ashwasan (While converting Miraj-Kolhapur line to broad gauge, assurance was received from railway department regarding Ichalkaranji station). Includes photo and list of municipal council members elected 5 July 1961.",
+    "status": "published",
+    "version": 1,
+    "previousVersions": [],
+    "originalFile": "ichalkaranji-railway-historical-1965-resolution.jpg.jpg",
+    "createdAt": "2026-08-27T09:31:59.877Z",
+    "updatedAt": "2026-08-27T09:31:59.889Z"
   }
 ];
