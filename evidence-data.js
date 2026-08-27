@@ -64,5 +64,57 @@ const EVIDENCE_DOCS = [
     "originalFile": "evidence-1929-story-of-ichalkaranji.pdf",
     "createdAt": "2026-08-25T10:06:09.593Z",
     "updatedAt": "2026-08-25T10:06:09.607Z"
+  },
+  {
+    "id": "ev-2015-karad-belgaum-proposal",
+    "title": "कराड–इचलकरंजी–निपाणी–बेळगाव प्रस्तावित नवीन रेल्वे मार्ग — सर्वेक्षण तपशील व लोकप्रतिनिधी/नागरी संस्था पाठिंबा पत्रे (2015-16)",
+    "category": "Railway / Government Letters",
+    "date": "2015-2016",
+    "authority": "विविध — इचलकरंजी रेल्वे कृती समिती, आमदार (महाराष्ट्र व कर्नाटक), विविध नगरपरिषदा/महानगरपालिका",
+    "referenceNumber": "बहुविध पत्रे — तपशील सारांशात",
+    "tags": [
+      "Karad-Belgaum",
+      "191.9 किमी",
+      "Nipani",
+      "Islampur",
+      "Sankeshwar",
+      "2015",
+      "Support Letters",
+      "Alternate Proposal"
+    ],
+    "summary": "⚠️ महत्त्वाची सूचना: हा प्रस्ताव सध्याच्या History/Project Status पानांवरील हातकणंगले–इचलकरंजी 8 किमी शाखा मार्गाच्या DPR (2017/2020) पेक्षा पूर्णपणे वेगळा आहे — गोंधळ टाळण्यासाठी वेगळा ठेवला आहे.\n\nहा एक मोठा, स्वतंत्र प्रस्तावित नवीन रेल्वे मार्ग आहे: कराड–इचलकरंजी–निपाणी–बेळगाव (एकूण 191.9 किमी — महाराष्ट्रात 94.6 किमी, कर्नाटकात 97.3 किमी). सर्वेक्षण तपशील: Take-off Point — Shenoli Yard (पुणे-मिरज मार्गावर); Meeting Point — Sambre Station (मिरज-बेळगाव मार्गावर); एकूण 21 स्थानके (4 अस्तित्वात: कराड, शेणोली, सांबरे, बेळगाव; 17 प्रस्तावित: तांबवे, इस्लामपूर, वाळवा, आष्टा, दुधगाव, नेज, इचलकरंजी, हुपरी, कागल, आडी, निपाणी, कणगला, संकेश्वर, हलकर्णी, दड्डी, हंडिगणूर, काकती); निपाणी-कणगला दरम्यान 2.85 किमी लांबीचा 1 बोगदा; गेज 1676mm सिंगल लाईन; गती 60-110 किमी/तास.\n\n2015-16 मध्ये अनेक लोकप्रतिनिधी व स्थानिक स्वराज्य संस्थांनी रेल्वे मंत्री सुरेश प्रभू व पंतप्रधान नरेंद्र मोदी यांना हा मार्ग मंजूर करण्याची विनंती करणारी पत्रे पाठवली — इचलकरंजी रेल्वे कृती समिती, आमदार सुरेश हाळवणकर (इचलकरंजी), आमदार शिवेंद्रसिंहराजे भोसले (सातारा), आमदार शशिकला जोल्ले (निपाणी, कर्नाटक), इस्लामपूर नगरपरिषद, आष्टा नगरपरिषद, निपाणी नगरपालिका (कर्नाटक), संकेश्वर नगरपरिषद (कर्नाटक), बेळगावी महानगरपालिका, कराड नगरपरिषद. पत्रांमध्ये नमूद अंदाजित खर्च ₹2100 कोटी (एका पत्रानुसार — हा आकडा DPR सारखा अधिकृत दस्तऐवज नाही, त्यामुळे पडताळणी आवश्यक).",
+    "extractedText": "Karad Belgaum Railway Proposal. Salient features of the proposed new line: Route - Karad Belgaum via Nipani. Gauge - 1676mm (Single Line). Ruling Gradient - 1:150 in Plain terrain, 1:80 in Ghat Section for length of 1.5 Kms. Length in Kms - 191.9km (94.6 km in Maharashtra and 97.3 km in Karnataka). Speed - 60kmph for Ghat section and 110kmph for sectional length other than Ghat section. Take off Point - Shenoli Yard on Pune-Miraj section of CR. Meeting Point - At Sambre Station on MRJ end MRJ-Belgaum Section of SWR Rly. Nos of stations - 21 Nos. Existing Stations - Karad, Shenoli, Sambre, Belgaum. Proposed Stations - Tambhave, Islampur, Walva, Ashta, Dudhgaon, Nej, Ichalkaranji, Hupari, Kagal, Adi, Nipani, Kanagala, Sankeshwar, Halkarni, Daddi, Handignur, Kakati. Tunnels - 1 Nos of length 2.85 kms near Nipani from km 117.45 to 120.30 between proposed Nipani and Kanangala station. Support letters to Railway Minister Suresh Prabhu and PM Narendra Modi from Ichalkaranji Railway Kruti Samiti, MLA Suresh Halwankar, MLA Shivendrasinghraje Bhosale, MLA Shashikala Jolle Nipani, Islampur Nagarparishad, Aashta Nagarparishad, Nipani City Municipal Council, Sankeshwar Town Municipal Council, Corporation of the City of Belagavi, Karad Nagarparishad, dated between October 2015 and December 2015.",
+    "status": "published",
+    "version": 1,
+    "previousVersions": [],
+    "originalFile": "evidence-2015-karad-belgaum-railway-proposal.pdf",
+    "createdAt": "2026-08-27T03:52:09.921Z",
+    "updatedAt": "2026-08-27T03:52:09.935Z"
+  },
+  {
+    "id": "ev-2026-mp-mane-letter",
+    "title": "खासदार धैर्यशील माने यांचे रेल्वे मंत्र्यांना पत्र — हातकणंगले-इचलकरंजी मार्ग शीघ्र पूर्ण करण्याची विनंती (22 जुलै 2026)",
+    "category": "Railway / Government Letters",
+    "date": "22.07.2026",
+    "authority": "श्री. धैर्यशील संभाजीराव माने, खासदार (लोकसभा) — मा. श्री. अश्विनी वैष्णव, रेल्वे मंत्री, भारत सरकार यांना",
+    "referenceNumber": "जा.क्र. डीएसएम/३८/२०२६ — रेल्वे बोर्ड प्राप्ती शिक्का: 04 AUG 2026",
+    "tags": [
+      "2026",
+      "MP Letter",
+      "Dhairyasheel Mane",
+      "Ashwini Vaishnav",
+      "Karad-Belgaum",
+      "Pink Book",
+      "GST",
+      "Budget"
+    ],
+    "summary": "खासदार धैर्यशील संभाजीराव माने यांनी रेल्वे मंत्री अश्विनी वैष्णव यांना लिहिलेलं अधिकृत पत्र — हातकणंगले-इचलकरंजी 8 किमी रेल्वे मार्ग शीघ्रतेने पूर्ण करण्यासाठी सहकार्याची विनंती. यातील महत्त्वाचे मुद्दे:\n\n🔗 अत्यंत महत्त्वाची स्पष्टता: \"हातकणंगले–इचलकरंजी रेलमार्ग जो मात्र ८ कि.मी. का है, यह रेलमार्ग कराड-बेलगाम (१९१ किमी) रेलमार्गका हिस्सा है\" — म्हणजे हा 8 किमी मार्ग स्वतंत्र नसून कराड-इचलकरंजी-निपाणी-बेळगाव या मोठ्या 191 किमी प्रकल्पाचाच भाग आहे. 2011 मध्ये कराड-बेळगाव मार्गाच्या सर्वेक्षणाला मंजुरी मिळाली, आणि 2013 मध्ये मध्य रेल्वे, पुणेने सर्वेक्षण पूर्ण करून अहवाल रेल्वे बोर्डाकडे पाठवला. भविष्यात कराड-बेळगाम मार्गाला मंजुरी मिळाली तर हातकणंगले-इचलकरंजी मार्ग आपोआप त्याला जोडला जाईल असं नमूद.\n\n📅 अर्थसंकल्पीय इतिहास: 2017 च्या अर्थसंकल्पात ₹150 कोटींची तरतूद व 2017-18 मध्ये ₹10 कोटी वितरित; भूमिपूजन 11.06.2017 रोजी तत्कालीन रेल्वेमंत्री सुरेश प्रभू यांच्या हस्ते; 2019-20 मध्ये टोकन ₹10,000 तरतूद व ₹10 लाख वितरित; 5 जुलै 2019 रोजी रेल्वे विभागाच्या Pink Book मध्ये समावेश; ⚠️ या पत्रात असंही नमूद आहे की या मार्गाचं सर्वेक्षण मध्य रेल्वे, पुणेने ऑगस्ट 2018 मध्ये पूर्ण करून DPR रेलभवनला पाठवला — ही तारीख साईटवर आधीच नोंदवलेल्या 30.11.2017 (मूळ DPR) व 02.01.2020 (सुधारित DPR) या तारखांशी पूर्णपणे जुळत नाही, त्यामुळे ही एक Conflicting Record आहे — पुढील पडताळणी आवश्यक.\n\n😞 अलीकडची निराशा: 2020-22 च्या अर्थसंकल्पात केवळ ₹1,000 (नाममात्र टोकन) वितरित करण्यात आले, अपेक्षित मुख्य निधी मिळाला नाही.\n\n💰 आर्थिक महत्त्व: पत्रानुसार इचलकरंजीतील कापड उद्योग, स्पिनिंग मिल, सिमेंट, कच्चा माल, पॅकिंग मटेरियल, कोळसा इत्यादींमधून दरवर्षी अंदाजे ₹5,200 कोटी GST भरला जातो.",
+    "extractedText": "Dhairyasheel S. Mane, Member of Parliament - Loksabha. Member: Standing Committee on Home Affairs, Consultative Committee on Ministry of Textiles. Ja.Kr. DSM/38/2026, Dt. 22.07.2026. To: Shri Ashwini Vaishnav, Railway Minister, Government of India, New Delhi. Subject: Hatkanangale-Ichalkaranji 8 km railway line - regarding necessary cooperation for speedy completion. Received by Ministry of Railways (Railway Board) 04 AUG 2026. Content: 2017 budget provision of Rs.150 crore for approval, Rs.10 crore allocated 2017-18. 2019-20 token provision Rs.10,000, Rs.10 lakh allotted. Included in Pink Book 5 July 2019. Foundation stone laid by then Railway Minister Suresh Prabhu on 11-06-2017. Hatkanangale-Ichalkaranji railway line is part of Karad-Belgaum (191 km) railway line. In 2011 survey of Karad-Belgaum line was approved, in 2013 Central Railway Pune completed survey and sent report to Railway Board. If Karad-Belgaum line gets approval in future, Hatkanangale-Ichalkaranji will automatically be connected. Survey of this line completed by Central Railway Pune in August 2018, DPR report sent to Rail Bhavan. In 2020-22 budget only token Rs.1000 was allotted, causing disappointment. Ichalkaranji textile industry pays approximately Rs.5200 crore GST annually from textile, spinning mills, cement, raw materials, packing material, coal etc.",
+    "status": "published",
+    "version": 1,
+    "previousVersions": [],
+    "originalFile": "evidence-2026-mp-mane-letter.pdf",
+    "createdAt": "2026-08-27T03:59:18.708Z",
+    "updatedAt": "2026-08-27T03:59:18.725Z"
   }
 ];
