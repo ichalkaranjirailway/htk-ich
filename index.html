@@ -457,9 +457,7 @@ if (GALLERY_ITEMS.length > HOMEPAGE_GALLERY_PREVIEW_COUNT) {
   var galMoreLink = document.createElement('a');
   galMoreLink.className = 'gallery-item gallery-more-tile';
   galMoreLink.href = 'gallery.html';
-  galMoreLink.style.cssText = 'display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;background:#0B3D91;color:#fff;text-align:center;';
   var galMoreCount = document.createElement('span');
-  galMoreCount.style.cssText = 'font-size:1.3rem;font-weight:700;';
   galMoreCount.textContent = '+' + (GALLERY_ITEMS.length - HOMEPAGE_GALLERY_PREVIEW_COUNT);
   var galMoreLabel = document.createElement('span');
   galMoreLabel.textContent = 'पूर्ण दालन पहा →';
@@ -511,9 +509,7 @@ if (typeof TEAM_MEMBERS !== 'undefined' && teamGrid) {
     var teamMoreLink = document.createElement('a');
     teamMoreLink.className = 'team-item team-more-tile';
     teamMoreLink.href = 'team.html';
-    teamMoreLink.style.cssText = 'display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;background:#0B3D91;color:#fff;text-align:center;border-radius:8px;padding:12px;';
     var teamMoreCount = document.createElement('span');
-    teamMoreCount.style.cssText = 'font-size:1.3rem;font-weight:700;';
     teamMoreCount.textContent = '+' + (TEAM_MEMBERS.length - HOMEPAGE_TEAM_PREVIEW_COUNT);
     var teamMoreLabel = document.createElement('span');
     teamMoreLabel.textContent = 'पूर्ण यादी पहा →';

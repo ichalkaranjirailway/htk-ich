@@ -5,8 +5,10 @@ Source snapshot audited: `htk-ich-main` zip export (no `.git` history included i
 
 ## CURRENT PHASE
 Phase 0 — Discovery + Baseline Audit: COMPLETE
-Phase 1 — Information Architecture / Sitemap: COMPLETE (decision below)
-Phase 2 — Homepage restructuring: IN PROGRESS (unit 1 of N complete — see below)
+Phase 1 — Information Architecture / Sitemap: COMPLETE
+Phase 2 — Homepage restructuring: COMPLETE (this pass — see "PHASE 2 STATUS" below for what's
+left for a future deeper pass)
+Phase 3 — Header/Navigation/Footer consistency: COMPLETE (audit + fix both done this session)
 
 ## PHASE 1 — IA DECISION (locked, applies to all later homepage work)
 Confirmed sitemap stays as-is (no page merges/renames needed): HOME, HISTORY, PROJECT-STATUS,
@@ -80,12 +82,99 @@ a future unit (not started, no changes made yet):
 - Homepage copy sections (About/Facts) not yet reviewed for length/overload — audit only, no
   known problem found yet.
 
+## PHASE 2 STATUS: COMPLETE (for this pass)
+Polish items closed out this session:
+- Moved all "preview → full page" tile styling (gallery/team/timeline more-tiles) out of inline
+  `style=""` attributes into proper reusable classes: `.gallery-more-tile`, `.team-more-tile` (in
+  `gallery.css`) and `.entry-more-tile` (in `styles.css`), using the site's existing `--navy`
+  design token instead of a hardcoded hex color.
+- Audited the above-the-fold block (Independence Day seasonal banner, vote widget, public voters
+  teaser, Kajrolkar tribute) — already link-out teasers, not full duplicated content. No change
+  needed, none made.
+- Audited About/Facts copy (`content.js`: aboutP1–3, fact1–5) — factual, evidence-dense, already
+  concise (2–5 sentences each). Not homepage-overload material. No change needed, none made.
+- Duplicate/stray files (`admin (1).html`, `admin (2).html`, `index (2).html`,
+  `gallery (1).css`, `team-data (2) (1).js`) — confirmed unreferenced by any other file
+  (grep-checked), left untouched per instruction, still flagged "suspected duplicates — do not
+  delete yet".
+
+## PHASE 3 — HEADER / NAVIGATION / FOOTER AUDIT (COMPLETE) + FIX (IMPLEMENTED)
+
+### Audit findings
+- **Footer**: already fully consistent across all 13 public pages — identical markup/text
+  (`इचलकरंजी रेल्वे कृती समिती` / `Citizen-maintained evidence archive · अद्ययावत केले जात आहे`).
+  No issue found.
+- **Masthead/branding**: already fully consistent — every inner page has the same
+  `<header class="masthead"><div class="wrap masthead-top">...` band. No issue found.
+- **Navigation — P1 issue found**: `index.html` was the ONLY page with a real navigation menu
+  (`<nav class="subnav">`, sticky, horizontally-scrollable on mobile via existing CSS). All 12
+  other public pages (history, project-status, evidence, evidence-detail, our-work,
+  why-ichalkaranji, officials, gallery, team, brief, kajrolkar, voters-list) had **no nav
+  menu at all** — only a single contextual "← back" link (each with its own one-off CSS class:
+  `.hist-back`, `.ev-back`, `.ow-back`, etc.). Once a visitor left the homepage, they were stuck
+  navigating one page at a time back to `index.html` — a real dead-end problem, not just
+  cosmetic.
+- **Active page state**: did not exist anywhere (not even on the homepage's own subnav).
+- **Mobile menu**: no hamburger exists; the subnav is a horizontal-scroll bar (`overflow-x:auto`)
+  — already mobile-usable as-is, no separate mobile menu needed.
+- **Broken/duplicate links**: none found in the nav — all 10 nav targets verified to exist as
+  real files.
+- **opinion.html — deliberately excluded from this fix**: it's a standalone, distraction-free
+  vote/share landing page (own dark theme, doesn't even load `styles.css`), built for WhatsApp/
+  social sharing. Adding the full site nav would work against its single-purpose conversion
+  design, so it intentionally still has no nav — same as before. Documenting this so it isn't
+  mistaken for a miss later.
+
+### Fix implemented (small, mechanical, same pattern on every file)
+Files touched: `styles.css` (one new rule), and these 12 pages — inserted the identical
+`<nav class="subnav">` markup already used on `index.html` right after `</header>`, mechanically,
+with each page's own entry marked `aria-current="page"`:
+`history.html, project-status.html, evidence.html, evidence-detail.html, our-work.html,
+why-ichalkaranji.html, officials.html, gallery.html, team.html, brief.html, kajrolkar.html,
+voters-list.html`.
+- Nav link set (same 10 links everywhere): मुख्यपान → index.html, इतिहास → history.html,
+  प्रकल्प स्थिती → project-status.html, आमचं काम → our-work.html, इचलकरंजी का? →
+  why-ichalkaranji.html, अधिकाऱ्यांसाठी → officials.html, कागदपत्रे → evidence.html, गॅलरी →
+  gallery.html, सदस्य → team.html, मत नोंदवा → opinion.html.
+- Active-page marking: each top-level page marks itself; `evidence-detail.html` marks "कागदपत्रे"
+  (it's an evidence sub-page); `brief.html` marks "अधिकाऱ्यांसाठी" (reached from officials.html);
+  `kajrolkar.html` and `voters-list.html` get the nav for escape/wayfinding but mark nothing
+  active since they aren't top-level nav items themselves.
+- New CSS rule added to `styles.css`: `nav.subnav a[aria-current="page"]` (navy color + bold +
+  underline) — reuses existing `--navy` token, no new colors introduced.
+- Zero changes to `index.html`'s own subnav in this unit (it already had one).
+
+### Verification performed
+- Confirmed `</header>` occurred exactly once in each of the 12 target files before editing
+  (guarantees the insertion landed in exactly the right, intended spot, not somewhere by chance).
+- Confirmed exactly one `<nav class="subnav">` / one `</nav>` per file after editing.
+- Confirmed all 10 nav-target files exist on disk.
+- Re-ran the full Voting Protection Protocol on `index.html` (all 30 IDs present exactly once,
+  `owSubmitVote` count unchanged at 2) — this phase did not touch `index.html` or `opinion.html`
+  at all, and this is now confirmed, not just assumed.
+- Confirmed `opinion.html` still has zero nav insertions (intentionally excluded).
+- Ran a `<div>`/`</div>` balance check across all touched files — all 12 newly-touched pages
+  balance exactly (17/17, 16/16, etc.); `index.html` shows a 76-open/75-close imbalance, but this
+  was verified to be **pre-existing in the original uploaded zip, not introduced by any change
+  made in this project** (checked by diffing div counts against the untouched original archive).
+  Flagged here for future attention but not fixed yet — locating and fixing a stray unclosed
+  `<div>` inside a 500+ line file safely needs its own careful, isolated unit, not a rushed fix
+  bundled into a navigation task.
+
+## KNOWN OPEN ITEM CARRIED FORWARD
+`index.html` has one unclosed `<div>` somewhere (pre-existing, not caused by this project). Needs
+a dedicated, careful diagnostic pass before Phase 11 (mobile) / Phase 12 (visual consistency) —
+an unclosed div can silently break layout nesting in ways that only show up at certain
+breakpoints.
+
 ## NEXT RECOMMENDED TASK
-Either (a) continue Phase 2 with the polish items above, or (b) move to Phase 3 (global
-header/navigation/footer consistency across all pages — not yet audited this session), or (c)
-begin the P1 fact-checking pass on data.js/evidence-data.js/project-status-data.js copy against
-the source PDFs (flagged in Phase 0, still outstanding). Recommend (b) next since navigation
-consistency is cheap to verify and affects every other page.
+Options for the next session, in priority order: (a) locate and safely fix the pre-existing
+unclosed `<div>` in `index.html` (isolated, careful diff-based fix, verify voting widget
+untouched afterward), (b) Phase 3 continued — responsive/spacing check of the newly-added nav
+on the 4-6 pages with the busiest existing headers (officials.html, brief.html had the most
+existing `<div>`s, worth a visual gut-check), (c) begin the outstanding P1 fact-checking pass on
+data.js/evidence-data.js/project-status-data.js against source PDFs (flagged since Phase 0,
+still not started).
 
 ## BASELINE FACTS (do not re-derive these — just verify if repo changes)
 

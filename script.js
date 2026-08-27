@@ -151,9 +151,8 @@ function renderTimeline() {
 
   if (previewCount && fullFiltered.length > previewCount) {
     trackEl.innerHTML += `
-      <a class="entry entry-more-tile" href="${(typeof window !== "undefined" && window.HOMEPAGE_TIMELINE_MORE_LINK) || "our-work.html"}"
-         style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;background:#0B3D91;color:#fff;text-align:center;gap:6px;">
-        <span style="font-size:1.3rem;font-weight:700;">+${fullFiltered.length - previewCount}</span>
+      <a class="entry entry-more-tile" href="${(typeof window !== "undefined" && window.HOMEPAGE_TIMELINE_MORE_LINK) || "our-work.html"}">
+        <span>+${fullFiltered.length - previewCount}</span>
         <span>पूर्ण कालपटल पहा →</span>
       </a>
     `;
