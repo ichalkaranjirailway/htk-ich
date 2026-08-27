@@ -110,14 +110,25 @@ function proofHTML(entry) {
 
 function renderTimeline() {
   const sorted = [...ENTRIES].sort((a, b) => new Date(b.date) - new Date(a.date));
-  const filtered = activeCategory === "all" ? sorted : sorted.filter(e => e.category === activeCategory);
+  const fullFiltered = activeCategory === "all" ? sorted : sorted.filter(e => e.category === activeCategory);
 
-  if (filtered.length === 0) {
+  if (fullFiltered.length === 0) {
     trackEl.innerHTML = "";
     emptyEl.hidden = false;
     return;
   }
   emptyEl.hidden = true;
+
+  // होमपेज ही trailer आहे, पूर्ण archive नाही — म्हणून index.html
+  // window.HOMEPAGE_TIMELINE_PREVIEW_COUNT सेट करून फक्त तितक्याच नोंदी
+  // दाखवायला सांगू शकतं. ही page-level opt-in आहे: our-work.html किंवा
+  // इतर कुठलंही page हा flag सेट करत नसल्यामुळे तिथे नेहमीप्रमाणे पूर्ण
+  // यादी दिसत राहते — या बदलामुळे script.js च्या डीफॉल्ट वागण्यात काहीही
+  // फरक पडत नाही.
+  const previewCount = (typeof window !== "undefined" && window.HOMEPAGE_TIMELINE_PREVIEW_COUNT)
+    ? window.HOMEPAGE_TIMELINE_PREVIEW_COUNT
+    : null;
+  const filtered = previewCount ? fullFiltered.slice(0, previewCount) : fullFiltered;
 
   trackEl.innerHTML = filtered.map(e => {
     const meta = CATEGORY_META[e.category] || { label: e.category };
@@ -137,6 +148,16 @@ function renderTimeline() {
       </article>
     `;
   }).join("");
+
+  if (previewCount && fullFiltered.length > previewCount) {
+    trackEl.innerHTML += `
+      <a class="entry entry-more-tile" href="${(typeof window !== "undefined" && window.HOMEPAGE_TIMELINE_MORE_LINK) || "our-work.html"}"
+         style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;background:#0B3D91;color:#fff;text-align:center;gap:6px;">
+        <span style="font-size:1.3rem;font-weight:700;">+${fullFiltered.length - previewCount}</span>
+        <span>पूर्ण कालपटल पहा →</span>
+      </a>
+    `;
+  }
 }
 
 renderLangToggle();

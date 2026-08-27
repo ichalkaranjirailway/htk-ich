@@ -303,7 +303,7 @@
 <div class="section-head">
 <span class="section-num">04</span>
 <h2>छायाचित्र दालन — पुरावे आणि क्षण</h2>
-<p>आंदोलन, पत्रकार परिषदा, बातम्या आणि अधिकृत कागदपत्रे — एका दृष्टिक्षेपात.</p>
+<p>आंदोलन, पत्रकार परिषदा, बातम्या आणि अधिकृत कागदपत्रांमधील काही ठळक क्षण — पूर्ण दालन पुढे पाहता येईल.</p>
 </div>
 <div class="gallery-grid" id="gallery-grid"></div>
 </div>
@@ -319,7 +319,7 @@
 <div class="section-head">
 <span class="section-num">05</span>
 <h2>कृती समिती सदस्य</h2>
-<p>या मागणीसाठी सातत्याने पाठपुरावा करणारे सदस्य.</p>
+<p>या मागणीसाठी सातत्याने पाठपुरावा करणारे काही सदस्य — पूर्ण यादी पुढे पाहता येईल.</p>
 <div class="members-info-note">
 <p class="members-info-note-title">सदस्यांविषयी नम्र सूचना</p>
 <p>ही माहिती सध्या उपलब्ध झालेल्या अधिकृत नोंदी, नावे व छायाचित्रांवर आधारित आहे. ज्या सदस्यांची माहिती किंवा छायाचित्रे अद्याप उपलब्ध झालेली नाहीत, त्यांच्या योगदानाकडे दुर्लक्ष करण्याचा हेतू नाही.</p>
@@ -335,8 +335,8 @@
 <div class="wrap">
 <div class="section-head">
 <span class="section-num">06</span>
-<h2>पुरावा कालपटल</h2>
-<p>श्रेणीनुसार फिल्टर करा — RTI, तक्रार पोर्टल्स, याचिका, अधिकाऱ्यांना पत्रे, सोशल मीडिया आणि प्रसारमाध्यमे.</p>
+<h2>पुरावा कालपटल — अलीकडील कारवाई</h2>
+<p>श्रेणीनुसार फिल्टर करा — RTI, तक्रार पोर्टल्स, याचिका, अधिकाऱ्यांना पत्रे, सोशल मीडिया आणि प्रसारमाध्यमे. प्रत्येक श्रेणीतील सर्वात अलीकडील नोंदी इथे — संपूर्ण यादीसाठी "आमचं काम" पान पाहा.</p>
 </div>
 <div class="tabs" id="langToggle" style="margin-bottom:8px;"></div>
 <div class="tabs" id="tabs"></div>
@@ -428,8 +428,13 @@ function openLightbox(src, caption){
 }
 function closeLightbox(){ document.getElementById('lightbox').style.display = 'none'; }
 
+// होमपेज = trailer/entry-point, पूर्ण archive नाही — म्हणून इथे मर्यादित
+// preview दाखवतो आणि उरलेल्यांसाठी दालनाच्या स्वतंत्र पानाकडे नेणारी tile
+// जोडतो. gallery.html आणि gallery-data.js मध्ये कोणताही बदल नाही —
+// तिथे नेहमीप्रमाणे संपूर्ण यादी दिसत राहील.
+var HOMEPAGE_GALLERY_PREVIEW_COUNT = 6;
 var grid = document.getElementById('gallery-grid');
-GALLERY_ITEMS.forEach(function(item){
+GALLERY_ITEMS.slice(0, HOMEPAGE_GALLERY_PREVIEW_COUNT).forEach(function(item){
   var div = document.createElement('div');
   div.className = 'gallery-item';
   var isPdf = /\.pdf$/i.test(item.src);
@@ -448,10 +453,25 @@ GALLERY_ITEMS.forEach(function(item){
   div.appendChild(span);
   grid.appendChild(div);
 });
+if (GALLERY_ITEMS.length > HOMEPAGE_GALLERY_PREVIEW_COUNT) {
+  var galMoreLink = document.createElement('a');
+  galMoreLink.className = 'gallery-item gallery-more-tile';
+  galMoreLink.href = 'gallery.html';
+  galMoreLink.style.cssText = 'display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;background:#0B3D91;color:#fff;text-align:center;';
+  var galMoreCount = document.createElement('span');
+  galMoreCount.style.cssText = 'font-size:1.3rem;font-weight:700;';
+  galMoreCount.textContent = '+' + (GALLERY_ITEMS.length - HOMEPAGE_GALLERY_PREVIEW_COUNT);
+  var galMoreLabel = document.createElement('span');
+  galMoreLabel.textContent = 'पूर्ण दालन पहा →';
+  galMoreLink.appendChild(galMoreCount);
+  galMoreLink.appendChild(galMoreLabel);
+  grid.appendChild(galMoreLink);
+}
 
+var HOMEPAGE_TEAM_PREVIEW_COUNT = 6;
 var teamGrid = document.getElementById('team-grid');
 if (typeof TEAM_MEMBERS !== 'undefined' && teamGrid) {
-  TEAM_MEMBERS.forEach(function(member){
+  TEAM_MEMBERS.slice(0, HOMEPAGE_TEAM_PREVIEW_COUNT).forEach(function(member){
     var item = document.createElement('div');
     item.className = member.memorial ? 'team-item memorial' : 'team-item';
     if (member.memorial) {
@@ -487,7 +507,27 @@ if (typeof TEAM_MEMBERS !== 'undefined' && teamGrid) {
     }
     teamGrid.appendChild(item);
   });
+  if (TEAM_MEMBERS.length > HOMEPAGE_TEAM_PREVIEW_COUNT) {
+    var teamMoreLink = document.createElement('a');
+    teamMoreLink.className = 'team-item team-more-tile';
+    teamMoreLink.href = 'team.html';
+    teamMoreLink.style.cssText = 'display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;background:#0B3D91;color:#fff;text-align:center;border-radius:8px;padding:12px;';
+    var teamMoreCount = document.createElement('span');
+    teamMoreCount.style.cssText = 'font-size:1.3rem;font-weight:700;';
+    teamMoreCount.textContent = '+' + (TEAM_MEMBERS.length - HOMEPAGE_TEAM_PREVIEW_COUNT);
+    var teamMoreLabel = document.createElement('span');
+    teamMoreLabel.textContent = 'पूर्ण यादी पहा →';
+    teamMoreLink.appendChild(teamMoreCount);
+    teamMoreLink.appendChild(teamMoreLabel);
+    teamGrid.appendChild(teamMoreLink);
+  }
 }
+</script>
+<script>
+// होमपेजवरच पुरावा-कालपटल मर्यादित (trailer) दाखवायचं आहे — our-work.html
+// हा flag सेट करत नाही, त्यामुळे तिथे नेहमीप्रमाणे पूर्ण यादी दिसते.
+window.HOMEPAGE_TIMELINE_PREVIEW_COUNT = 6;
+window.HOMEPAGE_TIMELINE_MORE_LINK = "our-work.html";
 </script>
 <script src="script.js"></script>
 <script>
