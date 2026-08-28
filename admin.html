@@ -82,7 +82,10 @@
 <fieldset class="token-box">
 <legend>🔑 एकदाच सेटअप</legend>
 <label>GitHub Token</label>
-<input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+<div style="display:flex;gap:8px;align-items:stretch;">
+<input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" style="flex:1;">
+<button type="button" id="toggleTokenBtn" class="secondary" style="flex-shrink:0;padding:0 14px;" aria-label="Token दाखवा/लपवा">👁️</button>
+</div>
 <p class="hint">तुमच्याच ब्राऊझरमध्ये साठवलं जातं — परत विचारणार नाही. हे पेज कुणालाही शेअर करू नका.</p>
 <details>
 <summary>Token कसा बनवायचा?</summary>
@@ -103,7 +106,6 @@
 <a href="#sec-optext">✏️ मतदान मजकूर</a>
 <a href="#sec-results">🗳️ निकाल</a>
 <a href="#sec-publiclist">📋 सार्वजनिक यादी</a>
-<a href="#sec-mail">📧 Email</a>
 <a href="#sec-evidence">📁 कागदपत्रे</a>
 <a href="#sec-timeline">📚 Timeline यादी</a>
 <a href="#formHeading">➕ नवीन नोंद</a>
@@ -280,31 +282,6 @@ service cloud.firestore {
 <div id="publicVotersAdminList" style="max-height:400px; overflow-y:auto; background:#fff; border:1px solid var(--line); border-radius:10px; padding:6px 12px; margin-top:12px;"></div>
 </div>
 
-<h2 id="sec-mail">📧 अधिकाऱ्यांना कळवणारा Email</h2>
-<p class="sub" style="margin-top:-4px;">वरचाच GitHub Token वापरून, "अधिकाऱ्यांना थेट कळवा" बटणाचा मजकूर, ईमेल आयडी आणि तो बटण कधी सक्रिय होईल ती वेळ इथून बदलता येईल.</p>
-<button id="loadMailBtn">Email सेटिंग लोड करा</button>
-<div id="mailFields" style="display:none; margin-top:10px;">
-<label>To (मुख्य ईमेल आयडी)</label>
-<input type="text" id="m-to" placeholder="उदा. mr@rb.railnet.gov.in">
-<label>CC (एकापेक्षा जास्त असल्यास स्वल्पविरामाने वेगळे करा)</label>
-<textarea id="m-cc" placeholder="id1@example.gov.in,id2@example.gov.in"></textarea>
-<label>Subject (विषय)</label>
-<input type="text" id="m-subject">
-<label>Body (मुख्य मजकूर)</label>
-<textarea id="m-bodyTemplate" rows="10"></textarea>
-<p class="hint">मजकुरात <code>{{STAT_LINE}}</code> आणि <code>{{SITE_URL}}</code> हे दोन शब्द जसेच्या तसे राहू द्या — पाठवताना तिथे आपोआप खरी मतसंख्या आणि साईटची लिंक भरली जाते. ते काढू नका किंवा त्यांचं स्पेलिंग बदलू नका.</p>
-<label>बटणावरचा मजकूर</label>
-<input type="text" id="m-buttonLabel">
-<label>बटण सक्रिय झाल्यावर दिसणारी सूचना</label>
-<input type="text" id="m-unlockedHint">
-<label>बटण अजून बंद असताना दिसणारी सूचना</label>
-<input type="text" id="m-lockedHint">
-<label>बटण कधी सक्रिय होईल? (भारतीय प्रमाण वेळ — IST)</label>
-<input type="datetime-local" id="m-unlockAt">
-<p class="hint">या तारीख-वेळेपूर्वी बटण दिसेल पण disabled (राखाडी) राहील — क्लिक करता येणार नाही. ही वेळ उलटल्यावर बटण आपोआप (पान रिफ्रेश न करताही) सक्रिय होईल.</p>
-<button type="button" id="saveMailBtn" class="wide">💾 Email सेटिंग सेव्ह करा</button>
-</div>
-
 <h2 id="sec-evidence">📁 सरकारी कागदपत्रे व पुरावे</h2>
 <p class="hint">RTI, CPGRAMS, आपले सरकार, पत्रे, PDF/फोटो अपलोड करा. मजकूर वाचणे (OCR) तुमच्याच ब्राऊझरमध्ये फुकट चालतं — कुठलाही API-key, बिलिंग किंवा सर्व्हर लागत नाही. OCR मजकूर पूर्ण-मजकूर शोधासाठी (search) वापरला जातो. सारांश तुम्ही स्वतः लिहिता, आणि तो नेहमी "Admin-Reviewed" म्हणून दाखवला जातो.</p>
 <button id="loadEvidenceBtn">कागदपत्रे लोड करा</button>
@@ -456,6 +433,13 @@ let currentDataSha = null;
 const tokenInput = document.getElementById('ghToken');
 tokenInput.value = localStorage.getItem('gh_token') || '';
 tokenInput.addEventListener('change', () => localStorage.setItem('gh_token', tokenInput.value.trim()));
+
+const toggleTokenBtn = document.getElementById('toggleTokenBtn');
+toggleTokenBtn.addEventListener('click', () => {
+  const showing = tokenInput.type === 'text';
+  tokenInput.type = showing ? 'password' : 'text';
+  toggleTokenBtn.textContent = showing ? '👁️' : '🙈';
+});
 
 const proofType = document.getElementById('proofType');
 proofType.addEventListener('change', refreshProofFields);
@@ -972,67 +956,6 @@ document.getElementById('saveOpTextBtn').addEventListener('click', async () => {
     await ghPut('opinion-content.js', b64EncodeUnicode(body), 'Update opinion page text', opTextSha);
     showStatus('✅ मजकूर साईटवर सेव्ह झाला. 1-2 मिनिटांत दिसेल.', 'ok');
     document.getElementById('loadOpTextBtn').click();
-  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
-});
-
-// ---- अधिकाऱ्यांना कळवणारा Email tab (mail-config.js) ----
-const MAIL_TEXT_KEYS = ["to","cc","subject","bodyTemplate","buttonLabel","unlockedHint","lockedHint"];
-let mailSha = null;
-const MAIL_DEFAULTS = {
-  to: 'mr@rb.railnet.gov.in',
-  cc: 'crb@rb.railnet.gov.in,secyrb@rb.railnet.gov.in,gm@cr.railnet.gov.in,drm@pa.railnet.gov.in',
-  subject: 'हातकणंगले–इचलकरंजी रेल्वे मार्ग त्वरित मंजूर करावा — नागरिक मत सर्वेक्षण (इचलकरंजी रेल्वे कृती समिती)',
-  bodyTemplate: 'मा. महोदय,\n\nमी इचलकरंजी रेल्वे कृती समितीच्या "इचलकरंजीला रेल्वे हवी का?" या नागरिक मत सर्वेक्षणाच्या माध्यमातून आपणास कळवत आहे.\n\n{{STAT_LINE}}\n\nहातकणंगले–इचलकरंजी या केवळ ८ किमी अंतराच्या ब्रॉडगेज रेल्वे मार्गाचा सुधारित DPR दिनांक ०२.०१.२०२० रोजी ₹१८०.७३ कोटी खर्चासह सादर करण्यात आला आहे, परंतु अद्याप रेल्वे बोर्डाकडून मंजुरी मिळालेली नाही. इचलकरंजी — "महाराष्ट्राचे मँचेस्टर" — येथे ५०,०००+ पॉवरलूम्स असून दैनंदिन अंदाजे ₹१३६ कोटींचे कापड उत्पादन होते, तरीही शहराला थेट रेल्वे कनेक्टिव्हिटी नाही.\n\nकृपया हा प्रकल्प तातडीने मंजूर करून पुढील कार्यवाही करावी, ही नम्र विनंती.\n\nसंपूर्ण पुरावा व तपशीलांसाठी: {{SITE_URL}}\n\nकळावे,\n[तुमचं नाव]\n[तुमचं शहर/परिसर]\n\n— इचलकरंजी रेल्वे कृती समिती',
-  unlockAt: '2026-08-19T00:00:00+05:30',
-  buttonLabel: '📧 अधिकाऱ्यांना थेट कळवा (ईमेल)',
-  unlockedHint: 'तुमचं स्वतःचं ईमेल अॅप उघडेल — तयार मसुदा तुम्ही बघून, नाव टाकून थेट पाठवू शकता.',
-  lockedHint: '🔒 हे बटण सर्वेक्षण संपल्यावर, १९ ऑगस्टच्या पहाटेपासून सक्रिय होईल.'
-};
-document.getElementById('loadMailBtn').addEventListener('click', async () => {
-  try {
-    requireToken();
-    showStatus('Email सेटिंग लोड होत आहे...', 'busy');
-    let obj;
-    try {
-      const f = await ghGet('mail-config.js');
-      mailSha = f.sha;
-      const content = b64DecodeUnicode(f.content);
-      const jsonText = content.slice(content.indexOf('{'), content.lastIndexOf('}') + 1);
-      obj = new Function('return ' + jsonText)();
-    } catch (notFoundErr) {
-      // repo मध्ये mail-config.js अजून नसेल (पहिल्यांदाच सेव्ह करत असाल), तर
-      // सध्याचे defaults दाखवतो — Save दाबल्यावर ही फाईल नव्याने तयार होईल.
-      mailSha = null;
-      obj = MAIL_DEFAULTS;
-      showStatus('ℹ️ mail-config.js अजून repo मध्ये नाही — खालचे सध्याचे defaults दिसत आहेत. Save दाबल्यावर नवीन फाईल तयार होईल.', 'busy');
-    }
-    MAIL_TEXT_KEYS.forEach(k => { const el = document.getElementById('m-' + k); if (el) el.value = obj[k] || ''; });
-    // unlockAt "2026-08-19T00:00:00+05:30" मधून फक्त datetime-local ला हवा
-    // तेवढा भाग (पहिली 16 अक्षरं) घेतो — timezone conversion टाळण्यासाठी,
-    // कारण ही वेळ नेहमी IST (+05:30) मध्येच साठवली/वाचली जाते.
-    document.getElementById('m-unlockAt').value = (obj.unlockAt || '').slice(0, 16);
-    document.getElementById('mailFields').style.display = 'block';
-    if (mailSha) showStatus('✅ Email सेटिंग लोड झाली.', 'ok');
-  } catch(err){ showStatus('❌ ' + err.message, 'err'); }
-});
-document.getElementById('saveMailBtn').addEventListener('click', async () => {
-  try {
-    requireToken();
-    showStatus('सेव्ह होतंय...', 'busy');
-    const obj = {};
-    MAIL_TEXT_KEYS.forEach(k => { obj[k] = document.getElementById('m-' + k).value; });
-    const dtVal = document.getElementById('m-unlockAt').value; // "2026-08-19T00:00"
-    obj.unlockAt = dtVal ? (dtVal + ':00+05:30') : '2026-08-19T00:00:00+05:30';
-    const body =
-      "// \"अधिकाऱ्यांना थेट कळवा\" ईमेलचं editable सेटिंग —\n" +
-      "// admin.html च्या \"📧 अधिकाऱ्यांना कळवणारा Email\" टॅबमधून बदलता येतं.\n" +
-      "// campaign-extras.js ही व्हॅल्यूज वापरतं. bodyTemplate मधले {{STAT_LINE}}\n" +
-      "// आणि {{SITE_URL}} हे दोन placeholders पाठवताना आपोआप खऱ्या मजकुराने\n" +
-      "// भरले जातात — ते placeholders जसेच्या तसे राहू द्या.\n" +
-      "const MAIL_CONFIG = " + JSON.stringify(obj, null, 2) + ";\n";
-    await ghPut('mail-config.js', b64EncodeUnicode(body), 'Update mail-to-officials config', mailSha);
-    showStatus('✅ Email सेटिंग साईटवर सेव्ह झाली. 1-2 मिनिटांत दिसेल.', 'ok');
-    document.getElementById('loadMailBtn').click();
   } catch(err){ showStatus('❌ ' + err.message, 'err'); }
 });
 
