@@ -352,12 +352,76 @@ instruction to receive changed files only, not a full-repo export)
 `index.html` (h1→h2 fix on vote-widget heading only — no other change this session),
 `evidence-detail.html` (added alt text to dynamically-rendered evidence images).
 
+## PHASE 14 — SEO / SOCIAL-SHARING AUDIT (DONE) + FIXES (IMPLEMENTED, all 14 public pages)
+
+### Audit findings
+- **Titles**: already good on every page — unique, descriptive, present. No issue.
+- **Meta descriptions**: missing on 2 pages — `evidence-detail.html`, `brief.html`.
+- **Canonical tags**: missing on 1 page — `evidence-detail.html`.
+- **Open Graph (og:title/og:description)**: missing entirely on 5 pages — `evidence-detail.html,
+  gallery.html, team.html, brief.html, voters-list.html`. Present but missing `og:url` on 7 more
+  (history, project-status, evidence, our-work, why-ichalkaranji, officials, kajrolkar).
+- **og:image — missing on ALL 14 pages, including index.html.** This is the biggest real-world
+  finding: since this campaign relies heavily on WhatsApp/social sharing (the vote widget has
+  built-in share buttons), every shared link was showing up with no preview image at all.
+- **twitter:card** — present only on `index.html` (and set to the weaker `"summary"`, not
+  `"summary_large_image"`), absent everywhere else.
+- **Favicon — `favicon.svg` exists in the repo but was not linked (`<link rel="icon">`) on ANY of
+  the 14 pages.** Real, silent bug: browser tabs have been showing a generic/blank icon this
+  whole time despite the asset already existing.
+
+### Fix implemented (mechanical, mostly additive, no page's body touched)
+All 14 pages: added `<link rel="icon" type="image/svg+xml" href="favicon.svg">`; added
+`og:image` + `twitter:image` pointing to the existing
+`ichalkaranji-railway-kruti-samiti-banner.jpg.jpeg` (720×594 — usable but not the ideal 1200×630
+OG ratio, flagging in case the owner wants a purpose-cropped banner later); added `og:type`
+(`website`); added/upgraded `twitter:card` to `summary_large_image` everywhere (including
+upgrading `index.html`'s prior `"summary"`).
+Additionally, only where genuinely missing (existing values were never overwritten): meta
+description + canonical on `evidence-detail.html`; meta description on `brief.html`; og:title/
+og:description on `evidence-detail.html, gallery.html, team.html, brief.html, voters-list.html`;
+og:url on the 7 pages that had og:title/og:description but no og:url.
+`evidence-detail.html` already carries `<meta name="robots" content="noindex, follow">` (sensible
+for a query-string-keyed detail page) — left as-is; adding OG/canonical there still helps social
+sharing of a specific document link even though it's deliberately excluded from search indexing.
+
+### Bonus fix found during the per-page h1 sanity check (not originally in scope, but a genuine,
+safe, isolated finding)
+`brief.html` had **zero real headings anywhere** — its title and 6 section headings were all
+plain `<div class="br-title">` / `<div class="br-h2">` rather than `<h1>`/`<h2>`. Confirmed both
+CSS rules are class-only selectors (no tag-based styling depends on them being `<div>`s), so
+converted the main title to `<h1 class="br-title">` and all 6 section headers to
+`<h2 class="br-h2">`. Verified: div count in `brief.html` balances (20/20), the `onclick="window.
+print()"` button untouched, page has zero inline `<script>` blocks to worry about.
+
+### Verification performed (full protocol, since `index.html` was among the touched files)
+- All 30 voting-widget IDs present exactly once in `index.html`, `owSubmitVote` count unchanged
+  (2) — this task only added `<head>` meta tags, nothing in the `<body>` of `index.html` was
+  touched.
+- `<div>` balance in `index.html` still 76/76 (unaffected — head-only changes).
+- Every one of the 14 public pages now has exactly one `<h1>` (was 2 on `index.html` from the
+  earlier session, 0 on `brief.html` found and fixed this session — both now 1).
+- Every one of the 14 pages now has exactly one `og:image` tag (previously 0 anywhere).
+- All inline `<script>` blocks across all 14 pages still pass a Node syntax parse.
+- `</head>` occurred exactly once per file before editing (confirmed the insertion point was
+  unambiguous everywhere).
+
+## FILES TOUCHED THIS SESSION (SEO pass) — supersedes the "FILES TOUCHED" note above, which was
+from the previous session
+`index.html`, `history.html`, `project-status.html`, `evidence.html`, `evidence-detail.html`,
+`our-work.html`, `why-ichalkaranji.html`, `officials.html`, `gallery.html`, `team.html`,
+`opinion.html`, `brief.html` (head meta tags + the 6 heading-tag fixes), `kajrolkar.html`,
+`voters-list.html`. All 14 public pages — deliver all 14 for this session, per the standing
+instruction to send only what changed.
+
 ## NEXT RECOMMENDED TASK
-(a) and (b) from before remain open, awaiting the owner's decision (source-doc lookup for the
-"मूळ DPR" figure; go-ahead to delete the 5 confirmed-safe duplicate files). Beyond those two
-owner-gated items, the next self-directed work is: Phase 14 (SEO — meta descriptions, Open Graph,
-canonical tags; not yet audited) or Phase 12 (broader visual-consistency pass now that structural,
-factual, mobile, and baseline accessibility audits are all clean).
+Still open, awaiting owner input: (a) the "मूळ DPR" verification-label question, (b) go-ahead to
+delete the 5 confirmed-safe duplicate files. Self-directed options for next session: (i) ask
+whether the owner wants a proper 1200×630 OG-ratio banner image made from existing site
+photos/branding (current og:image works but isn't the ideal crop), (ii) Phase 12 — broader visual
+consistency pass now that structural, factual, mobile, accessibility, and SEO audits are all
+clean — this would be the first "bigger" visual work and should probably be broken into its own
+sub-phases rather than attempted as one unit.
 
 ## BASELINE FACTS (do not re-derive these — just verify if repo changes)
 
