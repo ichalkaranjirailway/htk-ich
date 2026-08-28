@@ -287,6 +287,78 @@ whether to reconcile `index.html`'s 13-item subnav with the new 10-item inner-pa
 audits are both clean, per the instruction to hold off on larger visual redesign until this
 point.
 
+## PHASE 4 — MOBILE-FIRST AUDIT (DONE — good news: mostly already solid)
+Checked all 14 public pages for: viewport meta tag presence, hardcoded fixed pixel widths that
+could overflow, table responsiveness, image responsiveness, and grid/flex wrapping behavior.
+Findings:
+- Viewport meta tag present and correct on all 14 pages (opinion.html additionally sets
+  `maximum-scale=1`, which disables pinch-zoom — technically an accessibility concern, but this
+  is inside the protected vote-widget page, so left untouched without owner sign-off).
+- Global `img { max-width: 100%; }` rule already exists in `styles.css` — images are safe
+  site-wide.
+- `why-ichalkaranji.html`'s two data tables are already wrapped in `.wi-table-wrap { overflow-x:
+  auto; }` — safe on narrow screens, no fix needed.
+- `.team-grid` uses `flex-wrap: wrap`, `.gallery-grid` uses CSS Grid `auto-fill, minmax(220px,
+  1fr)` — both already reflow correctly on narrow viewports, including the new homepage preview
+  "more" tiles added in Phase 2 (verified: at a 320px viewport with 24px side padding, ~272px
+  content width, `minmax(220px,1fr)` collapses to a single column — no overflow).
+- `.masthead h1` already uses `clamp(32px, 5vw, 52px)` and `.stats-grid` already uses
+  `repeat(auto-fit, minmax(150px, 1fr))` — both properly fluid, no fix needed.
+Conclusion: the two additive CSS fixes made in the prior session (masthead-top wrap protection +
+subnav mobile padding) were in fact the only real mobile gaps in the current design system. No
+further Phase 4 fixes made this session — audited and confirmed clean rather than fixed, since
+nothing broken was found.
+
+## PHASE 3.1 — NAV ITEM-COUNT QUESTION (RESOLVED — no fix needed, was flagged in error)
+Re-examined `index.html`'s own subnav (13 items: 6 same-page anchors — `#stats #about #facts
+#gallery #team #timeline` — + 6 cross-page links + `#footer`) against the new 10-item inner-page
+nav (page links only). On closer inspection this is not an inconsistency needing reconciliation:
+the homepage nav correctly points to sections that physically exist on the homepage (including
+the trimmed gallery/team/timeline previews from Phase 2), while inner pages correctly need real
+page links since those sections don't exist there. Different content warrants different nav
+items — this is contextually correct design, not a defect. Retracting the earlier "flagged for
+Phase 3.1" note; no change made or needed.
+
+## PHASE 13 — ACCESSIBILITY QUICK AUDIT (DONE — 2 small fixes made)
+Checked alt text coverage, heading hierarchy (one-H1-per-page rule), and keyboard focus states
+across all 14 public pages.
+- **Fixed**: `evidence-detail.html` was rendering each evidence document's image via JS
+  (`<img src="${url}">`) with no `alt` attribute at all. Now uses the evidence item's own title
+  as `alt` text (`d.title`, falling back to "मूळ कागदपत्र" if untitled), with basic quote-escaping.
+  Verified: the surrounding inline script still passes a Node syntax parse.
+- **Fixed (vote-widget-adjacent, extra caution applied)**: `index.html` had two `<h1>` tags — the
+  homepage's own hero title (`c-heroTitle`, correct) and, separately, the vote widget's own
+  heading (`id="opHeroTitle"`), which is one of the 30 protected voting-widget IDs. Before
+  touching it: confirmed via `opinion-widget.js` (`document.getElementById('opHeroTitle')
+  .textContent = ...`) that the widget's JS only ever accesses this element by ID and only ever
+  sets `.textContent` — the tag name itself carries no functional meaning to the script. Changed
+  `<h1 id="opHeroTitle">` to `<h2 id="opHeroTitle">` (ID, all other attributes, position, and
+  content byte-for-byte unchanged) — a pure semantic/accessibility fix, not a logic change. Ran
+  the full Voting Protection Protocol immediately after: all 30 IDs present exactly once,
+  `owSubmitVote` count unchanged (2), `<div>` balance still 76/76, all 4 inline scripts still
+  parse. Every public page now has exactly one `<h1>`.
+- **Found, not fixed (low-severity, documented only)**: `evidence.html` goes `<h1>` → `<h3>`
+  (skipping `<h2>`) — the `<h3>` is the repeated per-card title inside the dynamically-rendered
+  evidence list, which is a common and low-risk pattern (not a real navigation-order problem for
+  screen readers in practice, since each `<h3>` is a distinct, meaningfully-labelled item), but
+  technically not strict heading order. Not fixed this session — a real fix would mean either
+  demoting to a consistent scheme with an added `<h2>` section wrapper, which is a small design
+  decision better bundled with other content-page polish rather than done in isolation.
+- Keyboard focus: `a:focus-visible, button:focus-visible, .tab:focus-visible` rule already exists
+  in `styles.css` — baseline keyboard accessibility already in place, no gap found.
+
+## FILES TOUCHED THIS SESSION (for reference — deliver only these, per owner's standing
+instruction to receive changed files only, not a full-repo export)
+`index.html` (h1→h2 fix on vote-widget heading only — no other change this session),
+`evidence-detail.html` (added alt text to dynamically-rendered evidence images).
+
+## NEXT RECOMMENDED TASK
+(a) and (b) from before remain open, awaiting the owner's decision (source-doc lookup for the
+"मूळ DPR" figure; go-ahead to delete the 5 confirmed-safe duplicate files). Beyond those two
+owner-gated items, the next self-directed work is: Phase 14 (SEO — meta descriptions, Open Graph,
+canonical tags; not yet audited) or Phase 12 (broader visual-consistency pass now that structural,
+factual, mobile, and baseline accessibility audits are all clean).
+
 ## BASELINE FACTS (do not re-derive these — just verify if repo changes)
 
 **Pages (top-level .html):** index, history, project-status, evidence, evidence-detail,

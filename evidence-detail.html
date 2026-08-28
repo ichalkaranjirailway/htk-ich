@@ -60,7 +60,7 @@ function esc(s){ return (s || '').toString().replace(/[&<>]/g, c => ({'&':'&amp;
 function renderFilePreview(d){
   if (!d.originalFile) return '<div class="ev-file-box">मूळ फाईल उपलब्ध नाही.</div>';
   const url = d.originalFile;
-  const box = /\.pdf$/i.test(url) ? `<iframe src="${url}"></iframe>` : `<img src="${url}">`;
+  const box = /\.pdf$/i.test(url) ? `<iframe src="${url}"></iframe>` : `<img src="${url}" alt="${(d.title || 'मूळ कागदपत्र').replace(/"/g, '&quot;')}">`;
   return `<div class="ev-file-box">${box}</div><a class="ev-original-link" href="${url}" target="_blank" rel="noopener">📄 मूळ कागदपत्र पाहा / Download</a>`;
 }
 
