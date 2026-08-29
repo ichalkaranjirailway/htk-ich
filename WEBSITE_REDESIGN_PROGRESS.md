@@ -566,13 +566,65 @@ confirm rules are properly locked down server-side; not a code change needed her
 
 ## KNOWN DUPLICATE/STRAY FILES IN THIS EXPORT (need owner confirmation before removal)
 `admin (1).html`, `admin (2).html`, `index (2).html`, `gallery (1).css`, `team-data (2) (1).js`
+— still not deleted, still awaiting owner go-ahead (see repeated notes above; unchanged since
+first flagged in Phase 0).
+
+## ADMIN PANEL — "📁 सरकारी कागदपत्रे व पुरावे" TAB IMPROVEMENTS (DONE, this session)
+Owner reported this specific admin tab was confusing, and asked specifically for: selecting
+multiple files at once should file them in automatically, sorted by date. Two real, related
+problems found and fixed — both in `admin.html` only, nothing else touched:
+
+1. **No multi-file upload existed at all.** The file input (`#ev-file`) only ever accepted one
+   file, so every document had to be uploaded and hand-described one at a time. Added a genuinely
+   new, separate "➕ एकाच वेळी अनेक कागदपत्रे (Bulk Upload)" panel above the existing single-item
+   form (which is untouched and still there for detailed one-at-a-time edits). The new panel:
+   - Accepts multiple files at once (`<input type="file" id="ev-bulk-files" multiple>`).
+   - For each selected file, sequentially: uploads it to the repo, runs the existing browser-side
+     OCR (`EvidenceOCR.extract`, same helper the single-item form already uses), then reuses the
+     existing `detectCategory`/`detectDate`/`detectReferenceNumber` keyword-based suggestions to
+     pre-fill category/date/reference number. Title is guessed from the filename as a starting
+     point.
+   - **Every bulk-uploaded item is saved with `status: "draft"`, never `"published"`.** This was
+     a deliberate safety choice, not an oversight: the site's own existing convention (see the
+     tab's own instructions) is that the human-written summary is what's shown as
+     "Admin-Reviewed" — auto-detected category/date are keyword guesses, not verified facts, so
+     none of this should go live without the owner opening each draft and checking it, exactly
+     like the existing single-item workflow already requires. This means "select multiple files"
+     now does the tedious upload+OCR+guess-metadata work automatically, but publishing each one
+     is still a deliberate human step — consistent with the "do not invent facts" principle
+     applied everywhere else in this project.
+   - If OCR fails on one particular file (e.g. a bad scan), that file still gets uploaded and
+     added as an empty-text draft rather than aborting the whole batch — the owner can re-run OCR
+     on it individually later from the normal single-item edit form.
+   - All new items are saved to `evidence-data.js` in a single batched write at the end of the
+     batch (reusing the existing `saveEvidenceDocs()` function, including its existing sha-
+     refresh-and-retry logic for GitHub's 409 conflicts) — not one commit per file.
+
+2. **The list was sorted by "last edited in admin" (`updatedAt`), not by the document's own real
+   date** — this was very likely the actual root of "confusing, doesn't end up in the right
+   place": editing an old 1965 letter today would jump it to the top of the list, ahead of a
+   2026 letter untouched since last week. Added a new date-parser (`evParseDateForSort`) that
+   understands this site's actual date formats — `02/07/2026`, `02 July 2026`, and Marathi
+   month names/Devanagari digits (`०२ जुलै २०२६`) — and changed the list's sort to use the
+   document's own `date` field through this parser, most-recent-first. A date that can't be
+   parsed sorts to the bottom rather than silently breaking the list. This is exactly the
+   "automatically land in their proper place, by date" behavior the owner asked for.
+
+**Verification performed:** admin.html's single inline `<script>` block still parses cleanly
+(Node), `<div>` balance now 89/89 and `<fieldset>` balance 5/5 (both include the new bulk panel's
+own balanced markup), `#ev-file` (single-item, untouched) and `#ev-bulk-files` (new) confirmed to
+be two distinct, non-conflicting IDs, and `ocr-helper.js` (which defines `EvidenceOCR`) was
+already loaded on this page before this script block, so no new script tag was needed. This
+session did not touch `index.html`, `opinion.html`, or any other public page — voting is
+unaffected by definition, not just by re-verification, since `admin.html` shares no markup or ID
+namespace with the vote widget.
+
+## FILES TOUCHED THIS SESSION
+`admin.html` only.
 
 ## NEXT RECOMMENDED TASK
-Phase 1: finalize sitemap/IA decision for homepage vs dedicated pages (the P2/P3 item above),
-then implement Phase 2 homepage restructuring as a small, verifiable diff that leaves the vote
-widget markup/IDs/script order completely untouched.
-
-## OPEN QUESTIONS FOR OWNER
-1. Confirm the 5 duplicate/stray files above are accidental exports and safe to ignore/delete.
-2. How should updated files be delivered each session (see chat) — no git push access is
-   available in this environment.
+Still open, awaiting owner input: (a) the "मूळ DPR" verification-label question, (b) go-ahead to
+delete the 5 confirmed-safe duplicate files. Otherwise: the owner may want to try the new bulk
+evidence upload and report back on the auto-detected category/date accuracy before this pattern
+(bulk-select → auto-process → draft-only) gets extended to the Gallery/Timeline tabs, which have
+a similar one-at-a-time feel today.

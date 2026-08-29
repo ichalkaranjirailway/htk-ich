@@ -285,12 +285,22 @@ service cloud.firestore {
 <h2 id="sec-evidence">📁 सरकारी कागदपत्रे व पुरावे</h2>
 <p class="hint">RTI, CPGRAMS, आपले सरकार, पत्रे, PDF/फोटो अपलोड करा. मजकूर वाचणे (OCR) तुमच्याच ब्राऊझरमध्ये फुकट चालतं — कुठलाही API-key, बिलिंग किंवा सर्व्हर लागत नाही. OCR मजकूर पूर्ण-मजकूर शोधासाठी (search) वापरला जातो. सारांश तुम्ही स्वतः लिहिता, आणि तो नेहमी "Admin-Reviewed" म्हणून दाखवला जातो.</p>
 <button id="loadEvidenceBtn">कागदपत्रे लोड करा</button>
+<p class="hint" style="margin-top:6px;">यादी आता कागदपत्रावरील प्रत्यक्ष दिनांकानुसार (Date) दिसते — जी नुकतीच edit केली त्यानुसार नाही, त्यामुळे नवीन कागदपत्र त्याच्या योग्य कालक्रमानुसार आपोआप योग्य ठिकाणी दिसेल.</p>
 <div id="evidenceList" style="display:none; margin-top:10px;"></div>
 
 <div id="evidenceEditBanner">✏️ कागदपत्र edit करत आहात. <button type="button" class="secondary" onclick="cancelEvidenceEdit()" style="padding:4px 10px;font-size:.78rem;">रद्द करा</button></div>
 
 <fieldset style="margin-top:16px;">
-<legend>➕ नवीन कागदपत्र / Edit</legend>
+<legend>➕ एकाच वेळी अनेक कागदपत्रे (Bulk Upload)</legend>
+<p class="hint">एकापेक्षा जास्त फाईल्स एकत्र निवडा — प्रत्येकीसाठी आपोआप OCR चालेल, दिनांक/category सुचवली जाईल, आणि सर्व Draft म्हणून सेव्ह होतील (थेट Publish होणार नाहीत — सारांश तपासून तुम्हीच नंतर एकेक Publish करा).</p>
+<input type="file" id="ev-bulk-files" accept=".pdf,.jpg,.jpeg,.png" multiple>
+<div id="ev-bulk-list" style="display:none; margin-top:10px;"></div>
+<button type="button" id="ev-bulk-startBtn" class="wide" style="display:none; margin-top:10px;">🚀 सर्व Draft म्हणून सेव्ह करा</button>
+<div id="ev-bulk-progress" class="hint" style="display:none; margin-top:8px;"></div>
+</fieldset>
+
+<fieldset style="margin-top:16px;">
+<legend>➕ एक कागदपत्र / Edit</legend>
 
 <label>मूळ फाईल (PDF / JPG / PNG)</label>
 <input type="file" id="ev-file" accept=".pdf,.jpg,.jpeg,.png">
@@ -517,6 +527,35 @@ function entryToText(entry){
 }
 
 // ---- Evidence (सरकारी कागदपत्रे) tab ----
+// कागदपत्रावरचा दिनांक (उदा. "02 July 2026", "02/07/2026", "०२ जुलै २०२६")
+// विविध रूपांत असू शकतो — यादी खऱ्या दिनांकानुसार लावण्यासाठी तो एका
+// तुलना-करता-येण्याजोग्या क्रमांकात रूपांतरित करतो. दिनांक ओळखता न आल्यास
+// यादीच्या तळाशी (सर्वात जुना समजून) ठेवतो — जेणेकरून चुकीचा दिनांक
+// चुकीच्या क्रमाने वर येऊन गोंधळ होणार नाही.
+const MARATHI_MONTHS = {"जानेवारी":1,"फेब्रुवारी":2,"मार्च":3,"एप्रिल":4,"मे":5,"जून":6,"जुलै":7,"ऑगस्ट":8,"सप्टेंबर":9,"ऑक्टोबर":10,"नोव्हेंबर":11,"डिसेंबर":12};
+const ENGLISH_MONTHS = {"january":1,"february":2,"march":3,"april":4,"may":5,"june":6,"july":7,"august":8,"september":9,"october":10,"november":11,"december":12};
+function evParseDateForSort(dateStr){
+  if (!dateStr) return -1;
+  let s = String(dateStr).trim();
+  // देवनागरी अंक असल्यास आधी सामान्य अंकांत बदलतो
+  const devanagariDigits = "०१२३४५६७८९";
+  s = s.replace(/[०-९]/g, d => String(devanagariDigits.indexOf(d)));
+  let m = s.match(/\b(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})\b/);
+  if (m) {
+    let [, d, mo, y] = m;
+    if (y.length === 2) y = '20' + y;
+    return +y * 10000 + (+mo) * 100 + (+d);
+  }
+  m = s.match(/\b(\d{1,2})\s+([\u0900-\u097Fa-zA-Z]+)\s+(\d{4})\b/);
+  if (m) {
+    const [, d, monName, y] = m;
+    const key = monName.toLowerCase();
+    const mo = MARATHI_MONTHS[monName] || ENGLISH_MONTHS[key];
+    if (mo) return +y * 10000 + mo * 100 + (+d);
+  }
+  return -1; // दिनांक ओळखता आला नाही
+}
+
 let evidenceSha = null;
 let evidenceEditingId = null;
 let evCurrentFileName = null; // filename already stored in repo (when editing, no new file picked)
@@ -542,7 +581,7 @@ document.getElementById('loadEvidenceBtn').addEventListener('click', () => loadE
 
 function renderEvidenceList(){
   const el = document.getElementById('evidenceList');
-  const docs = (window._evidenceDocs || []).slice().sort((a,b) => (b.updatedAt||'').localeCompare(a.updatedAt||''));
+  const docs = (window._evidenceDocs || []).slice().sort((a,b) => evParseDateForSort(b.date) - evParseDateForSort(a.date));
   el.innerHTML = '';
   docs.forEach(d => {
     const row = document.createElement('div');
@@ -710,6 +749,104 @@ async function evUploadFileIfNeeded(){
   await ghPut(filename, b64, 'Add evidence file: ' + filename);
   return filename;
 }
+
+// ---- Bulk Upload (एकाच वेळी अनेक कागदपत्रे) ----
+let evBulkFiles = [];
+const evBulkFileInput = document.getElementById('ev-bulk-files');
+const evBulkList = document.getElementById('ev-bulk-list');
+const evBulkStartBtn = document.getElementById('ev-bulk-startBtn');
+const evBulkProgress = document.getElementById('ev-bulk-progress');
+
+evBulkFileInput.addEventListener('change', (e) => {
+  evBulkFiles = Array.from(e.target.files || []);
+  if (evBulkFiles.length === 0) {
+    evBulkList.style.display = 'none';
+    evBulkStartBtn.style.display = 'none';
+    return;
+  }
+  evBulkList.innerHTML = '<label>निवडलेल्या फाईल्स (' + evBulkFiles.length + ')</label>' +
+    evBulkFiles.map(f => `<div class="entry-row"><div class="meta">${f.name}</div></div>`).join('');
+  evBulkList.style.display = 'block';
+  evBulkStartBtn.style.display = 'block';
+  evBulkStartBtn.textContent = '🚀 ' + evBulkFiles.length + ' फाईल्स Draft म्हणून सेव्ह करा';
+});
+
+// फाईलच्या मूळ नावावरून एक तात्पुरतं, वाचनीय Title बनवतो (उदा.
+// "rti-reply-2026-scan.pdf" → "rti reply 2026 scan") — OCR मधून खरं
+// शीर्षक/दिनांक सुचलं तर तेही जोडतो. हे फक्त सुरुवातीचा अंदाज आहे,
+// admin ने नंतर "Edit" मधून तपासून नीट करायचं आहे — म्हणूनच स्थिती
+// नेहमी "draft" ठेवली जाते, आपोआप कधीही Publish होत नाही.
+function evGuessTitleFromFilename(filename){
+  const base = filename.replace(/\.[^.]+$/, '').replace(/^evidence-\d+-/, '');
+  const words = base.replace(/[-_]+/g, ' ').trim();
+  return words ? words.charAt(0).toUpperCase() + words.slice(1) : filename;
+}
+
+evBulkStartBtn.addEventListener('click', async () => {
+  try {
+    requireToken();
+    if (!evBulkFiles.length) return;
+    evBulkStartBtn.disabled = true;
+    evBulkProgress.style.display = 'block';
+    if (!window._evidenceDocs) await loadEvidence();
+    const docs = window._evidenceDocs.slice();
+    const now = new Date().toISOString();
+
+    for (let i = 0; i < evBulkFiles.length; i++) {
+      const file = evBulkFiles[i];
+      evBulkProgress.textContent = `(${i+1}/${evBulkFiles.length}) ${file.name} — अपलोड होत आहे...`;
+      const filename = 'evidence-' + (Date.now() + i) + '-' + slugify(file.name);
+      const b64 = await fileToBase64(file);
+      await ghPut(filename, b64, 'Add evidence file: ' + filename);
+
+      evBulkProgress.textContent = `(${i+1}/${evBulkFiles.length}) ${file.name} — मजकूर वाचला जात आहे (OCR)...`;
+      let extractedText = '';
+      try {
+        const { fullText } = await EvidenceOCR.extract(file, () => {});
+        extractedText = fullText || '';
+      } catch (ocrErr) {
+        // एखाद्या फाईलवर OCR अयशस्वी झालं (उदा. खराब स्कॅन) तरी बाकीच्या
+        // फाईल्सचं bulk upload थांबू नये — रिकाम्या मजकुरासह draft तयार
+        // होईल, admin नंतर "OCR चालवा" वापरून पुन्हा प्रयत्न करू शकतो.
+        extractedText = '';
+      }
+      const category = extractedText ? EvidenceOCR.detectCategory(extractedText) : null;
+      const date = extractedText ? EvidenceOCR.detectDate(extractedText) : null;
+      const refNo = extractedText ? EvidenceOCR.detectReferenceNumber(extractedText) : null;
+
+      docs.push({
+        id: 'ev-' + (Date.now() + i),
+        title: evGuessTitleFromFilename(file.name),
+        category: category || 'Other Evidence',
+        date: date || '',
+        authority: '',
+        referenceNumber: refNo || '',
+        tags: [],
+        summary: '',
+        extractedText,
+        originalFile: filename,
+        status: 'draft',
+        version: 1,
+        previousVersions: [],
+        createdAt: now,
+        updatedAt: now,
+      });
+    }
+
+    evBulkProgress.textContent = 'सर्व फाईल्सची यादी सेव्ह होत आहे...';
+    await saveEvidenceDocs(docs, 'Bulk upload: ' + evBulkFiles.length + ' files');
+    evBulkProgress.textContent = `✅ ${evBulkFiles.length} फाईल्स Draft म्हणून सेव्ह झाल्या — खाली यादीत, दिनांकानुसार, दिसतील. प्रत्येकीचा सारांश तपासून मगच Publish करा.`;
+    evBulkFileInput.value = '';
+    evBulkFiles = [];
+    evBulkList.style.display = 'none';
+    evBulkStartBtn.style.display = 'none';
+    await loadEvidence();
+  } catch (err) {
+    evBulkProgress.textContent = '❌ ' + err.message;
+  } finally {
+    evBulkStartBtn.disabled = false;
+  }
+});
 
 async function saveEvidenceDocs(docs, message){
   const body = "// सरकारी कागदपत्रे व पुरावे — edited via admin.html \"सरकारी कागदपत्रे\" tab.\n// summary text is ADMIN-REVIEWED. extractedText (OCR) is used for search only.\nconst EVIDENCE_DOCS = " + JSON.stringify(docs, null, 2) + ";\n";
