@@ -622,6 +622,21 @@ namespace with the vote widget.
 ## FILES TOUCHED THIS SESSION
 `admin.html` only.
 
+## BULK UPLOAD — FOLLOW-UP FIX (same day, owner reported via screenshot)
+After a successful 19-file bulk upload, the owner reported the page "only shows this much" —
+the success message, then straight to the single-item "एक कागदपत्र / Edit" form, with no visible
+list of the 19 new drafts. Root cause: `#evidenceList` (the actual results list) sits near the
+top of the tab, right under the original "कागदपत्रे लोड करा" button — well *above* the Bulk
+Upload panel in the page. The list WAS being correctly refreshed after the bulk save, but it
+rendered off-screen above the owner's scroll position (right where they'd just clicked "सर्व
+Draft म्हणून सेव्ह करा"), and the success message's own wording ("खाली यादीत दिसतील" — "will
+appear in the list below") was actively wrong, pointing the opposite direction from where the
+list actually is. Fixed both: corrected the message to say "वरच्या यादीत" (in the list above),
+and added an automatic smooth-scroll to `#evidenceList` right after the bulk save completes, so
+the owner is taken straight to their new drafts without needing to scroll or hunt for them.
+Verified: admin.html's script still parses, `<div>` balance still 89/89 — this was a small,
+isolated change to the last few lines of the bulk-upload completion handler only.
+
 ## NEXT RECOMMENDED TASK
 Still open, awaiting owner input: (a) the "मूळ DPR" verification-label question, (b) go-ahead to
 delete the 5 confirmed-safe duplicate files. Otherwise: the owner may want to try the new bulk

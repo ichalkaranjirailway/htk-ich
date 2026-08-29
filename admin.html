@@ -835,12 +835,13 @@ evBulkStartBtn.addEventListener('click', async () => {
 
     evBulkProgress.textContent = 'सर्व फाईल्सची यादी सेव्ह होत आहे...';
     await saveEvidenceDocs(docs, 'Bulk upload: ' + evBulkFiles.length + ' files');
-    evBulkProgress.textContent = `✅ ${evBulkFiles.length} फाईल्स Draft म्हणून सेव्ह झाल्या — खाली यादीत, दिनांकानुसार, दिसतील. प्रत्येकीचा सारांश तपासून मगच Publish करा.`;
+    evBulkProgress.textContent = `✅ ${evBulkFiles.length} फाईल्स Draft म्हणून सेव्ह झाल्या — वरच्या यादीत, दिनांकानुसार, दिसतील. प्रत्येकीचा सारांश तपासून मगच Publish करा.`;
     evBulkFileInput.value = '';
     evBulkFiles = [];
     evBulkList.style.display = 'none';
     evBulkStartBtn.style.display = 'none';
     await loadEvidence();
+    document.getElementById('evidenceList').scrollIntoView({ behavior: 'smooth', block: 'start' });
   } catch (err) {
     evBulkProgress.textContent = '❌ ' + err.message;
   } finally {
