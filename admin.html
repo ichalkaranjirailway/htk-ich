@@ -283,7 +283,7 @@ service cloud.firestore {
 </div>
 
 <h2 id="sec-evidence">📁 सरकारी कागदपत्रे व पुरावे</h2>
-<p class="hint">RTI, CPGRAMS, आपले सरकार, पत्रे, PDF/फोटो अपलोड करा. मजकूर वाचणे (OCR) तुमच्याच ब्राऊझरमध्ये फुकट चालतं — कुठलाही API-key, बिलिंग किंवा सर्व्हर लागत नाही. OCR मजकूर पूर्ण-मजकूर शोधासाठी (search) वापरला जातो. सारांश तुम्ही स्वतः लिहिता, आणि तो नेहमी "Admin-Reviewed" म्हणून दाखवला जातो.</p>
+<p class="hint">RTI, CPGRAMS, आपले सरकार, पत्रे, PDF/फोटो अपलोड करा. मजकूर तुम्ही स्वतः (ऐच्छिक) टाकू शकता — तो साईटवरील शोधासाठी (search) वापरला जातो. सारांश तुम्ही स्वतः लिहिता, आणि तो नेहमी "Admin-Reviewed" म्हणून दाखवला जातो.</p>
 <button id="loadEvidenceBtn">कागदपत्रे लोड करा</button>
 <p class="hint" style="margin-top:6px;">यादी आता कागदपत्रावरील प्रत्यक्ष दिनांकानुसार (Date) दिसते — जी नुकतीच edit केली त्यानुसार नाही, त्यामुळे नवीन कागदपत्र त्याच्या योग्य कालक्रमानुसार आपोआप योग्य ठिकाणी दिसेल.</p>
 <div id="evidenceList" style="display:none; margin-top:10px;"></div>
@@ -292,7 +292,7 @@ service cloud.firestore {
 
 <fieldset style="margin-top:16px;">
 <legend>➕ एकाच वेळी अनेक कागदपत्रे (Bulk Upload)</legend>
-<p class="hint">एकापेक्षा जास्त फाईल्स एकत्र निवडा — प्रत्येकीसाठी आपोआप OCR चालेल, दिनांक/category सुचवली जाईल, आणि सर्व Draft म्हणून सेव्ह होतील (थेट Publish होणार नाहीत — सारांश तपासून तुम्हीच नंतर एकेक Publish करा).</p>
+<p class="hint">एकापेक्षा जास्त फाईल्स एकत्र निवडा — प्रत्येकीसाठी एक Draft तयार होईल (थेट Publish होणार नाही — शीर्षक/दिनांक/category/सारांश भरून तुम्हीच नंतर एकेक Publish करा).</p>
 <input type="file" id="ev-bulk-files" accept=".pdf,.jpg,.jpeg,.png" multiple>
 <div id="ev-bulk-list" style="display:none; margin-top:10px;"></div>
 <button type="button" id="ev-bulk-startBtn" class="wide" style="display:none; margin-top:10px;">🚀 सर्व Draft म्हणून सेव्ह करा</button>
@@ -312,14 +312,9 @@ service cloud.firestore {
     <div id="ev-preview" class="ev-preview-box">फाईल निवडा किंवा आधीची फाईल लोड होईल.</div>
   </div>
   <div class="ev-ocr-col">
-    <label>मजकूर वाचा (OCR)</label>
-    <div class="row">
-      <button type="button" id="ev-runOcrBtn" class="secondary">🔍 OCR चालवा</button>
-      <button type="button" id="ev-clearOcrBtn" class="secondary">🧹 OCR मजकूर पुसा</button>
-      <button type="button" id="ev-copyOcrBtn" class="secondary">📋 Copy मूळ मजकूर</button>
-    </div>
-    <div id="ev-ocrProgress" class="hint" style="display:none;"></div>
-    <textarea id="ev-extractedText" style="min-height:160px; font-family:var(--mono, monospace); font-size:.82rem;" placeholder="OCR चालवल्यावर मजकूर इथे दिसेल — हा कच्चा मजकूर आहे, चुका असू शकतात, त्या तपासा."></textarea>
+    <label>पूर्ण मजकूर (ऐच्छिक — शोधासाठी)</label>
+    <p class="hint">इथे कागदपत्रातला मजकूर हवा तर स्वतः copy-paste करा — तो साईटवरील शोधात (search) वापरला जातो. रिकामे ठेवले तरी कागदपत्र व्यवस्थित दिसेल, फक्त शोधात सापडणार नाही.</p>
+    <textarea id="ev-extractedText" style="min-height:160px; font-family:var(--mono, monospace); font-size:.82rem;" placeholder="(ऐच्छिक) कागदपत्रातला मजकूर इथे paste करा."></textarea>
   </div>
 </div>
 
@@ -336,11 +331,7 @@ service cloud.firestore {
       <option value="Other Evidence">Other Evidence</option>
     </select>
   </div>
-  <div style="flex:0 0 auto; align-self:flex-end;">
-    <button type="button" id="ev-autoDetectBtn" class="secondary">🪄 Auto Detect (सुचवा)</button>
-  </div>
 </div>
-<p class="hint">Auto Detect हे कीवर्ड-आधारित सूचना आहे (AI नाही) — नेहमी स्वतः खात्री करा.</p>
 
 <div class="row">
   <div><label>शीर्षक (Title)</label><input type="text" id="ev-title"></div>
@@ -354,7 +345,7 @@ service cloud.firestore {
 <input type="text" id="ev-tags" placeholder="HTK-ICH, Railway, DPR, ROR">
 <label>सारांश (Marathi) — पर्यायी, स्वतःच्या शब्दांत</label>
 <textarea id="ev-summary" placeholder="मूळ कागदपत्रात नसलेली माहिती लिहू नका. जर काही लिहायचं नसेल तर रिकामे ठेवा — कागदपत्र नुसतं फाईल+माहितीसह दिसेल."></textarea>
-<p class="hint">📌 पूर्ण मजकूर शोधासाठी (search) आधीच वरच्या OCR मजकुरातून वापरला जातो — त्यामुळे वेगळं प्रश्न-उत्तर भरायची गरज नाही.</p>
+<p class="hint">📌 पूर्ण मजकूर शोधासाठी (search) वरच्या "पूर्ण मजकूर" रकान्यात टाकलेला मजकूर वापरला जातो — तो रिकामा ठेवल्यास शीर्षक/category/authority/summary एवढ्यावरूनच शोध चालेल.</p>
 
 <div class="row" style="margin-top:18px;">
   <button type="button" id="ev-saveDraftBtn" class="secondary wide">💾 Draft म्हणून सेव्ह करा</button>
@@ -431,7 +422,6 @@ service cloud.firestore {
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="firebase-config.js"></script>
-<script src="ocr-helper.js"></script>
 
 <script>
 const REPO = "ichalkaranjirailway/htk-ich";
@@ -618,47 +608,6 @@ document.getElementById('ev-file').addEventListener('change', (e) => {
   evUpdatePreview(evPendingFile, evCurrentFileName);
 });
 
-document.getElementById('ev-runOcrBtn').addEventListener('click', async () => {
-  const file = evPendingFile;
-  if (!file) { showStatus('आधी फाईल निवडा.', 'err'); return; }
-  const progEl = document.getElementById('ev-ocrProgress');
-  progEl.style.display = 'block';
-  progEl.textContent = 'OCR सुरू होत आहे... (मोठ्या PDF/स्कॅनसाठी थोडा वेळ लागू शकतो)';
-  try {
-    const { pages, fullText } = await EvidenceOCR.extract(file, (p) => {
-      progEl.textContent = `OCR चालू आहे... ${Math.round(p * 100)}%`;
-    });
-    document.getElementById('ev-extractedText').value = fullText;
-    window._evLastPages = pages;
-    progEl.textContent = `✅ OCR पूर्ण — ${pages.length} पान(ने) वाचली.`;
-    setTimeout(() => { progEl.style.display = 'none'; }, 4000);
-  } catch (err) {
-    progEl.style.display = 'none';
-    showStatus('❌ OCR मध्ये अडचण: ' + err.message, 'err');
-  }
-});
-document.getElementById('ev-clearOcrBtn').addEventListener('click', () => {
-  if (!confirm('OCR मजकूर पुसायचा आहे का?')) return;
-  document.getElementById('ev-extractedText').value = '';
-  window._evLastPages = null;
-});
-document.getElementById('ev-copyOcrBtn').addEventListener('click', async () => {
-  try { await navigator.clipboard.writeText(document.getElementById('ev-extractedText').value); showStatus('✅ Copy झालं.', 'ok'); }
-  catch { showStatus('❌ Copy करता आलं नाही.', 'err'); }
-});
-
-document.getElementById('ev-autoDetectBtn').addEventListener('click', () => {
-  const text = document.getElementById('ev-extractedText').value;
-  if (!text.trim()) { showStatus('आधी OCR चालवा, मग Auto Detect वापरा.', 'err'); return; }
-  const cat = EvidenceOCR.detectCategory(text);
-  if (cat) document.getElementById('ev-category').value = cat;
-  const date = EvidenceOCR.detectDate(text);
-  if (date && !document.getElementById('ev-date').value) document.getElementById('ev-date').value = date;
-  const ref = EvidenceOCR.detectReferenceNumber(text);
-  if (ref && !document.getElementById('ev-refno').value) document.getElementById('ev-refno').value = ref;
-  showStatus(cat ? `🪄 सुचवलेली category: ${cat} (कीवर्ड-आधारित सूचना — खात्री करा)` : 'कुठलीही category ओळखता आली नाही — स्वतः निवडा.', 'ok');
-});
-
 function evClearForm(){
   evidenceEditingId = null;
   evCurrentFileName = null;
@@ -675,7 +624,6 @@ function evClearForm(){
   document.getElementById('ev-tags').value = '';
   document.getElementById('ev-summary').value = '';
   document.getElementById('ev-category').value = 'RTI';
-  window._evLastPages = null;
   evUpdatePreview(null, null);
 }
 function cancelEvidenceEdit(){ evClearForm(); }
@@ -772,10 +720,9 @@ evBulkFileInput.addEventListener('change', (e) => {
 });
 
 // फाईलच्या मूळ नावावरून एक तात्पुरतं, वाचनीय Title बनवतो (उदा.
-// "rti-reply-2026-scan.pdf" → "rti reply 2026 scan") — OCR मधून खरं
-// शीर्षक/दिनांक सुचलं तर तेही जोडतो. हे फक्त सुरुवातीचा अंदाज आहे,
-// admin ने नंतर "Edit" मधून तपासून नीट करायचं आहे — म्हणूनच स्थिती
-// नेहमी "draft" ठेवली जाते, आपोआप कधीही Publish होत नाही.
+// "rti-reply-2026-scan.pdf" → "rti reply 2026 scan"). हे फक्त सुरुवातीचा
+// अंदाज आहे, admin ने नंतर "Edit" मधून तपासून नीट करायचं आहे — म्हणूनच
+// स्थिती नेहमी "draft" ठेवली जाते, आपोआप कधीही Publish होत नाही.
 function evGuessTitleFromFilename(filename){
   const base = filename.replace(/\.[^.]+$/, '').replace(/^evidence-\d+-/, '');
   const words = base.replace(/[-_]+/g, ' ').trim();
@@ -799,31 +746,16 @@ evBulkStartBtn.addEventListener('click', async () => {
       const b64 = await fileToBase64(file);
       await ghPut(filename, b64, 'Add evidence file: ' + filename);
 
-      evBulkProgress.textContent = `(${i+1}/${evBulkFiles.length}) ${file.name} — मजकूर वाचला जात आहे (OCR)...`;
-      let extractedText = '';
-      try {
-        const { fullText } = await EvidenceOCR.extract(file, () => {});
-        extractedText = fullText || '';
-      } catch (ocrErr) {
-        // एखाद्या फाईलवर OCR अयशस्वी झालं (उदा. खराब स्कॅन) तरी बाकीच्या
-        // फाईल्सचं bulk upload थांबू नये — रिकाम्या मजकुरासह draft तयार
-        // होईल, admin नंतर "OCR चालवा" वापरून पुन्हा प्रयत्न करू शकतो.
-        extractedText = '';
-      }
-      const category = extractedText ? EvidenceOCR.detectCategory(extractedText) : null;
-      const date = extractedText ? EvidenceOCR.detectDate(extractedText) : null;
-      const refNo = extractedText ? EvidenceOCR.detectReferenceNumber(extractedText) : null;
-
       docs.push({
         id: 'ev-' + (Date.now() + i),
         title: evGuessTitleFromFilename(file.name),
-        category: category || 'Other Evidence',
-        date: date || '',
+        category: 'Other Evidence',
+        date: '',
         authority: '',
-        referenceNumber: refNo || '',
+        referenceNumber: '',
         tags: [],
         summary: '',
-        extractedText,
+        extractedText: '',
         originalFile: filename,
         status: 'draft',
         version: 1,

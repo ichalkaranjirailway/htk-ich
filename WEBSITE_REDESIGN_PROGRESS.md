@@ -643,3 +643,49 @@ delete the 5 confirmed-safe duplicate files. Otherwise: the owner may want to tr
 evidence upload and report back on the auto-detected category/date accuracy before this pattern
 (bulk-select → auto-process → draft-only) gets extended to the Gallery/Timeline tabs, which have
 a similar one-at-a-time feel today.
+
+## OCR — FULLY REMOVED FROM THE SITE (owner-requested, same day)
+Owner reported OCR "not working properly" and, when asked to confirm scope, explicitly chose full
+removal — both the single-item Edit form's OCR buttons and the Bulk Upload flow's automatic OCR —
+accepting the known trade-off that new evidence added from now on won't get automatic full-text
+search content (existing published documents' `extractedText` is untouched and still searchable).
+
+**Removed from `admin.html`:**
+- Single-item form: the "🔍 OCR चालवा" / "🧹 OCR मजकूर पुसा" / "📋 Copy मूळ मजकूर" buttons and the
+  OCR-progress element. The `#ev-extractedText` textarea itself was **kept**, but repurposed into
+  a plain manual field — the owner (or anyone helping) can still paste text in by hand if they
+  want a document to be searchable; it's just no longer auto-populated. Relabelled it "पूर्ण
+  मजकूर (ऐच्छिक — शोधासाठी)" with a hint explaining it's optional and manual now.
+- The "🪄 Auto Detect (सुचवा)" button and its hint — this only ever worked off OCR text, so it had
+  no purpose left. Category is now always chosen manually from the dropdown (still defaults to
+  RTI); date/reference-number are always typed in by hand.
+- Bulk Upload: removed the per-file OCR call and the category/date/reference-number auto-guessing
+  that depended on it. Bulk upload now does exactly what it says — uploads each file and creates
+  a bare `status: "draft"` entry with just a filename-derived title, leaving category ("Other
+  Evidence" default), date, authority, reference number, tags, and summary all blank for the
+  owner to fill in per-item during review. **This does not undo the earlier "sort list by actual
+  document date" fix** — that fix reads whatever is in each document's `date` field regardless of
+  how it got there, so it will work correctly once the owner types the real date in during review.
+- `ocr-helper.js` (the `EvidenceOCR` helper — text extraction, category/date/reference-number
+  guessing) — deleted from the repo entirely. Confirmed via a full-repo grep that nothing else
+  referenced it (`evidence.html`'s search only reads the `extractedText` *data field* already
+  stored in `evidence-data.js`, not the helper script — that keeps working for existing entries).
+- Updated three hint/instruction paragraphs on the tab that referenced OCR, so the UI text
+  matches what the tab actually does now.
+
+**Verified after removal:** admin.html's single inline `<script>` block still parses (Node),
+`<div>` balance now 86/86, `<fieldset>` balance still 5/5, grepped for every OCR-related element
+ID (`ev-runOcrBtn`, `ev-clearOcrBtn`, `ev-copyOcrBtn`, `ev-ocrProgress`, `ev-autoDetectBtn`,
+`_evLastPages`) and confirmed zero dangling references anywhere, and confirmed `EvidenceOCR`/
+`ocr-helper` have zero remaining references in any file. `#ev-extractedText` itself is still
+correctly wired into save/edit/version-history exactly as before — only how it gets filled in
+changed (manual instead of automatic).
+
+## FILES TOUCHED THIS SESSION
+`admin.html` (edited); `ocr-helper.js` (deleted).
+
+## NEXT RECOMMENDED TASK
+Still open, awaiting owner input: (a) the "मूळ DPR" verification-label question, (b) go-ahead to
+delete the 5 confirmed-safe duplicate files. Otherwise: try the simplified bulk-upload-without-OCR
+flow on a real batch and confirm the manual review step (typing title/date/category per draft)
+feels reasonable before extending the same bulk pattern to Gallery/Timeline tabs.
