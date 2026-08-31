@@ -483,5 +483,22 @@ const EVIDENCE_DOCS = [
     "previousVersions": [],
     "createdAt": "2026-08-29T05:03:14.495Z",
     "updatedAt": "2026-08-29T05:03:14.495Z"
+  },
+  {
+    "id": "ev-2026-odop-export-hub",
+    "title": "महाराष्ट्र ODOP आराखडा — इचलकरंजी वस्त्रोद्योग निर्यात-केंद्र नोंद",
+    "category": "Other Evidence",
+    "date": "2026",
+    "authority": "महाराष्ट्र शासन (DGFT/DPIIT 'Districts as Export Hubs' उपक्रम)",
+    "referenceNumber": "",
+    "tags": ["ODOP", "export", "textile", "Ministry of Textiles"],
+    "summary": "केंद्र सरकारच्या 'Districts as Export Hubs' उपक्रमांतर्गत आणि महाराष्ट्र शासनाच्या One District One Product (ODOP) आराखड्यात, कोल्हापूर जिल्ह्याचे वस्त्रोद्योग निर्यात-केंद्रित उत्पादन (HSN 630231 / 520512) म्हणून थेट 'हातकणंगले, इचलकरंजी' असे स्थान नमूद करण्यात आले आहे. ही केंद्र व राज्य शासनाची नोंद असून इचलकरंजीला राष्ट्रीय निर्यात-प्रोत्साहन यंत्रणेशी थेट जोडते — हातकणंगले-इचलकरंजी रेल्वे मार्गाच्या पुनर्मूल्यांकनाच्या मागणीला बळकटी देणारा मुद्दा.",
+    "extractedText": "",
+    "originalFile": "",
+    "status": "draft",
+    "version": 1,
+    "previousVersions": [],
+    "createdAt": "2026-08-31T00:00:00.000Z",
+    "updatedAt": "2026-08-31T00:00:00.000Z"
   }
 ];
