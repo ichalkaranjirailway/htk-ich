@@ -141,6 +141,8 @@ function renderGrid(){
     const snippet = d.summary || '';
     card.innerHTML = `
       <div class="ev-meta-row">
+        ${d.evidenceId ? `<span class="ev-badge evidence-id">${d.evidenceId}</span>` : ''}
+        ${d.sourceLevel ? `<span class="ev-badge level-${d.sourceLevel.toLowerCase()}" title="Source Level ${d.sourceLevel}">Level ${d.sourceLevel}</span>` : ''}
         <span class="ev-badge">${d.category || ''}</span>
         ${d.authority ? `<span class="ev-badge auth">${d.authority}</span>` : ''}
       </div>

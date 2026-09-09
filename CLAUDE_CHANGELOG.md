@@ -30,3 +30,20 @@
 - Delivered: `ichalkaranji-railway-phase-02.zip` (13 changed files + updated
   CLAUDE_PROGRESS.md/CLAUDE_CHANGELOG.md).
 - Next session: Phase 3 — Evidence ID scheme on `evidence-data.js`.
+
+## Session C — 2026-09-09 — Phase 3 Unit 1 (autonomous, via "START")
+- Resumed automatically per the new permanent workflow — no phase/task question asked.
+- Added Evidence ID (`IR-EV-YYYY-TYPE-NNN`) + source-Level (A/B/C/D) as new additive fields to
+  the 7 published entries in `evidence-data.js`. Internal `id` field (used for URL lookups)
+  untouched. The 19 unreviewed draft entries deliberately left without an ID.
+- Rendered the new ID/Level as badges on `evidence.html` (grid cards) and `evidence-detail.html`
+  (detail header), shown only when present.
+- Flagged one thin/unreviewed "published" entry (`ev-1787979873043`, blank authority/summary)
+  with a `verificationNote` field rather than inventing missing metadata.
+- Verified: `owSubmitVote` count unchanged (2), all 7 protected files byte-identical to source,
+  evidence-data.js re-parses as valid JSON (26 entries, exactly 7 with new fields), nested
+  `previousVersions` snapshot confirmed untouched, both HTML files parse cleanly and div-balance.
+- Delivered: `ichalkaranji-railway-phase-03.zip` (4 changed files:
+  `evidence-data.js`, `evidence.css`, `evidence.html`, `evidence-detail.html` +
+  updated CLAUDE_PROGRESS.md/CLAUDE_CHANGELOG.md).
+- Next session: Phase 4 — Official Decision Chain visual component.

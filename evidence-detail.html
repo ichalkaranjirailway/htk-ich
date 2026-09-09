@@ -94,11 +94,14 @@ function render(){
     <div class="ev-detail-header">
       <h1>${esc(d.title)}</h1>
       <div class="ev-detail-meta">
+        ${d.evidenceId ? `<span class="ev-badge evidence-id" style="vertical-align:middle;">${esc(d.evidenceId)}</span>` : ''}
+        ${d.sourceLevel ? `<span class="ev-badge level-${d.sourceLevel.toLowerCase()}" style="vertical-align:middle;" title="Source Level ${esc(d.sourceLevel)}">Level ${esc(d.sourceLevel)}</span>` : ''}
         <span><b>Category:</b> ${esc(d.category)}</span>
         ${d.date ? `<span><b>दिनांक:</b> ${esc(d.date)}</span>` : ''}
         ${d.authority ? `<span><b>विभाग:</b> ${esc(d.authority)}</span>` : ''}
         ${d.referenceNumber ? `<span><b>Reference No.:</b> ${esc(d.referenceNumber)}</span>` : ''}
       </div>
+      ${d.verificationNote ? `<div style="margin-top:8px;font-size:.78rem;color:var(--signal-red);">⚠ ${esc(d.verificationNote)}</div>` : ''}
     </div>
     <div class="ev-detail-body">
       <div class="ev-original-col">

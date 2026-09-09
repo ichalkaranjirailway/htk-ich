@@ -3,6 +3,8 @@
 const EVIDENCE_DOCS = [
   {
     "id": "ev-1787383568850",
+    "evidenceId": "IR-EV-2026-RTI-001",
+    "sourceLevel": "A",
     "title": "RTI 12-8-26 (C.Gov)",
     "category": "Railway / Government Letters",
     "date": "12.08.2026",
@@ -20,6 +22,8 @@ const EVIDENCE_DOCS = [
   },
   {
     "id": "ev-1956-loksabha",
+    "evidenceId": "IR-EV-1956-LS-001",
+    "sourceLevel": "A",
     "title": "लोकसभा प्रश्न क्र. 1205 — Ichal-Karanji ते Kolhapur-Miraj रेल्वे जोडणी (19 डिसेंबर 1956)",
     "category": "Railway / Government Letters",
     "date": "19.12.1956",
@@ -43,6 +47,8 @@ const EVIDENCE_DOCS = [
   },
   {
     "id": "ev-1929-story-of-ichalkaranji",
+    "evidenceId": "IR-EV-1929-HIST-001",
+    "sourceLevel": "C",
     "title": "The Story of Ichalkaranji (1929) — H. George Franks — रेल्वे मार्गाचा सर्वात जुना ज्ञात उल्लेख",
     "category": "Other Evidence",
     "date": "1929",
@@ -67,6 +73,8 @@ const EVIDENCE_DOCS = [
   },
   {
     "id": "ev-2015-karad-belgaum-proposal",
+    "evidenceId": "IR-EV-2015-LTR-001",
+    "sourceLevel": "B",
     "title": "कराड–इचलकरंजी–निपाणी–बेळगाव प्रस्तावित नवीन रेल्वे मार्ग — सर्वेक्षण तपशील व लोकप्रतिनिधी/नागरी संस्था पाठिंबा पत्रे (2015-16)",
     "category": "Railway / Government Letters",
     "date": "2015-2016",
@@ -93,6 +101,8 @@ const EVIDENCE_DOCS = [
   },
   {
     "id": "ev-2026-mp-mane-letter",
+    "evidenceId": "IR-EV-2026-LTR-001",
+    "sourceLevel": "B",
     "title": "खासदार धैर्यशील माने यांचे रेल्वे मंत्र्यांना पत्र — हातकणंगले-इचलकरंजी मार्ग शीघ्र पूर्ण करण्याची विनंती (22 जुलै 2026)",
     "category": "Railway / Government Letters",
     "date": "22.07.2026",
@@ -119,6 +129,8 @@ const EVIDENCE_DOCS = [
   },
   {
     "id": "ev-1965-tarun-bharat",
+    "evidenceId": "IR-EV-1965-MEDIA-001",
+    "sourceLevel": "C",
     "title": "तरुण भारत वृत्त — इचलकरंजी रेल्वेसाठी पालिकेचा 1965 चा ठराव",
     "category": "Photos / Scanned Documents",
     "date": "1965 (नेमकी मासिक तारीख अस्पष्ट — पत्रिकेवर फक्त \"20 नोव्हेंबर\" दिसतं, वर्षाचा अंक अस्पष्ट)",
@@ -210,6 +222,9 @@ const EVIDENCE_DOCS = [
   },
   {
     "id": "ev-1787979873043",
+    "evidenceId": "IR-EV-2015-DOC-001",
+    "sourceLevel": "C",
+    "verificationNote": "मेटाडेटा अपूर्ण (authority/summary रिकामे) — admin पुनरावलोकन प्रलंबित, तात्पुरता ID.",
     "title": "SANKESHWAR RAILWAY ACTION COMMITTEE",
     "category": "Photos / Scanned Documents",
     "date": "20/11/2015",

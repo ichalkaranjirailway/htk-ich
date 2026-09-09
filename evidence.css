@@ -15,6 +15,11 @@
 .ev-card .ev-meta-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
 .ev-badge{display:inline-block;font-size:.68rem;font-weight:700;padding:3px 9px;border-radius:12px;background:var(--navy);color:#fff;}
 .ev-badge.auth{background:var(--brass);color:#3a2a06;}
+.ev-badge.evidence-id{font-family:var(--mono);background:transparent;border:1px solid var(--navy);color:var(--navy);letter-spacing:.3px;}
+.ev-badge.level-a{background:var(--green-ok);}
+.ev-badge.level-b{background:var(--brass);color:#3a2a06;}
+.ev-badge.level-c{background:var(--ink-soft);}
+.ev-badge.level-d{background:var(--signal-red);}
 .ev-card .ev-date{font-size:.78rem;color:var(--ink-soft);}
 .ev-card .ev-snippet{font-size:.82rem;color:var(--ink-soft);margin-top:8px;line-height:1.4;max-height:3.6em;overflow:hidden;}
 .ev-card .ev-tags{margin-top:10px;font-size:.72rem;color:var(--ink-soft);}
