@@ -18,6 +18,13 @@
   --mono: "IBM Plex Mono", "Courier New", monospace;
 
   --radius: 2px;
+
+  /* Tribute / public-voters card palette — was hardcoded inline in index.html
+     (kept as separate tokens rather than merged into --navy/--brass because the
+     exact shades differ and changing them would alter the existing look). */
+  --navy-deep: #0B1F2E;
+  --gold-accent: #D4AF37;
+  --gold-light: #F3D27A;
 }
 
 * { box-sizing: border-box; }
@@ -37,6 +44,33 @@ body {
   line-height: 1.55;
   background-image:
     repeating-linear-gradient(180deg, rgba(0,0,0,0.015) 0px, rgba(0,0,0,0.015) 1px, transparent 1px, transparent 34px);
+}
+
+/* Skip-to-content link — hidden off-screen until keyboard-focused.
+   Added to every public page except the protected voting pages
+   (opinion.html, voters-list.html) and internal admin tools. */
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  background: var(--navy);
+  color: #fff;
+  padding: 10px 16px;
+  z-index: 1000;
+  font-family: var(--body);
+  font-size: 14px;
+  text-decoration: none;
+  border-radius: 0 0 var(--radius) 0;
+}
+.skip-link:focus {
+  left: 0;
+  top: 0;
+  width: auto;
+  height: auto;
+  overflow: visible;
 }
 
 a { color: var(--navy); }
