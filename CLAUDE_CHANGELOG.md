@@ -47,3 +47,23 @@
   `evidence-data.js`, `evidence.css`, `evidence.html`, `evidence-detail.html` +
   updated CLAUDE_PROGRESS.md/CLAUDE_CHANGELOG.md).
 - Next session: Phase 4 — Official Decision Chain visual component.
+
+## Session D (cont.) — 2026-09-22 — Visual design pass (user-requested, off phase track)
+- User said the site felt boring, gave full discretion, asked for a proper design pass with
+  only the changed files zipped up.
+- Files touched (3, on top of Phase 4's project-status.html): `styles.css`, `evidence.css`,
+  `index.html`.
+- Kept the established navy/brass/gold/paper brand (already used in the printed Amit Shah
+  nivedan) rather than swapping palettes. Added: a homepage-only hero treatment (gradient +
+  CSS-only rail-track motif, scoped to a new `.masthead-hero` modifier class so the other 12
+  pages' plain top-bar masthead is untouched), a single staggered hero entrance animation, a
+  real button for the previously-unstyled petition-signature CTA link, alternating section
+  backgrounds, brass-accented card treatments for stat cells/callouts/timeline entries, and a
+  responsive grid (previously 9 stacked bars) for the homepage's "explore more" tiles.
+- Verified: `owSubmitVote` count still 2, all 7 protected voting files byte-identical, diff shows
+  exactly 4 files differ from the original ZIP total (3 from this pass + project-status.html from
+  Phase 4), index.html div-balanced and parses cleanly, both CSS files brace-balanced.
+- A local wkhtmltoimage render was attempted for self-critique but its engine doesn't support
+  CSS custom properties at all (rendered unstyled) — not usable, noted for future sessions.
+- Delivered: `ichalkaranji-railway-design-refresh.zip` (styles.css, evidence.css, index.html,
+  project-status.html + updated CLAUDE_PROGRESS.md/CLAUDE_CHANGELOG.md).

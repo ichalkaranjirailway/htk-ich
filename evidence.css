@@ -50,7 +50,13 @@
 .ev-qa-item .ev-source-page{font-size:.72rem;color:var(--ink-soft);margin-top:8px;}
 .ev-summary-box{font-size:.9rem;line-height:1.6;color:var(--ink);margin-bottom:18px;}
 
-.ev-teaser{margin:26px 0;padding:18px 20px;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper-raised);}
+/* Explore-more tiles on the homepage — previously stacked as 9 identical
+   full-width bars; grouped into a responsive grid + given the same
+   card/hover language as .stat-cell/.entry so this reads as one set of
+   destinations, not a wall of repeated boxes. */
+.ev-teaser-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:8px;}
+.ev-teaser{padding:18px 20px;border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:var(--radius-lg);background:var(--paper-raised);box-shadow:var(--shadow-card);transition:transform .15s ease, box-shadow .15s ease;}
+.ev-teaser:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);}
 .ev-teaser h3{font-family:var(--display);color:var(--navy);margin:0 0 6px;font-size:1.1rem;}
 .ev-teaser p{margin:0 0 10px;font-size:.85rem;color:var(--ink-soft);}
 .ev-teaser a{color:var(--signal-red);font-weight:600;text-decoration:none;font-size:.85rem;}

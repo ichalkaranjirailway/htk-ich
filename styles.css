@@ -25,6 +25,15 @@
   --navy-deep: #0B1F2E;
   --gold-accent: #D4AF37;
   --gold-light: #F3D27A;
+
+  /* Content-card language (stats, callouts, timeline entries, explore-more
+     tiles) — deliberately more generous than --radius, which stays flat/
+     hairline for small data labels (.tag, .proof-link, .tab, .skip-link) so
+     the ledger/report feel of those stays intact. Cards get a bit of lift;
+     labels stay flat — a hierarchy choice, not a uniform default. */
+  --radius-lg: 10px;
+  --shadow-card: 0 2px 14px rgba(11, 31, 46, 0.09);
+  --shadow-lift: 0 12px 28px rgba(11, 31, 46, 0.16);
 }
 
 * { box-sizing: border-box; }
@@ -95,6 +104,36 @@ img { max-width: 100%; display: block; }
   color: var(--paper-raised);
   border-bottom: 6px solid var(--brass);
 }
+/* Homepage-only hero treatment. Scoped to this modifier class (added only
+   to index.html's <header>) rather than to .masthead itself — every other
+   page reuses .masthead as a short ~50px top bar with no .masthead-body,
+   and this decorative band/gradient would overlap and obscure that bar. */
+.masthead.masthead-hero {
+  position: relative;
+  background: linear-gradient(158deg, var(--navy-deep) 0%, var(--navy) 58%, var(--navy-soft) 100%);
+  overflow: hidden;
+}
+/* Rail-track motif along the base of the hero — two brass "rails" with
+   repeating "sleeper" ticks between them. Pure CSS gradients, no image
+   asset; a literal nod to the subject matter rather than decoration. */
+.masthead.masthead-hero::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 46px;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(212, 175, 55, 0.5) 0 2px, transparent 2px 30px),
+    linear-gradient(rgba(212, 175, 55, 0.55), rgba(212, 175, 55, 0.55)),
+    linear-gradient(rgba(212, 175, 55, 0.3), rgba(212, 175, 55, 0.3));
+  background-repeat: no-repeat;
+  background-position: 0 18px, 0 10px, 0 30px;
+  background-size: 100% 14px, 100% 2px, 100% 2px;
+  opacity: 0.55;
+  pointer-events: none;
+}
+@media (max-width: 560px) {
+  .masthead.masthead-hero::after { height: 30px; background-position: 0 10px, 0 5px, 0 19px; }
+}
 
 .masthead-top {
   display: flex;
@@ -120,8 +159,25 @@ img { max-width: 100%; display: block; }
 }
 
 .masthead-body {
-  padding: 40px 0 32px;
+  position: relative;
+  padding: 40px 0 44px;
+  z-index: 1;
 }
+/* One orchestrated entrance for the hero content — not repeated per-section
+   elsewhere on the page. Respects the global prefers-reduced-motion rule
+   above (animation-duration is forced to ~0 there). */
+@keyframes heroRise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.masthead-body > * {
+  animation: heroRise 0.7s ease both;
+}
+.masthead-body > *:nth-child(1) { animation-delay: 0.02s; }
+.masthead-body > *:nth-child(2) { animation-delay: 0.09s; }
+.masthead-body > *:nth-child(3) { animation-delay: 0.17s; }
+.masthead-body > *:nth-child(4) { animation-delay: 0.25s; }
+.masthead-body > *:nth-child(5) { animation-delay: 0.32s; }
 
 .eyebrow {
   font-family: var(--mono);
@@ -167,6 +223,31 @@ img { max-width: 100%; display: block; }
 }
 @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
+/* Hero CTA — was an unstyled plain link (only `a { color: var(--navy) }`
+   applied); this is the page's one primary call-to-action so it gets the
+   page's one real button treatment. */
+.hero-cta, a.lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+  padding: 12px 22px;
+  background: var(--gold-accent);
+  color: var(--navy-deep);
+  font-family: var(--body);
+  font-weight: 600;
+  font-size: 14.5px;
+  text-decoration: none;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.hero-cta:hover, a.lang-toggle:hover {
+  background: var(--gold-light);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+}
+
 /* ==========================================================
    NAV
    ========================================================== */
@@ -191,8 +272,9 @@ nav.subnav a {
   padding: 14px 14px 12px;
   border-bottom: 3px solid transparent;
   white-space: nowrap;
+  transition: color 0.15s ease, border-color 0.15s ease;
 }
-nav.subnav a:hover { color: var(--navy); border-bottom-color: var(--line); }
+nav.subnav a:hover { color: var(--navy); border-bottom-color: var(--brass); }
 nav.subnav a[aria-current="page"] { color: var(--navy); border-bottom-color: var(--navy); font-weight: 600; }
 @media (max-width: 480px) {
   nav.subnav a {
@@ -206,6 +288,12 @@ nav.subnav a[aria-current="page"] { color: var(--navy); border-bottom-color: var
    ========================================================== */
 section { padding: 56px 0; }
 section + section { border-top: 1px solid var(--line); }
+/* Gentle rhythm between sections so the page doesn't read as one unbroken
+   flat field — alternating bands only, no per-card decoration added. */
+main > section:nth-of-type(even) { background: var(--paper-raised); }
+/* #timeline's own .entry cards are already --paper-raised — keep the
+   section itself on --paper underneath them so the cards keep contrast. */
+#timeline { background: var(--paper); }
 
 .section-head { margin-bottom: 28px; }
 .section-num {
@@ -233,13 +321,27 @@ section + section { border-top: 1px solid var(--line); }
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
+  gap: 14px;
 }
 .stat-cell {
+  position: relative;
   background: var(--paper-raised);
-  padding: 20px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 22px 18px 20px;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.stat-cell::before {
+  content: "";
+  position: absolute; left: 18px; top: 0;
+  width: 26px; height: 3px;
+  background: var(--brass);
+  border-radius: 0 0 2px 2px;
+}
+.stat-cell:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lift);
 }
 .stat-cell .n {
   font-family: var(--display);
@@ -304,10 +406,13 @@ section + section { border-top: 1px solid var(--line); }
   position: relative;
   background: var(--paper-raised);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
   padding: 20px 22px;
   margin-bottom: 18px;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.15s ease;
 }
+.entry:hover { box-shadow: var(--shadow-lift); }
 .entry::before {
   content: "";
   position: absolute;
@@ -363,9 +468,10 @@ section + section { border-top: 1px solid var(--line); }
 .entry-more-tile{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   text-decoration:none;background:var(--navy);color:#fff;text-align:center;gap:6px;
-  padding:24px;transition:transform .2s ease;
+  padding:24px;border-radius:var(--radius-lg);box-shadow:var(--shadow-card);
+  transition:transform .2s ease, box-shadow .2s ease;
 }
-.entry-more-tile:hover{transform:translateY(-4px);}
+.entry-more-tile:hover{transform:translateY(-4px);box-shadow:var(--shadow-lift);}
 .entry-more-tile span:first-child{font-size:1.3rem;font-weight:700;}
 
 
@@ -409,7 +515,9 @@ section + section { border-top: 1px solid var(--line); }
   background: var(--navy);
   color: var(--paper-raised);
   padding: 22px 24px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
+  border-left: 4px solid var(--gold-accent);
+  box-shadow: var(--shadow-card);
 }
 .callout h3 { font-family: var(--display); margin: 0 0 10px; font-size: 17px; }
 .callout p { color: #D9DCE6; font-size: 14px; margin: 0; }

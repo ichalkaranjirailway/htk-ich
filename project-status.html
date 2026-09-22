@@ -40,6 +40,21 @@
   .ps-evidence-link:hover{text-decoration:underline;}
 
   .ps-disclaimer{margin-top:30px;padding:16px 18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper-raised);font-size:.82rem;color:var(--ink-soft);line-height:1.6;}
+
+  .ps-chain-section{margin:36px 0 8px;}
+  .ps-chain-section h2{font-family:var(--display);font-size:1.15rem;color:var(--navy);margin:0 0 4px;}
+  .ps-chain-section .ps-chain-sub{color:var(--ink-soft);font-size:.85rem;margin:0 0 20px;line-height:1.55;max-width:640px;}
+  .ps-chain{position:relative;margin:0;padding:0 0 0 26px;list-style:none;}
+  .ps-chain::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:var(--line);}
+  .ps-chain-node{position:relative;padding:0 0 26px 20px;}
+  .ps-chain-node:last-child{padding-bottom:0;}
+  .ps-chain-node::before{content:"";position:absolute;left:-26px;top:4px;width:14px;height:14px;border-radius:50%;background:var(--paper);border:2px solid var(--navy);}
+  .ps-chain-node.conflict::before{border-color:var(--signal-red);background:#fdeceb;}
+  .ps-chain-date{font-size:.74rem;font-weight:600;color:var(--ink-soft);letter-spacing:.02em;margin-bottom:3px;}
+  .ps-chain-title{font-family:var(--display);font-size:.95rem;color:var(--navy);font-weight:600;margin-bottom:5px;}
+  .ps-chain-node.conflict .ps-chain-title{color:var(--signal-red);}
+  .ps-chain-desc{font-size:.84rem;line-height:1.6;color:var(--ink);margin-bottom:7px;}
+  .ps-chain-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;}
 </style>
 
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -91,6 +106,12 @@
 
 <div class="ps-grid" id="psGrid"></div>
 
+<div class="ps-chain-section">
+<h2>🔗 अधिकृत निर्णय साखळी</h2>
+<p class="ps-chain-sub">प्रकल्पाच्या अधिकृत टप्प्यांचा कालानुक्रमे साखळी — साईटच्या स्वतःच्याच पडताळलेल्या Master Timeline डेटावर आधारित (नवीन डेटा नाही). ⚠️ चिन्हांकित नोंद ही स्रोतांमधली नोंदवलेली विसंगती आहे, लपवलेली नाही.</p>
+<ol class="ps-chain" id="psChain"></ol>
+</div>
+
 <div class="ps-disclaimer">
 📌 ही माहिती उपलब्ध सार्वजनिक व अधिकृत नोंदींवर आधारित तयार केली आहे — विशेषतः 12 ऑगस्ट 2026 च्या RTI उत्तरावर. कुठलीही रक्कम, तारीख किंवा टक्केवारी स्वतः तयार केलेली नाही. अधिक अद्ययावत अधिकृत माहिती उपलब्ध झाल्यास हे पान त्वरित अद्ययावत केलं जाईल. संपूर्ण मूळ कागदपत्रांसाठी <a href="evidence.html">पुरावा संग्रह</a> पहा.
 </div>
@@ -105,9 +126,17 @@
 </footer>
 
 <script src="project-status-data.js"></script>
+<script src="timeline-data.js"></script>
 <script>
 const VERIFY_LABEL = { verified: "🟢 पडताळलेलं", pending: "🟡 पडताळणी आवश्यक", context: "⚪ ऐतिहासिक संदर्भ" };
 function esc(s){ return (s || "").toString().replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+
+// अधिकृत निर्णय साखळी — Master Timeline मधल्या याच 8 पडताळलेल्या नोंदींचा निवडक, कालानुक्रमे संच.
+// इथे कुठलाही नवीन दिनांक/आकडा जोडलेला नाही — सर्व timeline-data.js मधूनच.
+const DECISION_CHAIN_IDS = [
+  "t-2017-survey", "t-2017-dpr", "t-2018-survey-conflict", "t-2019-pinkbook",
+  "t-2020-revised-dpr", "t-2020-22-token-budget", "t-2022-23-firr-eirr", "t-2026-rti"
+];
 
 function render(){
   const data = (typeof PROJECT_STATUS !== 'undefined') ? PROJECT_STATUS : { fields: [], updatedAt: '' };
@@ -123,6 +152,28 @@ function render(){
       ${f.evidenceUrl ? `<a class="ps-evidence-link" href="${f.evidenceUrl}">📄 मूळ पुरावा पहा →</a>` : ''}
     </div>
   `).join('');
+
+  const events = (typeof TIMELINE_EVENTS !== 'undefined') ? TIMELINE_EVENTS : [];
+  const chainEvents = DECISION_CHAIN_IDS
+    .map(id => events.find(e => e.id === id))
+    .filter(Boolean)
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+  const chainEl = document.getElementById('psChain');
+  if (chainEl) {
+    chainEl.innerHTML = chainEvents.map(e => {
+      const isConflict = e.verification === 'pending' && e.title.includes('⚠');
+      return `
+      <li class="ps-chain-node${isConflict ? ' conflict' : ''}">
+        <div class="ps-chain-date">${esc(e.dateLabel)}</div>
+        <div class="ps-chain-title">${esc(e.title)}</div>
+        <div class="ps-chain-desc">${esc(e.description)}</div>
+        <div class="ps-chain-meta">
+          <span class="ps-verify ${e.verification || 'context'}" style="padding:2px 7px;">${VERIFY_LABEL[e.verification] || '⚪ ऐतिहासिक संदर्भ'}</span>
+          ${e.evidenceUrl ? `<a class="ps-evidence-link" href="${e.evidenceUrl}">📄 मूळ पुरावा पहा →</a>` : ''}
+        </div>
+      </li>`;
+    }).join('');
+  }
 }
 render();
 </script>

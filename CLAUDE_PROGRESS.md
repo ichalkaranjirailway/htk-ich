@@ -1,10 +1,10 @@
 # CLAUDE_PROGRESS.md — Ichalkaranji Railway Evidence & Accountability Portal
 
-Last updated: 2026-09-09 (Session B — Phase 2)
-Source: user-uploaded ZIP (`htk-ich-main__13_.zip`), confirmed byte-identical to
-github.com/ichalkaranjirailway/htk-ich main HEAD `0e40f23` at time of upload. Per explicit
-instruction, this and all future sessions work from the uploaded ZIP as the authoritative
-master copy — do not pull/clone from GitHub unless the user says otherwise.
+Last updated: 2026-09-22 (Session D — Phase 4 Unit 1)
+Source: user-uploaded ZIP (`htk-ich-main.zip`), which reflects Phase 0–3 only (no Phase 4
+changes were present — the earlier Phase-4 delivery apparently wasn't merged into this working
+copy). Per explicit instruction, this and all future sessions work from the uploaded ZIP as the
+authoritative master copy — do not pull/clone from GitHub unless the user says otherwise.
 
 ## RELATIONSHIP TO PRIOR WORK
 `WEBSITE_REDESIGN_PROGRESS.md` (older, narrower master prompt — homepage de-duplication,
@@ -20,7 +20,8 @@ PHASE 1 — Architecture cleanup and safety mapping: COMPLETE (Session A/B — s
 PHASE 2 — Visual/IA redesign: DONE for this pass (accessibility + design-token consolidation
   unit — see PHASE 2 UNIT 1 below). Further Phase 2 units possible later (see "Deferred").
 PHASE 3 — Evidence ID architecture: DONE for this pass (see PHASE 3 UNIT 1 below).
-PHASE 4–14: NOT STARTED
+PHASE 4 — Official Decision Chain: DONE for this pass (see PHASE 4 UNIT 1 below).
+PHASE 5–14: NOT STARTED
 
 ## FINAL PROTECTED FILE LIST (locked, do not modify without explicit user sign-off)
 `opinion.html`, `opinion-widget.js`, `opinion-widget.css`, `opinion-content.js`,
@@ -123,6 +124,38 @@ What was done:
 - `diff -rq` against the source ZIP confirms only 4 files differ from the Phase-2 baseline this
   session: `evidence-data.js`, `evidence.css`, `evidence.html`, `evidence-detail.html`.
 
+## PHASE 4 UNIT 1 (this session, 22 Sep 2026) — Official Decision Chain
+File touched (1): `project-status.html` only.
+
+What was done:
+1. Added a vertical connected-node "अधिकृत निर्णय साखळी" (Official Decision Chain) component
+   to `project-status.html`, placed between the existing status grid and the disclaimer.
+2. **Zero new data.** The component reads `timeline-data.js` (loaded via a new `<script>` tag)
+   at render time and pulls a curated, hardcoded subset of 8 existing event IDs:
+   `t-2017-survey, t-2017-dpr, t-2018-survey-conflict, t-2019-pinkbook, t-2020-revised-dpr,
+   t-2020-22-token-budget, t-2022-23-firr-eirr, t-2026-rti` — sorted chronologically by date at
+   render time. `timeline-data.js` itself was not modified, so this component and `history.html`'s
+   timeline can never drift out of sync.
+3. Deliberately excluded two milestones the master prompt's own example mentions (a
+   project-specific 23.02.2023 EIRR-request date, a "2026 fresh FLS/DPR process" step) — neither
+   is verified anywhere in this site's actual data files, so they were not invented.
+4. The flagged `t-2018-survey-conflict` node (genuine 3-way date discrepancy between the
+   original DPR, revised DPR, and MP Mane's letter) renders with red-accented styling and stays
+   visible with its ⚠️ marker and full verification note — not hidden or resolved.
+5. Each node shows: date label, title, full description, verification badge (🟢/🟡/⚪, same
+   legend as the rest of the page), and an evidence link when one exists — same visual language
+   as the existing `.ps-card`/`.ps-verify` styles already on this page.
+
+## VERIFICATION DONE THIS SESSION (Phase 4, all passed)
+- `owSubmitVote` count in `index.html`: still 2 (file untouched this session).
+- `diff -rq` against the source ZIP: **only `project-status.html` differs** — every other file,
+  including all 7 protected voting files, byte-identical.
+- `project-status.html` re-parses cleanly with Python's `html.parser`.
+- Inline `<script>` block brace/paren balance: 0/0 (balanced).
+- Simulated the exact chain-building logic (Node.js) against the real `timeline-data.js`:
+  confirms 8 nodes render, correct chronological order (2017-06-11 → 2026-08-12), and exactly
+  one node (`t-2018-survey-conflict`) is flagged as the conflict node — matching the source data.
+
 ## DEFERRED (candidates for future sessions, not started)
 - Full audit of remaining one-off hex colors sitewide (beyond the 3 consolidated in Phase 2).
 - Explicit tablet-breakpoint stress test — existing grids already use
@@ -147,16 +180,78 @@ in this environment. Recommend the user spot-check `evidence.html` and one detai
 don't visually clash with existing category/authority badges. Also recommend re-checking the
 skip-link/id="main" behavior from Phase 2 at the same time.
 
+## VISUAL DESIGN PASS (22 Sep 2026, same day as Phase 4 — user-requested, off the phase track)
+User said the site felt boring and asked for a proper visual-design pass with full discretion.
+Scope: `styles.css` (global) + `evidence.css` (homepage-only `.ev-teaser` grid) + `index.html`
+(homepage) only. Deliberately did NOT touch history.html/evidence.html/our-work.html/
+why-ichalkaranji.html/officials.html/gallery.html/team.html/brief.html/kajrolkar.html — none of
+them needed changes for this pass since their shared chrome (masthead-top bar, subnav, footer)
+already reads fine as a plain bar and gets only the safe global tweaks below; only the homepage
+has the large hero + card-heavy sections that read as flat/boring.
+
+Kept the established brand (paper/navy/brass/gold tokens — same ones already used in the printed
+Amit Shah nivedan letterhead) rather than replacing the palette; added visual energy instead of
+swapping identity:
+1. New `--radius-lg`/`--shadow-card`/`--shadow-lift` tokens — a deliberately more generous radius
+   for *content cards* (stat cells, callouts, timeline entries, explore-more tiles), while hairline
+   `--radius:2px` stays untouched for small data labels (`.tag`, `.proof-link`, `.tab`,
+   `.skip-link`) so the ledger/report feel of those is unchanged. A hierarchy choice, not a
+   blanket radius bump.
+2. New `.masthead-hero` MODIFIER class (added only to index.html's `<header>`, NOT to base
+   `.masthead`) — a navy-deep→navy→navy-soft gradient + a pure-CSS-gradient "rail track" motif
+   (two brass rails + repeating sleeper ticks) along the hero's base, literal to the railway
+   subject rather than decorative-for-its-own-sake. **Important**: this was deliberately scoped
+   to a modifier class after checking — the other 12 public pages reuse bare `.masthead` as a
+   short ~50px top bar with no `.masthead-body`, and the gradient/rail-motif band would have
+   overlapped/obscured that bar if applied to `.masthead` itself.
+3. One orchestrated hero entrance (`heroRise` keyframe, staggered on `.masthead-body`'s 5 direct
+   children only) — a single moment, not per-section scroll animations. Respects the existing
+   global `prefers-reduced-motion` rule.
+4. The homepage's one real call-to-action — "याचिकेवर स्वाक्षरी करा" (sign the petition) — was
+   previously a completely unstyled plain link (`.lang-toggle` had zero CSS rules anywhere in the
+   codebase). Gave it a real button treatment (gold-accent fill, hover lift). No HTML class
+   changes needed for this one — just added the missing CSS.
+5. Section rhythm: `main > section:nth-of-type(even)` gets `--paper-raised` background for
+   alternating bands (scoped via the `<main>` element, which only index.html/dead-duplicate
+   index(2).html use) — with an explicit `#timeline` override back to `--paper` since its own
+   `.entry` cards are already `--paper-raised` and would've lost contrast otherwise.
+6. `.stat-cell` (brass top-accent + hover lift), `.callout` (brass left-accent bar), `.entry`
+   (hover lift) all promoted to the new card language.
+7. The 9 "explore more" tiles at the bottom of the homepage were previously 9 stacked full-width
+   bars with a completely unstyled class (only `.ev-teaser` in evidence.css, which had a flat
+   hairline-radius box with no hover state). Wrapped them in a new `.ev-teaser-grid` (responsive
+   grid, added in `evidence.css` since that's where `.ev-teaser` already lived) and gave the tiles
+   the same accent-bar/hover-lift card language. `.ev-teaser` only ever appears on index.html, so
+   this couldn't affect evidence.html/evidence-detail.html despite living in the same stylesheet.
+8. `nav.subnav a:hover` — added a transition + changed the hover underline color from `--line` to
+   `--brass` (was barely visible before). This rule is shared sitewide (all pages use `.subnav`),
+   so this one small polish DOES apply everywhere — everything else in this pass is homepage-only.
+
+VERIFICATION: diff against the pre-pass working copy shows exactly 3 files changed this sub-pass
+(`styles.css`, `evidence.css`, `index.html`) on top of the already-delivered Phase 4 file
+(`project-status.html`) — 4 files total differ from the original uploaded ZIP, everything else
+byte-identical including all 7 protected voting files (owSubmitVote count still 2). index.html
+div-tag-balanced (77 open/77 close), parses cleanly, inline `<script>` blocks brace-balanced.
+Tried a local headless render (wkhtmltoimage) for a self-critique screenshot per usual design
+practice — its old WebKit engine doesn't support CSS custom properties (`var()`) at all, so it
+rendered the WHOLE site unstyled (not just this pass's changes) and wasn't usable as a check;
+noting this so a future session doesn't waste time on the same tool. No live modern-browser
+render was possible in this environment — recommend the user spot-check the homepage on an
+actual phone/browser after deploying, especially the hero on a narrow (<560px) screen.
+
 ## NEXT EXACT ACTION
-Begin Phase 4: build the "Official Decision Chain" visual component (per master prompt §6) using
-the dates/figures already verified in `evidence-data.js`/`project-status-data.js` (2017 FLS,
-30.11.2017 original DPR ₹191.59cr/-10.11% ROR, 02.01.2020 revised DPR ₹180.73cr/-12.73% ROR,
-2023 Railway Board EIRR request, 2026 fresh FLS/DPR process) — additive new component, likely
-placed on `project-status.html` and/or `history.html`; do not invent any date/figure not already
-present in the site's own data files.
+Begin Phase 5: RTI/CPGRAMS evidence classification (answered/partial/transferred/not-clarified,
+per master prompt §11). Only one RTI entry is currently published in `evidence-data.js`
+(`ev-1787383568850`) — if its classification isn't already clear from the entry's own fields,
+mark it "पडताळणी आवश्यक" rather than guessing.
 
 ## LAST COMPLETED STEP
-Phase 3 Unit 1 complete and verified: Evidence ID + source-Level fields added to the 7 published
-evidence-data.js entries (additive only, internal `id` untouched), badges rendered on
-evidence.html/evidence-detail.html, all voting-protection checksums confirmed intact, deliverable
-zip prepared.
+Same-day visual design pass complete and verified (see above) on top of Phase 4 Unit 1 (Official
+Decision Chain). All voting-protection checksums confirmed intact, deliverable zip prepared.
+
+## NOTE FOR NEXT SESSION
+This session's uploaded ZIP did NOT contain the Phase 4 changes from the 9-10 Sep session (see
+CLAUDE_CHANGELOG.md) — the user evidently didn't merge that delivered zip into their live copy.
+If a future session's ZIP looks like it's missing already-"done" phases again, don't assume the
+progress log is wrong — diff against this file's stated PROJECT STATUS and trust what's actually
+in the ZIP.
