@@ -89,3 +89,24 @@
   CLAUDE_PROGRESS.md/CLAUDE_CHANGELOG.md).
 - Next session: Phase 6 — scope not yet decided, check WEBSITE_REDESIGN_PROGRESS.md and the main
   master prompt for the next unstarted item.
+
+## Session D (cont.) — 2026-09-22 — Phase 6 Unit 1 (design refresh → inner pages)
+- After Phase 5, asked the user what's next; offered the two standing owner-decision items
+  (मूळ DPR verification, duplicate-file deletion) plus "suggest something new" — user chose the
+  latter, explicitly declining both standing items for now.
+- Files touched (3): history.html, why-ichalkaranji.html, officials.html — each edited only
+  inside its own local <style> block, using the --radius-lg/--shadow-card/--shadow-lift tokens
+  already defined globally in styles.css from this morning's homepage design pass. Gave
+  .hist-item, .wi-fact-card/.wi-callout, .of-link-card/.of-cta/.of-glance the same card language
+  (brass accents, shadow, hover-lift) as the homepage. our-work.html needed no changes — it
+  already inherits the homepage's .entry/.stat-cell polish via the shared script.js/styles.css.
+- Found (not acted on, since the user had just declined this exact item): data.js id 8, a
+  published CPGRAMS reply (ref. PMOPG/E/2026/0107756), independently confirms the exact figures
+  the long-flagged "मूळ DPR" verification gap needs — flagged in CLAUDE_PROGRESS.md for whenever
+  the user wants to revisit it.
+- Verified: all 3 files parse cleanly, each file's own <style> block brace-balanced, owSubmitVote
+  still 2 (index.html untouched this phase), diff against the original ZIP shows exactly 3 new
+  files beyond everything delivered earlier today (12 total across the whole session), all 7
+  protected voting files byte-identical.
+- Delivered: ichalkaranji-railway-phase-06.zip (history.html, why-ichalkaranji.html,
+  officials.html + updated CLAUDE_PROGRESS.md/CLAUDE_CHANGELOG.md).

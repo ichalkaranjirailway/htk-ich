@@ -22,7 +22,9 @@ PHASE 2 — Visual/IA redesign: DONE for this pass (accessibility + design-token
 PHASE 3 — Evidence ID architecture: DONE for this pass (see PHASE 3 UNIT 1 below).
 PHASE 4 — Official Decision Chain: DONE for this pass (see PHASE 4 UNIT 1 below).
 PHASE 5 — RTI/CPGRAMS classification: DONE for this pass (see PHASE 5 UNIT 1 below).
-PHASE 6–14: NOT STARTED
+PHASE 6 — Design-refresh extended to inner content pages: DONE for this pass (see PHASE 6 UNIT 1
+below).
+PHASE 7–14: NOT STARTED
 
 ## FINAL PROTECTED FILE LIST (locked, do not modify without explicit user sign-off)
 `opinion.html`, `opinion-widget.js`, `opinion-widget.css`, `opinion-content.js`,
@@ -241,16 +243,70 @@ render was possible in this environment — recommend the user spot-check the ho
 actual phone/browser after deploying, especially the hero on a narrow (<560px) screen.
 
 ## NEXT EXACT ACTION
-Begin Phase 6 — check `WEBSITE_REDESIGN_PROGRESS.md` (older, narrower master prompt) and the
-main master prompt's remaining phases for the next unstarted item; no phase-6 scope has been
-decided yet.
+No fixed next phase — asked the user after Phase 5 what to do next; they said "suggest something
+new, you decide" (explicitly declining the two standing owner-decision items below). Phase 6
+(this session) was that suggestion. For a future session: candidates are extending this same
+card-language pass to `brief.html`/`kajrolkar.html`/`voters-list.html` (not done this round —
+scope kept to the 3 clearest "flat local card" pages), or check with the user again.
+
+## STILL OPEN — OWNER-DECISION ITEMS (repeatedly flagged, not auto-actioned, user explicitly
+deferred both again this session)
+1. The "मूळ DPR" (30.11.2017, ₹191.59 crore, ROR -10.11%) verification-label question from
+   `WEBSITE_REDESIGN_PROGRESS.md` — `project-status-data.js`/`timeline-data.js` mark it
+   "verified" with `evidenceUrl: null` and only "प्रकल्पाच्या अधिकृत नोंदी" as source. NOTE FOR
+   NEXT SESSION: this may now be resolvable without new user sourcing — `data.js` id 8 (a CPGRAMS
+   reply, ref. PMOPG/E/2026/0107756, already published on `our-work.html`) independently confirms
+   these exact same figures via an official government channel. Not applied this session since
+   the user was offered this exact item and explicitly chose "suggest something new" instead —
+   flagging the finding here rather than acting on a declined item.
+2. Go-ahead to delete the 5 confirmed-safe duplicate files (`admin (1).html`, `admin (2).html`,
+   `index (2).html`, `gallery (1).css`, `team-data (2) (1).js`) — still present, still unreferenced,
+   still awaiting explicit sign-off.
 
 ## LAST COMPLETED STEP
-Phase 5 Unit 1 complete and verified: added an `answered / partial / transferred / not-clarified`
-classification to every RTI/CPGRAMS entry whose reply text was concrete enough to classify with
-confidence (see PHASE 5 UNIT 1 below) — all 7 existing RTI/grievance entries site-wide (5 in
-`data.js`'s Our Work list, 1 in `evidence-data.js`'s Evidence Centre). All voting-protection
-checksums confirmed intact, deliverable zip prepared.
+Phase 6 Unit 1 complete and verified (see below). All voting-protection checksums confirmed
+intact, deliverable zip prepared.
+
+## PHASE 6 UNIT 1 (same session, 22 Sep 2026) — design refresh extended to inner content pages
+After Phase 5, asked the user what to do next; offered the two standing owner-decision items
+above plus "suggest something new" — user picked the latter. Chose this because it's a direct,
+natural continuation of today's earlier design-refresh work: that pass was deliberately scoped to
+`index.html` only (see its own progress note above), while `history.html`, `why-ichalkaranji.html`,
+and `officials.html` each carry their OWN local `<style>` block with their own flat, hairline-
+radius component classes (`.hist-item`, `.wi-fact-card`/`.wi-callout`, `.of-link-card`/`.of-cta`)
+that never got the new `--radius-lg`/`--shadow-card`/`--shadow-lift` card language — these three
+were the clearest remaining "flat" pages site-wide (checked first: `our-work.html` already
+inherits the homepage's `.entry`/`.stat-cell` polish automatically since it renders through the
+same shared `script.js`/`styles.css`, so no change was needed there).
+
+Files touched (3): `history.html`, `why-ichalkaranji.html`, `officials.html` — each edited ONLY
+inside its own existing `<style>` block, using the same custom-property tokens defined globally
+in `styles.css` (loaded on every page already, so no new tokens or files needed):
+- `history.html`: `.hist-item` (each timeline entry) — was borderless text with only a bottom
+  padding gap; now a `--paper-raised` card with brass left-accent, `--radius-lg`, `--shadow-card`,
+  hover-lift. The connecting line + dot markers (`.hist-track`, `.hist-item::before`) are
+  untouched in position/behavior — only the dot's `top` offset was adjusted (4px → 20px) to stay
+  aligned with the card's new internal top padding.
+- `why-ichalkaranji.html`: `.wi-fact-card` (6 fact cards) got the same brass-top-accent +
+  shadow + hover-lift as the homepage's `.stat-cell`; `.wi-callout` (4 note boxes) got the same
+  brass-left-accent + shadow as the homepage's `.callout`; `.wi-table-wrap` got a matching shadow
+  (table internals untouched).
+- `officials.html`: `.of-link-card` (6 cards) got brass-left-accent + shadow + hover-lift (was:
+  hover only changed border color, no lift/shadow at all); `.of-cta` button got the same
+  hover-lift treatment as the homepage's petition-CTA button; `.of-glance` (the key-value summary
+  table) got a matching shadow.
+
+Deliberately NOT touched this round: `brief.html`, `kajrolkar.html`, `voters-list.html` (each
+also has its own local style block, not yet surveyed this session — candidates for a future
+unit, not done now to keep this pass's scope reviewable).
+
+VERIFICATION DONE THIS SESSION (Phase 6, all passed):
+- All 3 edited files re-parse cleanly with Python's `html.parser`.
+- Each file's own `<style>` block brace-balanced (0/0).
+- `owSubmitVote` count in `index.html`: still 2 (this phase didn't touch `index.html` at all).
+- `diff -rq` against the original uploaded ZIP: exactly 3 NEW files differ beyond everything
+  already delivered earlier today (12 total differ across the whole session) — all 7 protected
+  voting files byte-identical.
 
 ## PHASE 5 UNIT 1 (same session, 22 Sep 2026) — RTI/CPGRAMS reply classification
 Files touched (7): `data.js`, `script.js`, `styles.css`, `evidence-data.js`, `evidence.html`,
