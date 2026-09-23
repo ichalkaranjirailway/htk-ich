@@ -448,6 +448,16 @@ main > section:nth-of-type(even) { background: var(--paper-raised); }
 .tag.status-replied { color: var(--green-ok); border-color: var(--green-ok); }
 .tag.status-no-response { color: var(--signal-red); border-color: var(--signal-red); }
 .tag.status-pending { color: var(--brass); border-color: var(--brass); }
+/* RTI/CPGRAMS reply classification — a finer-grained read of WHAT an answer
+   actually did (answered in full / partly declined / forwarded elsewhere /
+   no clarification yet), separate from the replied/pending/no-response tag
+   above which only tracks whether *a* reply arrived at all. Only rendered
+   when an entry has this field, so unrelated entries (letters, petitions,
+   media) are unaffected. */
+.tag.rti-answered { color: var(--green-ok); border-color: var(--green-ok); }
+.tag.rti-partial { color: var(--brass); border-color: var(--brass); }
+.tag.rti-transferred { color: var(--ink-soft); border-color: var(--line); }
+.tag.rti-not-clarified { color: var(--signal-red); border-color: var(--signal-red); }
 .entry-date { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); margin-left: auto; }
 
 .entry h3 { font-family: var(--display); font-size: 19px; margin: 0 0 4px; }

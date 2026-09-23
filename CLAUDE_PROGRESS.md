@@ -21,7 +21,8 @@ PHASE 2 — Visual/IA redesign: DONE for this pass (accessibility + design-token
   unit — see PHASE 2 UNIT 1 below). Further Phase 2 units possible later (see "Deferred").
 PHASE 3 — Evidence ID architecture: DONE for this pass (see PHASE 3 UNIT 1 below).
 PHASE 4 — Official Decision Chain: DONE for this pass (see PHASE 4 UNIT 1 below).
-PHASE 5–14: NOT STARTED
+PHASE 5 — RTI/CPGRAMS classification: DONE for this pass (see PHASE 5 UNIT 1 below).
+PHASE 6–14: NOT STARTED
 
 ## FINAL PROTECTED FILE LIST (locked, do not modify without explicit user sign-off)
 `opinion.html`, `opinion-widget.js`, `opinion-widget.css`, `opinion-content.js`,
@@ -240,14 +241,78 @@ render was possible in this environment — recommend the user spot-check the ho
 actual phone/browser after deploying, especially the hero on a narrow (<560px) screen.
 
 ## NEXT EXACT ACTION
-Begin Phase 5: RTI/CPGRAMS evidence classification (answered/partial/transferred/not-clarified,
-per master prompt §11). Only one RTI entry is currently published in `evidence-data.js`
-(`ev-1787383568850`) — if its classification isn't already clear from the entry's own fields,
-mark it "पडताळणी आवश्यक" rather than guessing.
+Begin Phase 6 — check `WEBSITE_REDESIGN_PROGRESS.md` (older, narrower master prompt) and the
+main master prompt's remaining phases for the next unstarted item; no phase-6 scope has been
+decided yet.
 
 ## LAST COMPLETED STEP
-Same-day visual design pass complete and verified (see above) on top of Phase 4 Unit 1 (Official
-Decision Chain). All voting-protection checksums confirmed intact, deliverable zip prepared.
+Phase 5 Unit 1 complete and verified: added an `answered / partial / transferred / not-clarified`
+classification to every RTI/CPGRAMS entry whose reply text was concrete enough to classify with
+confidence (see PHASE 5 UNIT 1 below) — all 7 existing RTI/grievance entries site-wide (5 in
+`data.js`'s Our Work list, 1 in `evidence-data.js`'s Evidence Centre). All voting-protection
+checksums confirmed intact, deliverable zip prepared.
+
+## PHASE 5 UNIT 1 (same session, 22 Sep 2026) — RTI/CPGRAMS reply classification
+Files touched (7): `data.js`, `script.js`, `styles.css`, `evidence-data.js`, `evidence.html`,
+`evidence-detail.html`, `evidence.css`.
+
+What this is: a second, finer-grained tag alongside the existing replied/pending/no-response
+status — it answers "given that a reply arrived, did it actually answer what was asked?" Four
+values: `answered` (every question got a substantive answer), `partial` (some answered, some
+explicitly declined/withheld), `transferred` (forwarded to another authority without answering
+directly), `not-clarified` (no reply yet, or the reply doesn't actually address the question).
+
+Classified only where the site's OWN already-published reply text made the call unambiguous —
+nothing was invented or guessed from outside sources:
+- `data.js` id 5 (RTI, Satara DCE, 7 questions) → **answered** — one reply covered the substance,
+  no explicit refusal language.
+- `data.js` id 6 (RTI transfer order, 15.05.2026) → **transferred** — literally a Section 6(3)
+  transfer order, no other reading possible.
+- `data.js` id 7 (RTI follow-up on the above) → **not-clarified** — its own response field says
+  "no reply received yet."
+- `data.js` id 8 (CPGRAMS reply, CAO Const.) → **answered** — every point in the grievance
+  (DPR dates/costs, Karad–Ichalkaranji–Nipani–Belagavi status) got a direct factual answer.
+- `data.js` id 15 (joint application, Collector → Municipal Corp → DEN) → **transferred** — its
+  own response field describes it being forwarded stage to stage with "take appropriate action"
+  at each hop, never actually answered.
+- `data.js` id 32 (RTI, fund sanction/DPR status, Ref. OL-272) → **answered** — all 3 questions
+  got direct answers.
+- `data.js` id 33 (RTI, Traffic Survey/file notings/funds, Ref. OL-270) → **partial** — 2 of 5
+  questions explicitly declined ("details cannot be shared" / "not available in this office"),
+  3 of 5 genuinely answered.
+- `evidence-data.js` `ev-1787383568850` (the one published RTI doc in the Evidence Centre) →
+  **partial** — read question-by-question from its own OCR'd text: Q1 (DPR file notings) got a
+  summary but not the certified copies asked for and an explicit "cannot be shared" for the rest;
+  Q2 (reasons for delay) explicitly declined citing RTI Act's scope (opinions/reasons aren't
+  covered); Q3 (NITI Aayog/Finance correspondence) explicitly declined; Q4 (Pink Book/current
+  status) genuinely answered. Mixed record → partial, matching the same logic as id 33 above.
+- Two entries were deliberately left WITHOUT a classification because their own text doesn't
+  support one confidently: `data.js` id 4 (social media, no-response — nothing to classify, no
+  reply exists) and any other rti/grievance-adjacent entry not listed above — none exist; those
+  are the only 5 rti + 2 grievance entries in `data.js`, and the only 1 published RTI/CPGRAMS
+  entry in `evidence-data.js`. Every qualifying entry got a call; none were skipped.
+
+Implementation: added a `classification` field (data.js) / `rtiStatus` field (evidence-data.js —
+different field name since it's a different data file with its own schema, same value set) to
+just those entries; added a second `.tag.rti-*` / `.ev-badge.rti-*` badge, rendered only when the
+field is present, so every other entry (letters, petitions, media, social, the other 25 Our Work
+entries, the other 26 evidence docs) is visually unaffected. Labels are Marathi by default,
+English when the page's `lang` toggle is set to English (matching the existing i18n pattern in
+`script.js`).
+
+VERIFICATION DONE THIS SESSION (Phase 5, all passed):
+- Simulated `ENTRIES.filter(e => e.classification)` in Node against the real `data.js`: exactly
+  the intended 7 entries carry the field, correct values on each.
+- `node --check` on `data.js`, `script.js`, `evidence-data.js`: syntax OK.
+- `evidence.html`/`evidence-detail.html` re-parse cleanly with Python's `html.parser`; inline
+  `<script>` blocks brace/paren-balanced.
+- `styles.css`/`evidence.css` brace-balanced.
+- `owSubmitVote` count in `index.html`: still 2.
+- `diff -rq` against the original uploaded ZIP: exactly 9 files differ across the WHOLE session
+  (this phase's 7 + `index.html`/`project-status.html` from the earlier design-refresh/Phase-4
+  passes today) — all 7 protected voting files (`opinion.html`, `opinion-widget.js`,
+  `opinion-content.js`, `opinion-widget.css`, `firebase-config.js`, `voters-list.html`,
+  `admin.html`) byte-identical.
 
 ## NOTE FOR NEXT SESSION
 This session's uploaded ZIP did NOT contain the Phase 4 changes from the 9-10 Sep session (see

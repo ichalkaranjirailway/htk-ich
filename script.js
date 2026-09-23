@@ -14,6 +14,17 @@ let activeCategory = "all";
 // नोंदी इंग्रजीतही मराठीतच दिसत राहतात (कधीही रिकाम्या दिसणार नाहीत).
 let lang = "mr";
 
+// RTI/CPGRAMS reply classification labels — only entries that have this
+// field (currently: RTI and CPGRAMS/grievance entries whose reply text was
+// read closely enough to tell full-answer apart from partial/declined
+// apart from a transfer apart from "no reply yet") show this second tag.
+const RTI_STATUS_META = {
+  answered:       { mr: "पूर्ण उत्तर मिळालं",      en: "Fully Answered" },
+  partial:        { mr: "आंशिक उत्तर",             en: "Partially Answered" },
+  transferred:    { mr: "हस्तांतरित",              en: "Transferred" },
+  "not-clarified":{ mr: "अद्याप स्पष्टीकरण नाही",  en: "Not Yet Clarified" },
+};
+
 function t(entry, field) {
   if (lang === "en" && entry.en && entry.en[field]) return entry.en[field];
   return entry[field];
@@ -133,11 +144,13 @@ function renderTimeline() {
   trackEl.innerHTML = filtered.map(e => {
     const meta = CATEGORY_META[e.category] || { label: e.category };
     const statusLabel = { replied: "Replied", pending: "Pending", "no-response": "No Response" }[e.status] || e.status;
+    const rtiMeta = e.classification ? RTI_STATUS_META[e.classification] : null;
     return `
       <article class="entry" data-status="${e.status}">
         <div class="entry-top">
           <span class="tag cat">${meta.label}</span>
           <span class="tag status-${e.status}">${statusLabel}</span>
+          ${rtiMeta ? `<span class="tag rti-${e.classification}">${lang === "en" ? rtiMeta.en : rtiMeta.mr}</span>` : ""}
           <span class="entry-date">${fmtDate(e.date)}${e.referenceNo ? " · Ref: " + e.referenceNo : ""}</span>
         </div>
         <h3>${t(e, "title")}</h3>

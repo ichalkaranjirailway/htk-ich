@@ -20,6 +20,12 @@
 .ev-badge.level-b{background:var(--brass);color:#3a2a06;}
 .ev-badge.level-c{background:var(--ink-soft);}
 .ev-badge.level-d{background:var(--signal-red);}
+/* RTI/CPGRAMS reply classification badge — same 4-state scheme as the
+   .tag.rti-* classes on our-work.html/index.html's timeline entries. */
+.ev-badge.rti-answered{background:var(--green-ok);}
+.ev-badge.rti-partial{background:var(--brass);color:#3a2a06;}
+.ev-badge.rti-transferred{background:var(--ink-soft);}
+.ev-badge.rti-not-clarified{background:var(--signal-red);}
 .ev-card .ev-date{font-size:.78rem;color:var(--ink-soft);}
 .ev-card .ev-snippet{font-size:.82rem;color:var(--ink-soft);margin-top:8px;line-height:1.4;max-height:3.6em;overflow:hidden;}
 .ev-card .ev-tags{margin-top:10px;font-size:.72rem;color:var(--ink-soft);}

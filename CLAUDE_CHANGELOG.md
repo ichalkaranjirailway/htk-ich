@@ -67,3 +67,25 @@
   CSS custom properties at all (rendered unstyled) — not usable, noted for future sessions.
 - Delivered: `ichalkaranji-railway-design-refresh.zip` (styles.css, evidence.css, index.html,
   project-status.html + updated CLAUDE_PROGRESS.md/CLAUDE_CHANGELOG.md).
+
+## Session D (cont.) — 2026-09-22 — Phase 5 Unit 1 (RTI/CPGRAMS classification)
+- Files touched (7): data.js, script.js, styles.css, evidence-data.js, evidence.html,
+  evidence-detail.html, evidence.css.
+- Added a second classification tag (answered/partial/transferred/not-clarified) to every
+  RTI/CPGRAMS entry site-wide whose own already-published reply text supported a confident call:
+  data.js ids 5, 6, 7, 8, 15, 32, 33 and evidence-data.js's one published RTI doc
+  (ev-1787383568850). Every classification traced to that entry's own OCR'd/admin-authored reply
+  text — no outside guessing. Full reasoning per entry is in CLAUDE_PROGRESS.md's Phase 5 Unit 1
+  section.
+- New badge rendered only when the field is present — every other entry (25 other Our Work items,
+  26 other evidence docs) visually unaffected.
+- Verified: Node simulation confirms exactly the 7 intended data.js entries got the field with
+  correct values; node --check passes on all 3 touched .js files; evidence.html/evidence-detail.html
+  parse cleanly and are script-brace-balanced; both touched CSS files brace-balanced; owSubmitVote
+  still 2; diff against the original uploaded ZIP shows exactly 9 files differ across the whole
+  session (this phase's 7 + index.html/project-status.html from earlier today), all 7 protected
+  voting files byte-identical.
+- Delivered: ichalkaranji-railway-phase-05.zip (the 7 changed files + updated
+  CLAUDE_PROGRESS.md/CLAUDE_CHANGELOG.md).
+- Next session: Phase 6 — scope not yet decided, check WEBSITE_REDESIGN_PROGRESS.md and the main
+  master prompt for the next unstarted item.

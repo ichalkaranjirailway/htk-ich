@@ -91,6 +91,12 @@
 <script src="evidence-data.js"></script>
 <script>
 const docs = (typeof EVIDENCE_DOCS !== 'undefined' ? EVIDENCE_DOCS : []).filter(d => d.status === 'published');
+const RTI_STATUS_LABELS = {
+  answered: "पूर्ण उत्तर मिळालं",
+  partial: "आंशिक उत्तर",
+  transferred: "हस्तांतरित",
+  "not-clarified": "अद्याप स्पष्टीकरण नाही",
+};
 
 function populateFilters(){
   const cats = [...new Set(docs.map(d => d.category).filter(Boolean))].sort();
@@ -143,6 +149,7 @@ function renderGrid(){
       <div class="ev-meta-row">
         ${d.evidenceId ? `<span class="ev-badge evidence-id">${d.evidenceId}</span>` : ''}
         ${d.sourceLevel ? `<span class="ev-badge level-${d.sourceLevel.toLowerCase()}" title="Source Level ${d.sourceLevel}">Level ${d.sourceLevel}</span>` : ''}
+        ${d.rtiStatus ? `<span class="ev-badge rti-${d.rtiStatus}">${RTI_STATUS_LABELS[d.rtiStatus] || d.rtiStatus}</span>` : ''}
         <span class="ev-badge">${d.category || ''}</span>
         ${d.authority ? `<span class="ev-badge auth">${d.authority}</span>` : ''}
       </div>
